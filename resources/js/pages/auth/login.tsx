@@ -120,19 +120,20 @@
 //     description: 'Enter your email and password below to log in',
 // };
 
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
-import InputError from '@/components/input-error';
-import PasswordInput from '@/components/password-input';
-import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+// import InputError from '@/components/input-error';
+// import PasswordInput from '@/components/password-input';
+// import TextLink from '@/components/text-link';
+// import { Button } from '@/components/ui/button';
+// import { Checkbox } from '@/components/ui/checkbox';
+// import { Input } from '@/components/ui/input';
+// import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { register } from '@/routes';
+
 import { store } from '@/routes/login';
-import { request } from '@/routes/password';
+// import { request } from '@/routes/password';
 import { toast } from 'sonner';
 
 import { PortalLoader } from '@/components/portal-loader';
@@ -307,11 +308,23 @@ export default function Login({
                             className="flex w-full transform cursor-pointer items-center justify-center gap-5 rounded-lg bg-[#2563eb] py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-[#1d4ed8] active:scale-[0.98] sm:py-4 sm:text-base"
                         >
                             {processing && (
-                                <LoaderCircle className="size-5 animate-spin" />
+                                // <LoaderCircle className="size-5 animate-spin" />
+                                <Spinner />
                             )}
                             Log in
                         </button>
                     </form>
+
+                    <div className="mt-6 text-center text-sm text-[#64748b]">
+                        Don't have an account?{' '}
+                        <Link
+                            prefetch="hover"
+                            href={register()}
+                            className="font-bold text-[#2563eb] hover:underline"
+                        >
+                            Register
+                        </Link>
+                    </div>
 
                     <div className="mt-8 text-center text-[10px] text-[#64748b] sm:text-xs">
                         © 2026 MUHAS Gender Reporting Unit. Version 1.0.2
@@ -342,8 +355,3 @@ export default function Login({
         </>
     );
 }
-
-Login.layout = {
-    title: 'Log in to your account',
-    description: 'Enter your email and password below to log in',
-};
