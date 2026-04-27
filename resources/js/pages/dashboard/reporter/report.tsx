@@ -6,6 +6,7 @@ const Dashboard = () => {
     const reportPreferenceContinue = useStepperFormStore(
         (state) => state.reportPreferenceContinue,
     );
+
     return <>{reportPreferenceContinue ? <NewCase /> : <AnonymousCheck />}</>;
 };
 export default Dashboard;

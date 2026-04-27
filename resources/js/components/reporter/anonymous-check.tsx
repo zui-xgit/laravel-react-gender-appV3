@@ -104,7 +104,9 @@ import { ChevronRight, Info, Shield } from 'lucide-react';
 export const AnonymousCheck = () => {
     const isAnonymous = useStepperFormStore((state) => state.isAnonymous);
     const setAnonymous = useStepperFormStore((state) => state.setAnonymous);
-    const setReportPreferenceContinue = useStepperFormStore((state) => state.setReportPreferenceContinue);
+    const setReportPreferenceContinue = useStepperFormStore(
+        (state) => state.setReportPreferenceContinue,
+    );
 
     const canContinue = isAnonymous !== null;
 
@@ -127,17 +129,28 @@ export const AnonymousCheck = () => {
                         <Shield size={20} className="sm:h-6 sm:w-6" />
                     </div>
                     <div className="min-w-0">
-                        <h2 className="text-primary text-lg font-bold tracking-tight sm:text-xl md:text-3xl">Reporting Preference</h2>
-                        <p className="text-secondary mt-1 text-xs sm:text-sm">Choose how you would like to submit this report.</p>
+                        <h2 className="text-lg font-bold tracking-tight text-primary sm:text-xl md:text-3xl">
+                            Reporting Preference
+                        </h2>
+                        <p className="mt-1 text-xs text-primary sm:text-sm">
+                            Choose how you would like to submit this report.
+                        </p>
                     </div>
                 </div>
 
                 {/* Informational Notice */}
                 <div className="flex items-start gap-3">
-                    <Info size={16} className="mt-0.5 shrink-0" style={{ color: 'var(--accent-primary)' }} />
-                    <p className="text-secondary text-xs leading-relaxed">
-                        This reporting system is designed to support individuals affected by gender-based misconduct, harassment, or discrimination.
-                        Your safety and privacy are a priority. You are not required to provide identifying information to submit a report.
+                    <Info
+                        size={16}
+                        className="mt-0.5 shrink-0"
+                        style={{ color: 'var(--accent-primary)' }}
+                    />
+                    <p className="text-xs leading-relaxed text-primary">
+                        This reporting system is designed to support individuals
+                        affected by gender-based misconduct, harassment, or
+                        discrimination. Your safety and privacy are a priority.
+                        You are not required to provide identifying information
+                        to submit a report.
                     </p>
                 </div>
 
@@ -152,16 +165,21 @@ export const AnonymousCheck = () => {
                             isAnonymous === true
                                 ? {
                                       borderColor: 'var(--accent-primary)',
-                                      backgroundColor: 'color-mix(in srgb, var(--accent-primary) 10%, var(--bg-surface))',
+                                      backgroundColor:
+                                          'color-mix(in srgb, var(--accent-primary) 10%, var(--bg-surface))',
                                   }
                                 : {}
                         }
                     >
                         <div className="flex items-start">
                             <div>
-                                <p className="text-primary font-semibold">Report Anonymously</p>
-                                <p className="text-secondary mt-1 text-xs">
-                                    No personal details are collected. This option may limit direct follow-up, but your report will still be reviewed.
+                                <p className="font-semibold text-primary">
+                                    Report Anonymously
+                                </p>
+                                <p className="mt-1 text-xs text-primary">
+                                    No personal details are collected. This
+                                    option may limit direct follow-up, but your
+                                    report will still be reviewed.
                                 </p>
                             </div>
                         </div>
@@ -176,16 +194,21 @@ export const AnonymousCheck = () => {
                             isAnonymous === false
                                 ? {
                                       borderColor: 'var(--accent-primary)',
-                                      backgroundColor: 'color-mix(in srgb, var(--accent-primary) 10%, var(--bg-surface))',
+                                      backgroundColor:
+                                          'color-mix(in srgb, var(--accent-primary) 10%, var(--bg-surface))',
                                   }
                                 : {}
                         }
                     >
                         <div className="flex items-start">
                             <div>
-                                <p className="text-primary font-semibold">Identify Myself</p>
-                                <p className="text-secondary mt-1 text-xs">
-                                    Providing your details may help investigators contact you for clarification or offer support services, where
+                                <p className="font-semibold text-primary">
+                                    Identify Myself
+                                </p>
+                                <p className="mt-1 text-xs text-primary">
+                                    Providing your details may help
+                                    investigators contact you for clarification
+                                    or offer support services, where
                                     appropriate.
                                 </p>
                             </div>
@@ -204,25 +227,27 @@ export const AnonymousCheck = () => {
                             canContinue
                                 ? {
                                       backgroundColor: 'var(--accent-primary)',
-                                      color: 'white',
+                                      color: 'var(--text-primary)',
                                       cursor: 'pointer',
                                       boxShadow: 'var(--card-shadow)',
                                   }
                                 : {
                                       backgroundColor: 'var(--bg-surface)',
-                                      color: 'var(--text-secondary)',
+                                      color: 'var(--text-primary)',
                                       cursor: 'not-allowed',
                                       opacity: 0.5,
                                   }
                         }
                         onMouseEnter={(e) => {
                             if (canContinue) {
-                                e.currentTarget.style.backgroundColor = 'var(--accent-hover)';
+                                e.currentTarget.style.backgroundColor =
+                                    'var(--accent-hover)';
                             }
                         }}
                         onMouseLeave={(e) => {
                             if (canContinue) {
-                                e.currentTarget.style.backgroundColor = 'var(--accent-primary)';
+                                e.currentTarget.style.backgroundColor =
+                                    'var(--accent-primary)';
                             }
                         }}
                     >

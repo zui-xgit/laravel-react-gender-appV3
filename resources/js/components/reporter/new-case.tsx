@@ -44,11 +44,11 @@ const NewCase = () => {
 
     const [caseTrackingId, setCaseTrackingId] = useState<string>('');
 
-    useEffect(() => {
-        const handleResize = () => setWindowWidth(window.innerWidth);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    // useEffect(() => {
+    //     const handleResize = () => setWindowWidth(window.innerWidth);
+    //     window.addEventListener('resize', handleResize);
+    //     return () => window.removeEventListener('resize', handleResize);
+    // }, []);
 
     useEffect(() => {
         setData({ ...formData, isAnonymous });
