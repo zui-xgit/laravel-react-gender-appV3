@@ -13,12 +13,34 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('username')->unique();
-            $table->string('email')->unique();
+            $table->uuid('uuid')->nullable(); 
+            // Role
+            $table->enum('role', ['admin', 'officer'])->nullable();
+
+
+            // Basic Identity
+            $table->string('username')->unique();  // login user name
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->enum('gender', ['male', 'female']);
+
+            // Contact and personal information
+            $table->string('email')->nullable();
+            $table->string('phone', 20);
+
+            // Authentication
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->rememberToken();
+
+
+            // Management fields
+            $table->enum('status', ['active', 'inactive', 'suspended'])->default("active");
+            // $table->string('department')->nullable(); 
+            // $table->string('staff_id')->nullable()->unique(); // For MUHAS staff/students
+            $table->timestamp('last_login_at')->nullable();
+
+
+            $table->rememberToken();  // this is managed by laravel 
             $table->timestamps();
         });
 

@@ -1,7 +1,13 @@
-import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import {
+    Activity,
+    BookOpen,
+    FilePlus2,
+    FolderGit2,
+    LayoutGrid,
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
-import { NavFooter } from '@/components/nav-footer';
+// import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import {
@@ -13,38 +19,56 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
+import { adminDashboard, reporterReport, reporterTrack } from '@/routes';
 import type { NavItem } from '@/types';
+import { UsePageProps } from '@/types/types';
 
-const mainNavItems: NavItem[] = [
+const AdminNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
-        href: dashboard(),
+        title: 'Admin Dashboard',
+        href: adminDashboard(),
         icon: LayoutGrid,
     },
 ];
 
-const footerNavItems: NavItem[] = [
+const OfficerNavItems: NavItem[] = [];
+
+const ReporterNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: FolderGit2,
+        title: 'New Case',
+        href: reporterReport(),
+        icon: FilePlus2,
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
+        title: 'Track Status',
+        href: reporterTrack(),
+        icon: Activity,
     },
 ];
 
+// const footerNavItems: NavItem[] = [
+//     {
+//         title: 'Repository',
+//         href: 'https://github.com/laravel/react-starter-kit',
+//         icon: FolderGit2,
+//     },
+//     {
+//         title: 'Documentation',
+//         href: 'https://laravel.com/docs/starter-kits#react',
+//         icon: BookOpen,
+//     },
+// ];
+
 export function AppSidebar() {
+    const { auth } = usePage<UsePageProps>().props;
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={adminDashboard()} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
@@ -53,12 +77,21 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                {auth.user ? (
+                    <>
+                        {auth.user.role === 'admin' && (
+                            <NavMain items={AdminNavItems} />
+                        )}
+                    </>
+                ) : (
+                    <NavMain items={ReporterNavItems} />
+                )}
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
-                <NavUser />
+                {/* <NavFooter items={footerNavItems} className="mt-auto" /> */}
+
+                {auth.user && <NavUser />}
             </SidebarFooter>
         </Sidebar>
     );

@@ -2,8 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\AccusedDetail;
+use App\Models\CaseDetail;
+use App\Models\IncidentDetail;
+use App\Models\InformantDetail;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\VictimDetail;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,8 +20,26 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'role' => 'admin', 
+            'user_name' => 'admin.juma',
         ]);
+        User::factory()->create([
+            'role' => 'officer', 
+            'user_name' => 'officer.juma',
+        ]);
+
+        $cases = CaseDetail::factory(10)->create(); 
+
+        $cases->each(function ($case) {
+            if($case->is_anonymous){
+                InformantDetail::factory()->anonymous()->for($case)->create(); 
+            }else{
+                InformantDetail::factory()->for($case)->create(); 
+            }
+            VictimDetail::factory()->for($case)->create(); 
+            AccusedDetail::factory()->for($case)->create();
+            IncidentDetail::factory()->for($case)->create();
+
+        }); 
     }
 }

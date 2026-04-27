@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Models;
+
+use App\Models\CaseDetail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class VictimDetail extends Model
+{
+    /** @use HasFactory<\Database\Factories\VictimDetailFactory> */
+    use HasFactory;
+
+    
+    protected $guarded = ["id", "created_at"];
+
+    public function caseDetail(): BelongsTo
+    {
+        return $this->belongsTo(CaseDetail::class); 
+    }
+}

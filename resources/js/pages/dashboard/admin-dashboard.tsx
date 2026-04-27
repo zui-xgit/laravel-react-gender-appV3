@@ -1,8 +1,8 @@
 import { Head } from '@inertiajs/react';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
-import { dashboard } from '@/routes';
+import { adminDashboard } from '@/routes';
 
-export default function Dashboard() {
+export default function AdminDashboard() {
     return (
         <>
             <Head title="Dashboard" />
@@ -26,11 +26,11 @@ export default function Dashboard() {
     );
 }
 
-Dashboard.layout = {
+AdminDashboard.layout = {
     breadcrumbs: [
         {
             title: 'Dashboard',
-            href: dashboard(),
+            href: adminDashboard(),
         },
     ],
 };

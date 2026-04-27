@@ -141,3 +141,9 @@
         @apply bg-background text-foreground;
     }
 }
+
+@layer components {
+    .tborder {
+        @apply border-2 border-solid border-red-600;
+    }
+}

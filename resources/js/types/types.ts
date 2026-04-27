@@ -303,3 +303,31 @@ export interface UserData {
     created_at: string;
     // updated_at: string;
 }
+
+// UsePageProps
+import { PageProps } from '@inertiajs/core';
+
+export interface User {
+    uuid: string;
+    first_name: string;
+    last_name: string;
+    role?: string; // Included because it's used in your 'all_users' selection
+}
+
+export interface AdminOptions {
+    all_users: User[];
+    // roles?: string[]; // Uncomment if you enable these in PHP
+    // statuses?: string[];
+}
+
+export interface UsePageProps extends PageProps {
+    name: string;
+    auth: {
+        user: User | null;
+    };
+    sidebarOpen: boolean;
+    options: AdminOptions | null;
+    [key: string]: any; // Allows for additional page-specific props
+}
+
+// end UsePageProps/
