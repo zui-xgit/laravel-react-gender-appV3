@@ -31,14 +31,6 @@ const Report = () => {
 
     // next step implementation
     const isAnonymous = useStepperFormStore((state) => state.isAnonymous);
-    const setReportPreferenceContinue = useStepperFormStore(
-        (state) => state.setReportPreferenceContinue,
-    );
-    const canContinue = isAnonymous !== null;
-
-    const handleContinue = () => {
-        setReportPreferenceContinue(true);
-    };
 
     // TEST USE EFFECT
 
@@ -93,8 +85,10 @@ const Report = () => {
                 <Button
                     variant="outline"
                     onClick={() => nextStep()}
-                    className="cursor-pointer"
-                    disabled={currentStep === steps.length}
+                    className="cursor-pointer disabled:pointer-events-auto disabled:cursor-not-allowed"
+                    disabled={
+                        currentStep === steps.length || isAnonymous === null
+                    }
                 >
                     Next
                 </Button>

@@ -56,15 +56,13 @@ export interface FormData {
 }
 
 interface StepperFormState {
-    currentStep: 1 | 2 | 3 | 4 | 5;
+    currentStep: 1 | 2 | 3 | 4 | 5 | 6;
     isAnonymous: boolean | null;
     formData: FormData;
     errors: Partial<Record<keyof FormData, string>>;
-    reportPreferenceContinue: boolean;
     isCaseSubmitted: boolean;
 
-    setCurrentStep: (value: 1 | 2 | 3 | 4 | 5) => void;
-    setReportPreferenceContinue: (value: boolean) => void;
+    setCurrentStep: (value: 1 | 2 | 3 | 4 | 5 | 6) => void;
     setAnonymous: (value: boolean) => void;
     setErrors: (newErrors: Partial<Record<keyof FormData, string>>) => void;
     setIsCaseSubmitted: (value: boolean) => void;
@@ -142,14 +140,9 @@ export const useStepperFormStore = create<StepperFormState>()(
             formData: initialFormData,
             errors: {},
             isCaseSubmitted: false,
-            reportPreferenceContinue: false,
 
             setCurrentStep: (value) => {
                 set({ currentStep: value });
-            },
-
-            setReportPreferenceContinue: (value: boolean) => {
-                set({ reportPreferenceContinue: value });
             },
 
             //TODO:  i am supposed to implement this to the validate function
@@ -276,12 +269,13 @@ export const useStepperFormStore = create<StepperFormState>()(
             nextStep: () => {
                 if (get().validateStep()) {
                     set((state) => ({
-                        currentStep: Math.min(state.currentStep + 1, 5) as
+                        currentStep: Math.min(state.currentStep + 1, 6) as
                             | 1
                             | 2
                             | 3
                             | 4
-                            | 5,
+                            | 5
+                            | 6,
                     }));
                     window.scrollTo({
                         top: 0,
@@ -297,7 +291,8 @@ export const useStepperFormStore = create<StepperFormState>()(
                         | 2
                         | 3
                         | 4
-                        | 5,
+                        | 5
+                        | 6,
                 }));
                 window.scrollTo({
                     top: 0,
@@ -311,7 +306,6 @@ export const useStepperFormStore = create<StepperFormState>()(
                     isAnonymous: null,
                     formData: initialFormData,
                     errors: {},
-                    reportPreferenceContinue: false,
                     isCaseSubmitted: false,
                 }),
 
