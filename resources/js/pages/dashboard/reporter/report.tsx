@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Stepper,
     StepperContent,
@@ -28,11 +28,13 @@ const Report = () => {
     const setCurrentStep = useStepperFormStore((state) => state.setCurrentStep);
     const previousStep = useStepperFormStore((state) => state.previousStep);
     const nextStep = useStepperFormStore((state) => state.nextStep);
-
-    // next step implementation
-    const isAnonymous = useStepperFormStore((state) => state.isAnonymous);
+    const isAnonymouse = useStepperFormStore((state) => state.isAnonymous);
 
     // TEST USE EFFECT
+
+    useEffect(() => {
+        console.log(isAnonymouse);
+    }, [isAnonymouse]);
 
     return (
         <Stepper
@@ -65,6 +67,7 @@ const Report = () => {
                         {step === 1 && <AnonymousCheck />}
                         {step === 2 && <Step2 />}
                         {step === 3 && <Step3 />}
+                        {step === 4 && <Step4 />}
                         {step === 5 && <Step5 />}
                         {step === 6 && <Step6 />}
                     </StepperContent>
@@ -86,11 +89,11 @@ const Report = () => {
                     variant="outline"
                     onClick={() => nextStep()}
                     className="cursor-pointer disabled:pointer-events-auto disabled:cursor-not-allowed"
-                    disabled={
-                        currentStep === steps.length || isAnonymous === null
-                    }
+                    // disabled={
+                    //     currentStep === steps.length || isAnonymous === null
+                    // }
                 >
-                    Next
+                    {currentStep === 6 ? <>Submit</> : <>Next</>}
                 </Button>
             </div>
         </Stepper>

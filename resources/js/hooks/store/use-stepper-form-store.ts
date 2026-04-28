@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -8,7 +9,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 export type Sex = 'male' | 'female' | 'prefer_not_to_say';
 
 export interface FormData {
-    // COMPLAINANT / INFORMANT (Step 1)
+    // COMPLAINANT / INFORMANT (Step 2)
     informantName: string;
     informantTitle: string;
     informantSex: Sex | null;
@@ -16,7 +17,7 @@ export interface FormData {
     informantPhone: string;
     informantWorkplace: string;
 
-    // VICTIM INFORMATION (Step 2)
+    // VICTIM INFORMATION (Step 3)
     victimName: string;
     victimTitle: string;
     victimSex: Sex | null;
@@ -28,7 +29,7 @@ export interface FormData {
     victimDisability: string;
     victimWorkplace: string;
 
-    // ACCUSED DETAILS (Step 3)
+    // ACCUSED DETAILS (Step 4)
     accusedName: string;
     accusedSex: Sex | null;
     accusedTitle: string;
@@ -39,7 +40,7 @@ export interface FormData {
     accusedResidence: string;
     accusedWorkplace: string;
 
-    // INCIDENT DETAILS (Step 4)
+    // INCIDENT DETAILS (Step 5)
     incidentDate: string;
     incidentTime: string;
     incidentLocation: string;
@@ -51,7 +52,7 @@ export interface FormData {
     incidentAssistance: string;
     incidentInvolved: string;
 
-    // CONFIRMATION (Step 5)
+    // CONFIRMATION (Step 6)
     confirmationChecked: boolean;
 }
 
@@ -155,12 +156,7 @@ export const useStepperFormStore = create<StepperFormState>()(
                 }));
             },
 
-            setAnonymous: (value) =>
-                set({
-                    isAnonymous: value,
-                    currentStep: value ? 2 : 1,
-                    errors: {},
-                }),
+            setAnonymous: (value: boolean) => set({ isAnonymous: value }),
 
             updateFormData: (data) =>
                 set((state) => ({
@@ -170,9 +166,21 @@ export const useStepperFormStore = create<StepperFormState>()(
             validateStep: () => {
                 const { currentStep, formData, isAnonymous } = get();
                 const errors: Partial<Record<keyof FormData, string>> = {};
+                let anonymouseError: boolean = false;
 
-                // Step 1 - Informant (required only if identified)
-                if (currentStep === 1 && isAnonymous === false) {
+                // step 1 - checking the anonymous thing
+
+                if (currentStep === 1) {
+                    if (isAnonymous === null) {
+                        anonymouseError = true;
+                        toast.info(
+                            'Choose to report anonymously or identfy yourself please',
+                        );
+                    }
+                }
+
+                // Step 2 - Informant (required only if identified)
+                if (currentStep === 2 && isAnonymous === false) {
                     if (!formData.informantName.trim())
                         errors.informantName = 'Required';
                     if (!formData.informantTitle.trim())
@@ -187,8 +195,8 @@ export const useStepperFormStore = create<StepperFormState>()(
                         errors.informantWorkplace = 'Required';
                 }
 
-                // Step 2 - Victim
-                if (currentStep === 2) {
+                // Step 3 - Victim
+                if (currentStep === 3) {
                     if (!formData.victimName.trim())
                         errors.victimName = 'Required';
                     if (!formData.victimTitle.trim())
@@ -210,8 +218,8 @@ export const useStepperFormStore = create<StepperFormState>()(
                         errors.victimWorkplace = 'Required';
                 }
 
-                // Step 3 - Accused
-                if (currentStep === 3) {
+                // Step 4 - Accused
+                if (currentStep === 4) {
                     if (!formData.accusedName.trim())
                         errors.accusedName = 'Required';
                     if (!formData.accusedTitle.trim())
@@ -231,8 +239,8 @@ export const useStepperFormStore = create<StepperFormState>()(
                         errors.accusedWorkplace = 'Required';
                 }
 
-                // Step 4 - Incident
-                if (currentStep === 4) {
+                // Step 5 - Incident
+                if (currentStep === 5) {
                     if (!formData.incidentDate.trim())
                         errors.incidentDate = 'Required';
                     if (!formData.incidentTime.trim())
@@ -255,28 +263,40 @@ export const useStepperFormStore = create<StepperFormState>()(
                         errors.incidentInvolved = 'Required';
                 }
 
-                // step 5 - Statement verification
-                if (currentStep === 5) {
+                // step 6 - Statement verification
+                if (currentStep === 6) {
                     if (formData.confirmationChecked === false) {
                         errors.confirmationChecked = 'Confirmation is Required';
                     }
                 }
 
                 set({ errors });
-                return Object.keys(errors).length === 0;
+                return Object.keys(errors).length === 0 && !anonymouseError;
             },
 
             nextStep: () => {
                 if (get().validateStep()) {
-                    set((state) => ({
-                        currentStep: Math.min(state.currentStep + 1, 6) as
-                            | 1
-                            | 2
-                            | 3
-                            | 4
-                            | 5
-                            | 6,
-                    }));
+                    if (get().currentStep === 1 && get().isAnonymous) {
+                        set((state) => ({
+                            currentStep: (state.currentStep + 2) as
+                                | 1
+                                | 2
+                                | 3
+                                | 4
+                                | 5
+                                | 6,
+                        }));
+                    } else {
+                        set((state) => ({
+                            currentStep: Math.min(state.currentStep + 1, 6) as
+                                | 1
+                                | 2
+                                | 3
+                                | 4
+                                | 5
+                                | 6,
+                        }));
+                    }
                     window.scrollTo({
                         top: 0,
                         behavior: 'smooth',
@@ -285,15 +305,27 @@ export const useStepperFormStore = create<StepperFormState>()(
             },
 
             previousStep: () => {
-                set((state) => ({
-                    currentStep: Math.max(state.currentStep - 1, 1) as
-                        | 1
-                        | 2
-                        | 3
-                        | 4
-                        | 5
-                        | 6,
-                }));
+                if (get().currentStep === 3 && get().isAnonymous) {
+                    set((state) => ({
+                        currentStep: (state.currentStep - 2) as
+                            | 1
+                            | 2
+                            | 3
+                            | 4
+                            | 5
+                            | 6,
+                    }));
+                } else {
+                    set((state) => ({
+                        currentStep: Math.max(state.currentStep - 1, 1) as
+                            | 1
+                            | 2
+                            | 3
+                            | 4
+                            | 5
+                            | 6,
+                    }));
+                }
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth',

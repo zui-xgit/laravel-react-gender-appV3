@@ -4,15 +4,6 @@ import { ChevronRight, Info, Shield } from 'lucide-react';
 export const AnonymousCheck = () => {
     const isAnonymous = useStepperFormStore((state) => state.isAnonymous);
     const setAnonymous = useStepperFormStore((state) => state.setAnonymous);
-    // const setReportPreferenceContinue = useStepperFormStore(
-    //     (state) => state.setReportPreferenceContinue,
-    // );
-
-    // const canContinue = isAnonymous !== null;
-
-    // const handleContinue = () => {
-    //     setReportPreferenceContinue(true);
-    // };
 
     return (
         <div className="w-full overflow-x-hidden px-5 pt-5 transition-all duration-500">
