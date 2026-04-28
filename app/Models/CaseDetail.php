@@ -7,6 +7,7 @@ use App\Models\CaseAssignment;
 use App\Models\IncidentDetail;
 use App\Models\InformantDetail;
 use App\Models\VictimDetail;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -14,10 +15,15 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class CaseDetail extends Model
 {
     /** @use HasFactory<\Database\Factories\CaseDetailFactory> */
-    use HasFactory;
+    use HasFactory, HasUuids;
 
-    protected $guarded = ["id", "created_at", 'updated_at'];
+    protected $guarded = ["id", "uuid", "created_at", 'updated_at'];
 
+    /**
+     * Get the columns that should receive a unique identifier.
+     *
+     * @return array<int, string>
+     */
     public function uniqueIds(): array
     {
         return ['uuid'];

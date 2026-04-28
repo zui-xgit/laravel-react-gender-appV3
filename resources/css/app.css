@@ -62,7 +62,7 @@
 }
 
 :root {
-    --background: oklch(1 0 0);
+    /* --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
@@ -86,7 +86,7 @@
     --chart-3: oklch(0.398 0.07 227.392);
     --chart-4: oklch(0.828 0.189 84.429);
     --chart-5: oklch(0.769 0.188 70.08);
-    --radius: 0.625rem;
+    --radius: 0.625rem; */
     /* --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
     --sidebar-primary: oklch(0.205 0 0);
@@ -97,29 +97,74 @@
     --sidebar-ring: oklch(0.87 0 0); */
 
     /* custom: I changed the sidebar colors(JUST LIKE DARK MODE)  (they came from #0F172A) */
-    /* #0F172A equivalent in oklch is approximately oklch(0.208 0.042 265.755) */
-    --sidebar: oklch(0.208 0.042 265.755);
-    --sidebar-foreground: oklch(0.985 0 0); /* Keep clean white */
 
-    --sidebar-primary: oklch(
-        0.488 0.162 255.608
-    ); /* A nice Slate/Indigo primary */
-    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --background: #f9fafb; /* Light Gray/Stone - much softer than pure white */
+    --foreground: #111827; /* Deep Slate - better contrast than pure black */
 
-    --sidebar-accent: oklch(
-        0.279 0.041 260.031
-    ); /* Slightly lighter slate for hover */
-    --sidebar-accent-foreground: oklch(0.985 0 0);
+    /* Card & Popover - Subtle contrast against the background */
+    --card: #ffffff;
+    --card-foreground: #111827;
+    --popover: #ffffff;
+    --popover-foreground: #111827;
 
-    --sidebar-border: oklch(0.279 0.041 260.031);
-    --sidebar-ring: oklch(0.439 0 0.01 260);
+    /* Primary - Professional Navy/Slate */
+    --primary: #1e293b;
+    --primary-foreground: #f9fafb;
+
+    /* Secondary - Muted Stone */
+    --secondary: #f3f4f6;
+    --secondary-foreground: #1f2937;
+
+    /* Muted - Softened for secondary text */
+    --muted: #f3f4f6;
+    --muted-foreground: #6b7280;
+
+    /* Accent - Subtle hover states */
+    --accent: #f3f4f6;
+    --accent-foreground: #111827;
+
+    /* Destructive - Softened Red */
+    --destructive: #dc2626;
+    --destructive-foreground: #fef2f2;
+
+    /* Borders & Inputs - Low-glare gray */
+    --border: #e5e7eb;
+    --input: #e5e7eb;
+    --ring: #9ca3af;
+
+    /* Chart Palette - Slightly desaturated to match the softer theme */
+    --chart-1: #4f46e5; /* Indigo */
+    --chart-2: #0891b2; /* Cyan */
+    --chart-3: #111827; /* Dark Slate */
+    --chart-4: #d97706; /* Amber */
+    --chart-5: #059669; /* Emerald */
+
+    --radius: 0.625rem;
+
+    --sidebar: #0b143d;
+    --sidebar-foreground: #ffffff;
+
+    /* A vibrant Indigo-Slate for the active/selected menu item */
+    /* This provides a clear "pop" against the dark background */
+    --sidebar-primary: #3b4ba0;
+    --sidebar-primary-foreground: #ffffff;
+
+    /* A subtle lift for hover states - slightly lighter than the base */
+    --sidebar-accent: #1a2452;
+    --sidebar-accent-foreground: #ffffff;
+
+    /* A very fine divider color to keep the UI crisp */
+    --sidebar-border: #1e2959;
+
+    /* Focus ring derived from the primary indigo with slight transparency */
+    --sidebar-ring: #4f5eb1;
 }
 
 .dark {
-    /* --background: oklch(0.145 0 0); */
+    /* --background: oklch(0.145 0 0);
     --background: #020617;
     --foreground: oklch(0.985 0 0);
-    --card: oklch(0.145 0 0);
+    --card: #0b143d;
     --card-foreground: oklch(0.985 0 0);
     --popover: oklch(0.145 0 0);
     --popover-foreground: oklch(0.985 0 0);
@@ -140,7 +185,7 @@
     --chart-2: oklch(0.696 0.17 162.48);
     --chart-3: oklch(0.769 0.188 70.08);
     --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
+    --chart-5: oklch(0.645 0.246 16.439); */
     /* --sidebar: oklch(0.205 0 0);
     --sidebar-foreground: oklch(0.985 0 0);
     --sidebar-primary: oklch(0.985 0 0);
@@ -151,22 +196,65 @@
     --sidebar-ring: oklch(0.439 0 0); */
 
     /* custom: I changed the sidebar colors  (they came from #0F172A) */
-    /* #0F172A equivalent in oklch is approximately oklch(0.208 0.042 265.755) */
-    --sidebar: oklch(0.208 0.042 265.755);
-    --sidebar-foreground: oklch(0.985 0 0); /* Keep clean white */
+    /* Base Colors */
+    --background: #020617;
+    --foreground: #f8fafc; /* Clean off-white */
 
-    --sidebar-primary: oklch(
-        0.488 0.162 255.608
-    ); /* A nice Slate/Indigo primary */
-    --sidebar-primary-foreground: oklch(0.985 0 0);
+    /* Card & Popover - Using your #0b143d base */
+    --card: #0b143d;
+    --card-foreground: #f8fafc;
+    --popover: #0b143d;
+    --popover-foreground: #f8fafc;
 
-    --sidebar-accent: oklch(
-        0.279 0.041 260.031
-    ); /* Slightly lighter slate for hover */
-    --sidebar-accent-foreground: oklch(0.985 0 0);
+    /* Primary - High contrast (White/Silver) */
+    --primary: #f8fafc;
+    --primary-foreground: #020617;
 
-    --sidebar-border: oklch(0.279 0.041 260.031);
-    --sidebar-ring: oklch(0.439 0 0.01 260);
+    /* Secondary - A muted slate/blue for less prominent elements */
+    --secondary: #1e293b;
+    --secondary-foreground: #f8fafc;
+
+    /* Muted - For disabled text or subtle backgrounds */
+    --muted: #1e293b;
+    --muted-foreground: #94a3b8;
+
+    /* Accent - For hover states on dropdowns/buttons */
+    --accent: #1e293b;
+    --accent-foreground: #f8fafc;
+
+    /* Destructive - Professional Red */
+    --destructive: #7f1d1d;
+    --destructive-foreground: #fca5a5;
+
+    /* Borders & Inputs - Subtle separation */
+    --border: #1e293b;
+    --input: #1e293b;
+    --ring: #334155;
+
+    /* Chart Palette - Derived to work with deep navy/slate backgrounds */
+    --chart-1: #3b82f6; /* Blue */
+    --chart-2: #10b981; /* Emerald */
+    --chart-3: #f59e0b; /* Amber */
+    --chart-4: #8b5cf6; /* Violet */
+    --chart-5: #ef4444; /* Rose */
+
+    --sidebar: #0b143d;
+    --sidebar-foreground: #ffffff;
+
+    /* A vibrant Indigo-Slate for the active/selected menu item */
+    /* This provides a clear "pop" against the dark background */
+    --sidebar-primary: #3b4ba0;
+    --sidebar-primary-foreground: #ffffff;
+
+    /* A subtle lift for hover states - slightly lighter than the base */
+    --sidebar-accent: #1a2452;
+    --sidebar-accent-foreground: #ffffff;
+
+    /* A very fine divider color to keep the UI crisp */
+    --sidebar-border: #1e2959;
+
+    /* Focus ring derived from the primary indigo with slight transparency */
+    --sidebar-ring: #4f5eb1;
 }
 
 @layer base {
