@@ -1,6 +1,13 @@
 description = "Generates a Git commit message based on staged changes."
 prompt = """
-Please generate a Conventional Commit message based on the following git diff:
+Please
+use the following command to stage the changes: 
+
+```
+!{git add .}
+
+```
+Then generate a Conventional Commit message based on the following git diff:
 
 ```diff
 !{git diff --staged}

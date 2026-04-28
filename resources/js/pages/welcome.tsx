@@ -416,6 +416,7 @@ import AnimatedBackground from '@/components/animated-background';
 import { GENDER_DESKS, HOTLINES, NAV_ITEMS } from '@/constants/constants';
 import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
 import { Link } from '@inertiajs/react';
+import { reporterReport } from '@/routes';
 
 const ScrollReveal: React.FC<{
     children: React.ReactNode;
@@ -622,6 +623,7 @@ const Welcome: React.FC = () => {
                             <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
                                 <Link
                                     prefetch
+                                    href={reporterReport()}
                                     className="group flex w-full flex-shrink-0 cursor-pointer items-center justify-center gap-3 rounded-2xl bg-[#f8fafc] px-12 py-6 text-xl font-black text-[#020617] shadow-[0_0_50px_rgba(248,250,252,0.15)] transition-all hover:bg-[#3b82f6] hover:text-[#f8fafc] active:scale-95 sm:w-auto"
                                 >
                                     Start Secure Report
@@ -818,6 +820,7 @@ const Welcome: React.FC = () => {
                         </div>
                         <Link
                             prefetch
+                            href={reporterReport()}
                             className="group cursor-pointer rounded-[32px] bg-[#f8fafc] px-16 py-8 text-3xl font-black text-[#020617] shadow-[0_0_80px_rgba(59,130,246,0.3)] transition-all hover:scale-110 hover:bg-[#3b82f6] hover:text-[#f8fafc] active:scale-95"
                         >
                             Report Now

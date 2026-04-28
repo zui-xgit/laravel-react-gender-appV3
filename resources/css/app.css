@@ -96,25 +96,23 @@
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.87 0 0); */
 
-    /* custom */
-    /* A very clean, off-white with a hint of slate-blue */
-    --sidebar: oklch(0.985 0.002 247.858);
-    --sidebar-foreground: oklch(
-        0.208 0.042 265.755
-    ); /* Using your dark slate for text */
+    /* custom: I changed the sidebar colors(JUST LIKE DARK MODE)  (they came from #0F172A) */
+    /* #0F172A equivalent in oklch is approximately oklch(0.208 0.042 265.755) */
+    --sidebar: oklch(0.208 0.042 265.755);
+    --sidebar-foreground: oklch(0.985 0 0); /* Keep clean white */
 
     --sidebar-primary: oklch(
-        0.208 0.042 265.755
-    ); /* High contrast dark for primary actions */
+        0.488 0.162 255.608
+    ); /* A nice Slate/Indigo primary */
     --sidebar-primary-foreground: oklch(0.985 0 0);
 
     --sidebar-accent: oklch(
-        0.951 0.006 252.541
-    ); /* Soft grayish-blue for hover states */
-    --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
+        0.279 0.041 260.031
+    ); /* Slightly lighter slate for hover */
+    --sidebar-accent-foreground: oklch(0.985 0 0);
 
-    --sidebar-border: oklch(0.92 0.004 250);
-    --sidebar-ring: oklch(0.439 0 0);
+    --sidebar-border: oklch(0.279 0.041 260.031);
+    --sidebar-ring: oklch(0.439 0 0.01 260);
 }
 
 .dark {
