@@ -63,6 +63,7 @@ interface StepperFormState {
     reportPreferenceContinue: boolean;
     isCaseSubmitted: boolean;
 
+    setCurrentStep: (value: 1 | 2 | 3 | 4 | 5) => void;
     setReportPreferenceContinue: (value: boolean) => void;
     setAnonymous: (value: boolean) => void;
     setErrors: (newErrors: Partial<Record<keyof FormData, string>>) => void;
@@ -141,8 +142,12 @@ export const useStepperFormStore = create<StepperFormState>()(
             formData: initialFormData,
             errors: {},
             isCaseSubmitted: false,
-
             reportPreferenceContinue: false,
+
+            setCurrentStep: (value) => {
+                set({ currentStep: value });
+            },
+
             setReportPreferenceContinue: (value: boolean) => {
                 set({ reportPreferenceContinue: value });
             },

@@ -13,18 +13,39 @@ import {
 } from '@/components/reui/stepper';
 
 import { Button } from '@/components/ui/button';
-import { Step1 } from '@/components/reporter/stepper/step1';
 import { AnonymousCheck } from '@/components/reporter/stepper/anonymous-check';
+import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
+import { Step2 } from '@/components/reporter/stepper/step2';
+import { Step3 } from '@/components/reporter/stepper/step3';
+import { Step4 } from '@/components/reporter/stepper/step4';
+import { Step5 } from '@/components/reporter/stepper/step5';
+import { Step6 } from '@/components/reporter/stepper/step6';
 
-const steps = [1, 2, 3, 4];
+const steps = [1, 2, 3, 4, 5, 6];
 
 const Report = () => {
-    const [currentStep, setCurrentStep] = useState(2);
+    const currentStep = useStepperFormStore((state) => state.currentStep);
+    const setCurrentStep = useStepperFormStore((state) => state.setCurrentStep);
+    const previousStep = useStepperFormStore((state) => state.previousStep);
+    const nextStep = useStepperFormStore((state) => state.nextStep);
+
+    // next step implementation
+    const isAnonymous = useStepperFormStore((state) => state.isAnonymous);
+    const setReportPreferenceContinue = useStepperFormStore(
+        (state) => state.setReportPreferenceContinue,
+    );
+    const canContinue = isAnonymous !== null;
+
+    const handleContinue = () => {
+        setReportPreferenceContinue(true);
+    };
+
+    // TEST USE EFFECT
 
     return (
         <Stepper
             value={currentStep}
-            onValueChange={setCurrentStep}
+            onValueChange={setCurrentStep as any}
             className="w-full space-y-8 px-4 py-2"
         >
             <StepperNav>
@@ -50,9 +71,10 @@ const Report = () => {
                         value={step}
                     >
                         {step === 1 && <AnonymousCheck />}
-                        {step === 2 && <p>step 2</p>}
-                        {step === 3 && <p>step 3</p>}
-                        {step === 4 && <p>step 4</p>}
+                        {step === 2 && <Step2 />}
+                        {step === 3 && <Step3 />}
+                        {step === 5 && <Step5 />}
+                        {step === 6 && <Step6 />}
                     </StepperContent>
                 ))}
             </StepperPanel>
@@ -61,14 +83,17 @@ const Report = () => {
             <div className="flex items-center justify-between gap-2.5">
                 <Button
                     variant="outline"
-                    onClick={() => setCurrentStep((prev) => prev - 1)}
+                    onClick={() => previousStep()}
+                    className="cursor-pointer disabled:pointer-events-auto disabled:cursor-not-allowed"
                     disabled={currentStep === 1}
                 >
                     Previous
                 </Button>
+
                 <Button
                     variant="outline"
-                    onClick={() => setCurrentStep((prev) => prev + 1)}
+                    onClick={() => nextStep()}
+                    className="cursor-pointer"
                     disabled={currentStep === steps.length}
                 >
                     Next

@@ -1,50 +1,68 @@
 // import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
-// import { Users } from 'lucide-react';
+// import { User } from 'lucide-react';
 
-// export const Step3 = () => {
+// export const Step2 = () => {
 //     const { formData, errors, updateFormData } = useStepperFormStore();
 
 //     return (
 //         <div className="animate-reveal space-y-6 sm:space-y-8">
 //             <div className="flex items-center gap-3 sm:gap-5">
-//                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-[#ef4444] sm:h-14 sm:w-14">
-//                     <Users size={20} className="sm:h-6 sm:w-6" />
+//                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-[#00A896] sm:h-14 sm:w-14">
+//                     <User size={20} className="sm:h-6 sm:w-6" />
 //                 </div>
 //                 <div className="min-w-0">
-//                     <h2 className="text-lg font-bold tracking-tight break-words sm:text-xl md:text-3xl">Accused Details</h2>
-//                     <p className="mt-1 text-xs text-white/40 sm:text-sm">Person responsible for the incident.</p>
+//                     <h2 className="text-lg font-bold tracking-tight break-words sm:text-xl md:text-3xl">Victim Information</h2>
+//                     <p className="mt-1 text-xs text-white/40 sm:text-sm">Details of the person affected.</p>
 //                 </div>
 //             </div>
 
 //             <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2">
-//                 {/* Name */}
+//                 {/* Victim Name */}
 //                 <div className="min-w-0 md:col-span-1">
-//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Name of the Accused</label>
+//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Victim Full Name</label>
 //                     <input
-//                         value={formData.accusedName}
-//                         onChange={(e) => updateFormData({ accusedName: e.target.value })}
+//                         type="text"
+//                         value={formData.victimName}
+//                         onChange={(e) => updateFormData({ victimName: e.target.value })}
 //                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
-//                             errors.accusedName
+//                             errors.victimName
 //                                 ? 'border-red-500 bg-white/10 text-white'
 //                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
 //                         }`}
 //                         placeholder="Enter full name"
 //                     />
-//                     {errors.accusedName && <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedName}</p>}
+//                     {errors.victimName && <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.victimName}</p>}
 //                 </div>
 
-//                 {/* accused Sex */}
+//                 {/* Victim Title */}
+//                 <div className="min-w-0 md:col-span-1">
+//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Title</label>
+//                     <input
+//                         type="text"
+//                         value={formData.victimTitle}
+//                         onChange={(e) => updateFormData({ victimTitle: e.target.value })}
+//                         placeholder="Mr. / Ms. / Prof."
+//                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
+//                             errors.victimTitle
+//                                 ? 'border-red-500 bg-white/10 text-white'
+//                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
+//                         }`}
+//                     />
+//                     {errors.victimTitle && <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.victimTitle}</p>}
+//                 </div>
+
+//                 {/* Victim Sex */}
 //                 <div className="min-w-0 md:col-span-1">
 //                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Sex</label>
 //                     <select
-//                         value={formData.accusedSex ?? ''}
+//                         value={formData.victimSex ?? ''}
 //                         onChange={(e) =>
 //                             updateFormData({
-//                                 accusedSex: e.target.value as 'male' | 'female' | 'prefer_not_to_say' | null,
+//                                 victimSex: e.target.value as 'male' | 'female' | 'prefer_not_to_say' | null,
 //                             })
 //                         }
 //                         className={`w-full min-w-0 cursor-pointer appearance-none rounded-xl border px-4 py-2.5 text-sm text-white transition-all focus:outline-none ${
-//                             errors.accusedSex ? 'border-red-500 bg-white/10 text-white' : 'border-white/10 bg-white/5 focus:border-[#00A896]'
+//                             errors.victimSex ? 'border-red-500 bg-white/10 text-white' : 'border-white/10 bg-white/5 focus:border-[#00A896]'
 //                         }`}
 //                         style={{
 //                             backgroundColor: 'rgba(255,255,255,0.05)', // keep the theme card style
@@ -64,135 +82,129 @@
 //                             Prefer not to say
 //                         </option>
 //                     </select>
-//                     {errors.accusedSex && <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedSex}</p>}
+//                     {errors.victimSex && <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.victimSex}</p>}
 //                 </div>
 
-//                 {/* Title */}
-//                 <div className="min-w-0 md:col-span-1">
-//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Title</label>
-//                     <input
-//                         value={formData.accusedTitle}
-//                         onChange={(e) => updateFormData({ accusedTitle: e.target.value })}
-//                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
-//                             errors.accusedTitle
-//                                 ? 'border-red-500 bg-white/10 text-white'
-//                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
-//                         }`}
-//                         placeholder="Mr. / Ms. / Prof."
-//                     />
-//                     {errors.accusedTitle && (
-//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedTitle}</p>
-//                     )}
-//                 </div>
-
-//                 {/* Age */}
+//                 {/* Victim Age */}
 //                 <div className="min-w-0 md:col-span-1">
 //                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Age</label>
 //                     <input
 //                         type="number"
-//                         value={formData.accusedAge ?? ''}
-//                         onChange={(e) => updateFormData({ accusedAge: Number(e.target.value) })}
+//                         value={formData.victimAge ?? ''}
+//                         onChange={(e) => updateFormData({ victimAge: Number(e.target.value) })}
 //                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
-//                             errors.accusedAge
+//                             errors.victimAge
 //                                 ? 'border-red-500 bg-white/10 text-white'
 //                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
 //                         }`}
-//                         placeholder="Enter age"
 //                     />
-//                     {errors.accusedAge && <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedAge}</p>}
+//                     {errors.victimAge && <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.victimAge}</p>}
 //                 </div>
 
-//                 {/* Phone */}
+//                 {/* Victim Phone */}
 //                 <div className="min-w-0 md:col-span-1">
-//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Phone Number</label>
+//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Phone number</label>
 //                     <input
 //                         type="number"
-//                         value={formData.accusedPhone ?? ''}
-//                         onChange={(e) => updateFormData({ accusedPhone: e.target.value })}
+//                         value={formData.victimPhone}
+//                         onChange={(e) => updateFormData({ victimPhone: e.target.value })}
 //                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
-//                             errors.accusedPhone
+//                             errors.victimPhone
 //                                 ? 'border-red-500 bg-white/10 text-white'
 //                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
 //                         }`}
 //                         placeholder="+255..."
 //                     />
-//                     {errors.accusedPhone && (
-//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedPhone}</p>
-//                     )}
+//                     {errors.victimPhone && <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.victimPhone}</p>}
 //                 </div>
 
-//                 {/* Email */}
+//                 {/* Victim Email */}
 //                 <div className="min-w-0 md:col-span-1">
 //                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Email</label>
 //                     <input
 //                         type="email"
-//                         value={formData.accusedEmail}
-//                         onChange={(e) => updateFormData({ accusedEmail: e.target.value })}
+//                         value={formData.victimEmail}
+//                         onChange={(e) => updateFormData({ victimEmail: e.target.value })}
 //                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
-//                             errors.accusedEmail
+//                             errors.victimEmail
 //                                 ? 'border-red-500 bg-white/10 text-white'
 //                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
 //                         }`}
-//                         placeholder="Enter email"
+//                         placeholder="example@email.com"
 //                     />
-//                     {errors.accusedEmail && (
-//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedEmail}</p>
-//                     )}
+//                     {errors.victimEmail && <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.victimEmail}</p>}
 //                 </div>
 
-//                 {/* Education */}
+//                 {/* Education Level */}
 //                 <div className="min-w-0 md:col-span-1">
-//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Education</label>
+//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Education Level</label>
 //                     <input
-//                         value={formData.accusedEducation}
-//                         onChange={(e) => updateFormData({ accusedEducation: e.target.value })}
+//                         type="text"
+//                         value={formData.victimEducation}
+//                         onChange={(e) => updateFormData({ victimEducation: e.target.value })}
 //                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
-//                             errors.accusedEducation
+//                             errors.victimEducation
 //                                 ? 'border-red-500 bg-white/10 text-white'
 //                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
 //                         }`}
-//                         placeholder="Specify education"
+//                         placeholder="Bachelor / Masters / PhD"
 //                     />
-//                     {errors.accusedEducation && (
-//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedEducation}</p>
+//                     {errors.victimEducation && (
+//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.victimEducation}</p>
 //                     )}
 //                 </div>
 
-//                 {/* Residence */}
+//                 {/* Primary Residence */}
 //                 <div className="min-w-0 md:col-span-1">
-//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Residence</label>
+//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Primary Residence</label>
 //                     <input
-//                         value={formData.accusedResidence}
-//                         onChange={(e) => updateFormData({ accusedResidence: e.target.value })}
+//                         type="text"
+//                         value={formData.victimResidence}
+//                         onChange={(e) => updateFormData({ victimResidence: e.target.value })}
 //                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
-//                             errors.accusedResidence
+//                             errors.victimResidence
 //                                 ? 'border-red-500 bg-white/10 text-white'
 //                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
 //                         }`}
-//                         placeholder="Specify residence"
 //                     />
-//                     {errors.accusedResidence && (
-//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedResidence}</p>
+//                     {errors.victimResidence && (
+//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.victimResidence}</p>
 //                     )}
 //                 </div>
 
-//                 {/* Workplace / Program */}
+//                 {/* Disability */}
+//                 <div className="min-w-0 md:col-span-1">
+//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Disability (State)</label>
+//                     <input
+//                         type="text"
+//                         value={formData.victimDisability}
+//                         onChange={(e) => updateFormData({ victimDisability: e.target.value })}
+//                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
+//                             errors.victimDisability
+//                                 ? 'border-red-500 bg-white/10 text-white'
+//                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
+//                         }`}
+//                     />
+//                     {errors.victimDisability && (
+//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.victimDisability}</p>
+//                     )}
+//                 </div>
+
+//                 {/* Workplace / Unit */}
 //                 <div className="min-w-0 md:col-span-2">
-//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">
-//                         Program (Bachelor/Masters/PHD) or School/Collage/ Directorate/Unit/Work place
-//                     </label>
-//                     <input
-//                         value={formData.accusedWorkplace}
-//                         onChange={(e) => updateFormData({ accusedWorkplace: e.target.value })}
-//                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
-//                             errors.accusedWorkplace
+//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Workplace / Unit</label>
+//                     <textarea
+//                         rows={3}
+//                         value={formData.victimWorkplace}
+//                         onChange={(e) => updateFormData({ victimWorkplace: e.target.value })}
+//                         className={`w-full min-w-0 resize-y rounded-xl border px-4 py-3 text-sm transition-all focus:outline-none ${
+//                             errors.victimWorkplace
 //                                 ? 'border-red-500 bg-white/10 text-white'
 //                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
 //                         }`}
-//                         placeholder="Specify workplace"
 //                     />
-//                     {errors.accusedWorkplace && (
-//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedWorkplace}</p>
+//                     {errors.victimWorkplace && (
+//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.victimWorkplace}</p>
 //                     )}
 //                 </div>
 //             </div>
@@ -201,9 +213,10 @@
 // };
 
 import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
-import { Users } from 'lucide-react';
+import { User } from 'lucide-react';
 import { FormInput } from '../form-input';
 import { FormSelect } from '../form-select';
+import { FormTextarea } from '../form-text-area';
 
 export const Step3 = () => {
     const { formData, errors, updateFormData } = useStepperFormStore();
@@ -219,92 +232,128 @@ export const Step3 = () => {
         <div className="animate-reveal space-y-6 sm:space-y-8">
             <div className="flex items-center gap-3 sm:gap-5">
                 <div className="border-subtle bg-surface flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border text-[var(--accent-primary)] sm:h-14 sm:w-14">
-                    <Users size={20} className="sm:h-6 sm:w-6" />
+                    <User size={20} className="sm:h-6 sm:w-6" />
                 </div>
                 <div className="min-w-0">
-                    <h2 className="text-primary text-lg font-bold tracking-tight break-words sm:text-xl md:text-3xl">Accused Details</h2>
-                    <p className="text-secondary mt-1 text-xs sm:text-sm">Person responsible for the incident.</p>
+                    <h2 className="text-lg font-bold tracking-tight break-words text-primary sm:text-xl md:text-3xl">
+                        Victim Information
+                    </h2>
+                    <p className="mt-1 text-xs text-secondary sm:text-sm">
+                        Details of the person affected.
+                    </p>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2">
                 <FormInput
-                    label="Name of the Accused"
-                    value={formData.accusedName}
-                    onChange={(e) => updateFormData({ accusedName: e.target.value })}
-                    placeholder="Enter full name"
-                    error={errors.accusedName}
-                />
-
-                <FormSelect
-                    label="Sex"
-                    value={formData.accusedSex ?? ''}
+                    label="Victim Full Name"
+                    type="text"
+                    value={formData.victimName}
                     onChange={(e) =>
-                        updateFormData({
-                            accusedSex: e.target.value as 'male' | 'female' | 'prefer_not_to_say' | null,
-                        })
+                        updateFormData({ victimName: e.target.value })
                     }
-                    options={sexOptions}
-                    error={errors.accusedSex}
+                    placeholder="Enter full name"
+                    error={errors.victimName}
                 />
 
                 <FormInput
                     label="Title"
-                    value={formData.accusedTitle}
-                    onChange={(e) => updateFormData({ accusedTitle: e.target.value })}
+                    type="text"
+                    value={formData.victimTitle}
+                    onChange={(e) =>
+                        updateFormData({ victimTitle: e.target.value })
+                    }
                     placeholder="Mr. / Ms. / Prof."
-                    error={errors.accusedTitle}
+                    error={errors.victimTitle}
+                />
+
+                <FormSelect
+                    label="Sex"
+                    value={formData.victimSex ?? ''}
+                    onChange={(e) =>
+                        updateFormData({
+                            victimSex: e.target.value as
+                                | 'male'
+                                | 'female'
+                                | 'prefer_not_to_say'
+                                | null,
+                        })
+                    }
+                    options={sexOptions}
+                    error={errors.victimSex}
                 />
 
                 <FormInput
                     label="Age"
                     type="number"
-                    value={formData.accusedAge ?? ''}
-                    onChange={(e) => updateFormData({ accusedAge: Number(e.target.value) })}
-                    placeholder="Enter age"
-                    error={errors.accusedAge}
+                    value={formData.victimAge ?? ''}
+                    onChange={(e) =>
+                        updateFormData({ victimAge: Number(e.target.value) })
+                    }
+                    error={errors.victimAge}
                 />
 
                 <FormInput
-                    label="Phone Number"
+                    label="Phone number"
                     type="number"
-                    value={formData.accusedPhone ?? ''}
-                    onChange={(e) => updateFormData({ accusedPhone: e.target.value })}
+                    value={formData.victimPhone}
+                    onChange={(e) =>
+                        updateFormData({ victimPhone: e.target.value })
+                    }
                     placeholder="+255..."
-                    error={errors.accusedPhone}
+                    error={errors.victimPhone}
                 />
 
                 <FormInput
                     label="Email"
                     type="email"
-                    value={formData.accusedEmail}
-                    onChange={(e) => updateFormData({ accusedEmail: e.target.value })}
-                    placeholder="Enter email"
-                    error={errors.accusedEmail}
+                    value={formData.victimEmail}
+                    onChange={(e) =>
+                        updateFormData({ victimEmail: e.target.value })
+                    }
+                    placeholder="example@email.com"
+                    error={errors.victimEmail}
                 />
 
                 <FormInput
-                    label="Education"
-                    value={formData.accusedEducation}
-                    onChange={(e) => updateFormData({ accusedEducation: e.target.value })}
-                    placeholder="Specify education"
-                    error={errors.accusedEducation}
+                    label="Education Level"
+                    type="text"
+                    value={formData.victimEducation}
+                    onChange={(e) =>
+                        updateFormData({ victimEducation: e.target.value })
+                    }
+                    placeholder="Bachelor / Masters / PhD"
+                    error={errors.victimEducation}
                 />
 
                 <FormInput
-                    label="Residence"
-                    value={formData.accusedResidence}
-                    onChange={(e) => updateFormData({ accusedResidence: e.target.value })}
-                    placeholder="Specify residence"
-                    error={errors.accusedResidence}
+                    label="Primary Residence"
+                    type="text"
+                    value={formData.victimResidence}
+                    onChange={(e) =>
+                        updateFormData({ victimResidence: e.target.value })
+                    }
+                    error={errors.victimResidence}
                 />
 
                 <FormInput
-                    label="Program (Bachelor/Masters/PHD) or School/Collage/ Directorate/Unit/Work place"
-                    value={formData.accusedWorkplace}
-                    onChange={(e) => updateFormData({ accusedWorkplace: e.target.value })}
-                    placeholder="Specify workplace"
-                    error={errors.accusedWorkplace}
+                    label="Disability (State)"
+                    type="text"
+                    value={formData.victimDisability}
+                    onChange={(e) =>
+                        updateFormData({ victimDisability: e.target.value })
+                    }
+                    error={errors.victimDisability}
+                />
+
+                <FormTextarea
+                    label="Workplace / Unit"
+                    rows={3}
+                    value={formData.victimWorkplace}
+                    onChange={(e) =>
+                        updateFormData({ victimWorkplace: e.target.value })
+                    }
+                    error={errors.victimWorkplace}
                     spanFull
                 />
             </div>

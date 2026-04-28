@@ -1,213 +1,198 @@
 // import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
-// import { ClipboardList } from 'lucide-react';
+// import { Users } from 'lucide-react';
 
-// export const Step4 = () => {
+// export const Step3 = () => {
 //     const { formData, errors, updateFormData } = useStepperFormStore();
 
 //     return (
 //         <div className="animate-reveal space-y-6 sm:space-y-8">
 //             <div className="flex items-center gap-3 sm:gap-5">
-//                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-[#00A896] sm:h-14 sm:w-14">
-//                     <ClipboardList size={20} className="sm:h-6 sm:w-6" />
+//                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-[#ef4444] sm:h-14 sm:w-14">
+//                     <Users size={20} className="sm:h-6 sm:w-6" />
 //                 </div>
 //                 <div className="min-w-0">
-//                     <h2 className="text-lg font-bold tracking-tight break-words sm:text-xl md:text-3xl">Incident Details</h2>
-//                     <p className="mt-1 text-xs text-white/40 sm:text-sm">Detailed account of the occurrence.</p>
+//                     <h2 className="text-lg font-bold tracking-tight break-words sm:text-xl md:text-3xl">Accused Details</h2>
+//                     <p className="mt-1 text-xs text-white/40 sm:text-sm">Person responsible for the incident.</p>
 //                 </div>
 //             </div>
 
 //             <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2">
-//                 {/* Date & Time */}
-//                 <div className="grid min-w-0 grid-cols-2 gap-4 sm:gap-6 md:col-span-2">
-//                     <div className="min-w-0">
-//                         <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Date of incident</label>
-//                         <input
-//                             type="date"
-//                             value={formData.incidentDate ?? ''}
-//                             onChange={(e) => updateFormData({ incidentDate: e.target.value })}
-//                             className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
-//                                 errors.incidentDate
-//                                     ? 'border-red-500 bg-white/10 text-white'
-//                                     : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
-//                             }`}
-//                         />
-//                         {errors.incidentDate && (
-//                             <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.incidentDate}</p>
-//                         )}
-//                     </div>
-//                     <div className="min-w-0">
-//                         <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Time of incident</label>
-//                         <input
-//                             type="time"
-//                             value={formData.incidentTime ?? ''}
-//                             onChange={(e) => updateFormData({ incidentTime: e.target.value })}
-//                             className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
-//                                 errors.incidentTime
-//                                     ? 'border-red-500 bg-white/10 text-white'
-//                                     : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
-//                             }`}
-//                         />
-//                         {errors.incidentTime && (
-//                             <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.incidentTime}</p>
-//                         )}
-//                     </div>
-//                 </div>
-
-//                 {/* Location */}
+//                 {/* Name */}
 //                 <div className="min-w-0 md:col-span-1">
-//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Where did incident occur</label>
+//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Name of the Accused</label>
 //                     <input
-//                         value={formData.incidentLocation ?? ''}
-//                         onChange={(e) => updateFormData({ incidentLocation: e.target.value })}
+//                         value={formData.accusedName}
+//                         onChange={(e) => updateFormData({ accusedName: e.target.value })}
 //                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
-//                             errors.incidentLocation
+//                             errors.accusedName
 //                                 ? 'border-red-500 bg-white/10 text-white'
 //                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
 //                         }`}
-//                         placeholder="Specify location"
+//                         placeholder="Enter full name"
 //                     />
-//                     {errors.incidentLocation && (
-//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.incidentLocation}</p>
-//                     )}
+//                     {errors.accusedName && <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedName}</p>}
 //                 </div>
 
+//                 {/* accused Sex */}
 //                 <div className="min-w-0 md:col-span-1">
+//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Sex</label>
+//                     <select
+//                         value={formData.accusedSex ?? ''}
+//                         onChange={(e) =>
+//                             updateFormData({
+//                                 accusedSex: e.target.value as 'male' | 'female' | 'prefer_not_to_say' | null,
+//                             })
+//                         }
+//                         className={`w-full min-w-0 cursor-pointer appearance-none rounded-xl border px-4 py-2.5 text-sm text-white transition-all focus:outline-none ${
+//                             errors.accusedSex ? 'border-red-500 bg-white/10 text-white' : 'border-white/10 bg-white/5 focus:border-[#00A896]'
+//                         }`}
+//                         style={{
+//                             backgroundColor: 'rgba(255,255,255,0.05)', // keep the theme card style
+//                             color: 'white', // ensure text is visible
+//                         }}
+//                     >
+//                         <option value="" className="bg-[#0B0B0B] text-white">
+//                             Select
+//                         </option>
+//                         <option value="male" className="bg-[#0B0B0B] text-white">
+//                             Male
+//                         </option>
+//                         <option value="female" className="bg-[#0B0B0B] text-white">
+//                             Female
+//                         </option>
+//                         <option value="prefer_not_to_say" className="bg-[#0B0B0B] text-white">
+//                             Prefer not to say
+//                         </option>
+//                     </select>
+//                     {errors.accusedSex && <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedSex}</p>}
+//                 </div>
+
+//                 {/* Title */}
+//                 <div className="min-w-0 md:col-span-1">
+//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Title</label>
+//                     <input
+//                         value={formData.accusedTitle}
+//                         onChange={(e) => updateFormData({ accusedTitle: e.target.value })}
+//                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
+//                             errors.accusedTitle
+//                                 ? 'border-red-500 bg-white/10 text-white'
+//                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
+//                         }`}
+//                         placeholder="Mr. / Ms. / Prof."
+//                     />
+//                     {errors.accusedTitle && (
+//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedTitle}</p>
+//                     )}
+//                 </div>
+
+//                 {/* Age */}
+//                 <div className="min-w-0 md:col-span-1">
+//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Age</label>
+//                     <input
+//                         type="number"
+//                         value={formData.accusedAge ?? ''}
+//                         onChange={(e) => updateFormData({ accusedAge: Number(e.target.value) })}
+//                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
+//                             errors.accusedAge
+//                                 ? 'border-red-500 bg-white/10 text-white'
+//                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
+//                         }`}
+//                         placeholder="Enter age"
+//                     />
+//                     {errors.accusedAge && <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedAge}</p>}
+//                 </div>
+
+//                 {/* Phone */}
+//                 <div className="min-w-0 md:col-span-1">
+//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Phone Number</label>
+//                     <input
+//                         type="number"
+//                         value={formData.accusedPhone ?? ''}
+//                         onChange={(e) => updateFormData({ accusedPhone: e.target.value })}
+//                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
+//                             errors.accusedPhone
+//                                 ? 'border-red-500 bg-white/10 text-white'
+//                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
+//                         }`}
+//                         placeholder="+255..."
+//                     />
+//                     {errors.accusedPhone && (
+//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedPhone}</p>
+//                     )}
+//                 </div>
+
+//                 {/* Email */}
+//                 <div className="min-w-0 md:col-span-1">
+//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Email</label>
+//                     <input
+//                         type="email"
+//                         value={formData.accusedEmail}
+//                         onChange={(e) => updateFormData({ accusedEmail: e.target.value })}
+//                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
+//                             errors.accusedEmail
+//                                 ? 'border-red-500 bg-white/10 text-white'
+//                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
+//                         }`}
+//                         placeholder="Enter email"
+//                     />
+//                     {errors.accusedEmail && (
+//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedEmail}</p>
+//                     )}
+//                 </div>
+
+//                 {/* Education */}
+//                 <div className="min-w-0 md:col-span-1">
+//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Education</label>
+//                     <input
+//                         value={formData.accusedEducation}
+//                         onChange={(e) => updateFormData({ accusedEducation: e.target.value })}
+//                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
+//                             errors.accusedEducation
+//                                 ? 'border-red-500 bg-white/10 text-white'
+//                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
+//                         }`}
+//                         placeholder="Specify education"
+//                     />
+//                     {errors.accusedEducation && (
+//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedEducation}</p>
+//                     )}
+//                 </div>
+
+//                 {/* Residence */}
+//                 <div className="min-w-0 md:col-span-1">
+//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Residence</label>
+//                     <input
+//                         value={formData.accusedResidence}
+//                         onChange={(e) => updateFormData({ accusedResidence: e.target.value })}
+//                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
+//                             errors.accusedResidence
+//                                 ? 'border-red-500 bg-white/10 text-white'
+//                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
+//                         }`}
+//                         placeholder="Specify residence"
+//                     />
+//                     {errors.accusedResidence && (
+//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedResidence}</p>
+//                     )}
+//                 </div>
+
+//                 {/* Workplace / Program */}
+//                 <div className="min-w-0 md:col-span-2">
 //                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">
-//                         Exact location of the incident
+//                         Program (Bachelor/Masters/PHD) or School/Collage/ Directorate/Unit/Work place
 //                     </label>
 //                     <input
-//                         value={formData.incidentExactLocation ?? ''}
-//                         onChange={(e) => updateFormData({ incidentExactLocation: e.target.value })}
+//                         value={formData.accusedWorkplace}
+//                         onChange={(e) => updateFormData({ accusedWorkplace: e.target.value })}
 //                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
-//                             errors.incidentExactLocation
+//                             errors.accusedWorkplace
 //                                 ? 'border-red-500 bg-white/10 text-white'
 //                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
 //                         }`}
-//                         placeholder="Specify exact location"
+//                         placeholder="Specify workplace"
 //                     />
-//                     {errors.incidentExactLocation && (
-//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.incidentExactLocation}</p>
-//                     )}
-//                 </div>
-
-//                 {/* Cause */}
-//                 <div className="min-w-0 md:col-span-2">
-//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">What was the cause?</label>
-//                     <textarea
-//                         rows={3}
-//                         value={formData.incidentCause ?? ''}
-//                         onChange={(e) => updateFormData({ incidentCause: e.target.value })}
-//                         className={`w-full min-w-0 resize-y rounded-xl border px-4 py-3 text-sm transition-all focus:outline-none ${
-//                             errors.incidentCause
-//                                 ? 'border-red-500 bg-white/10 text-white'
-//                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
-//                         }`}
-//                         placeholder="Describe cause"
-//                     />
-//                     {errors.incidentCause && (
-//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.incidentCause}</p>
-//                     )}
-//                 </div>
-
-//                 {/* How incident happened */}
-//                 <div className="min-w-0 md:col-span-2">
-//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">
-//                         Describe how the incident happened
-//                     </label>
-//                     <textarea
-//                         rows={3}
-//                         value={formData.incidentDescription ?? ''}
-//                         onChange={(e) => updateFormData({ incidentDescription: e.target.value })}
-//                         className={`w-full min-w-0 resize-y rounded-xl border px-4 py-3 text-sm transition-all focus:outline-none ${
-//                             errors.incidentDescription
-//                                 ? 'border-red-500 bg-white/10 text-white'
-//                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
-//                         }`}
-//                         placeholder="Describe incident"
-//                     />
-//                     {errors.incidentDescription && (
-//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.incidentDescription}</p>
-//                     )}
-//                 </div>
-
-//                 {/* Immediate actions */}
-//                 <div className="min-w-0 md:col-span-2">
-//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">
-//                         Describe Immediate actions taken
-//                     </label>
-//                     <textarea
-//                         rows={3}
-//                         value={formData.incidentActions ?? ''}
-//                         onChange={(e) => updateFormData({ incidentActions: e.target.value })}
-//                         className={`w-full min-w-0 resize-y rounded-xl border px-4 py-3 text-sm transition-all focus:outline-none ${
-//                             errors.incidentActions
-//                                 ? 'border-red-500 bg-white/10 text-white'
-//                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
-//                         }`}
-//                         placeholder="Describe immediate actions"
-//                     />
-//                     {errors.incidentActions && (
-//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.incidentActions}</p>
-//                     )}
-//                 </div>
-
-//                 {/* Injury/Disease */}
-//                 <div className="min-w-0 md:col-span-2">
-//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">
-//                         If the incident resulted in an injury or disease, describe it
-//                     </label>
-//                     <textarea
-//                         rows={3}
-//                         value={formData.incidentInjuries ?? ''}
-//                         onChange={(e) => updateFormData({ incidentInjuries: e.target.value })}
-//                         className={`w-full min-w-0 resize-y rounded-xl border px-4 py-3 text-sm transition-all focus:outline-none ${
-//                             errors.incidentInjuries
-//                                 ? 'border-red-500 bg-white/10 text-white'
-//                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
-//                         }`}
-//                         placeholder="Describe injury or disease"
-//                     />
-//                     {errors.incidentInjuries && (
-//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.incidentInjuries}</p>
-//                     )}
-//                 </div>
-
-//                 {/* Assistance */}
-//                 <div className="min-w-0 md:col-span-2">
-//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">
-//                         If injury/disease occurred, describe assistance provided
-//                     </label>
-//                     <textarea
-//                         rows={3}
-//                         value={formData.incidentAssistance ?? ''}
-//                         onChange={(e) => updateFormData({ incidentAssistance: e.target.value })}
-//                         className={`w-full min-w-0 resize-y rounded-xl border px-4 py-3 text-sm transition-all focus:outline-none ${
-//                             errors.incidentAssistance
-//                                 ? 'border-red-500 bg-white/10 text-white'
-//                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
-//                         }`}
-//                         placeholder="Describe assistance"
-//                     />
-//                     {errors.incidentAssistance && (
-//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.incidentAssistance}</p>
-//                     )}
-//                 </div>
-
-//                 {/* Who was involved */}
-//                 <div className="min-w-0 md:col-span-2">
-//                     <label className="mb-2 block text-[10px] font-black tracking-widest text-white/40 uppercase">Who was involved?</label>
-//                     <input
-//                         value={formData.incidentInvolved ?? ''}
-//                         onChange={(e) => updateFormData({ incidentInvolved: e.target.value })}
-//                         className={`w-full min-w-0 rounded-xl border px-4 py-2.5 text-sm transition-all focus:outline-none ${
-//                             errors.incidentInvolved
-//                                 ? 'border-red-500 bg-white/10 text-white'
-//                                 : 'border-white/10 bg-white/5 text-white focus:border-[#00A896]'
-//                         }`}
-//                         placeholder="Specify involved parties"
-//                     />
-//                     {errors.incidentInvolved && (
-//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.incidentInvolved}</p>
+//                     {errors.accusedWorkplace && (
+//                         <p className="mt-2 text-[10px] font-black tracking-widest text-red-500 uppercase">{errors.accusedWorkplace}</p>
 //                     )}
 //                 </div>
 //             </div>
@@ -216,115 +201,134 @@
 // };
 
 import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
-import { ClipboardList } from 'lucide-react';
+import { Users } from 'lucide-react';
 import { FormInput } from '../form-input';
-import { FormTextarea } from '../form-text-area';
+import { FormSelect } from '../form-select';
+
 export const Step4 = () => {
     const { formData, errors, updateFormData } = useStepperFormStore();
+
+    const sexOptions = [
+        { value: '', label: 'Select' },
+        { value: 'male', label: 'Male' },
+        { value: 'female', label: 'Female' },
+        { value: 'prefer_not_to_say', label: 'Prefer not to say' },
+    ];
 
     return (
         <div className="animate-reveal space-y-6 sm:space-y-8">
             <div className="flex items-center gap-3 sm:gap-5">
                 <div className="border-subtle bg-surface flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border text-[var(--accent-primary)] sm:h-14 sm:w-14">
-                    <ClipboardList size={20} className="sm:h-6 sm:w-6" />
+                    <Users size={20} className="sm:h-6 sm:w-6" />
                 </div>
                 <div className="min-w-0">
-                    <h2 className="text-primary text-lg font-bold tracking-tight break-words sm:text-xl md:text-3xl">Incident Details</h2>
-                    <p className="text-secondary mt-1 text-xs sm:text-sm">Detailed account of the occurrence.</p>
+                    <h2 className="text-lg font-bold tracking-tight break-words text-primary sm:text-xl md:text-3xl">
+                        Accused Details
+                    </h2>
+                    <p className="mt-1 text-xs text-secondary sm:text-sm">
+                        Person responsible for the incident.
+                    </p>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2">
-                {/* Date & Time */}
-                <div className="grid min-w-0 grid-cols-2 gap-4 sm:gap-6 md:col-span-2">
-                    <FormInput
-                        label="Date of incident"
-                        type="date"
-                        value={formData.incidentDate ?? ''}
-                        onChange={(e) => updateFormData({ incidentDate: e.target.value })}
-                        error={errors.incidentDate}
-                    />
-                    <FormInput
-                        label="Time of incident"
-                        type="time"
-                        value={formData.incidentTime ?? ''}
-                        onChange={(e) => updateFormData({ incidentTime: e.target.value })}
-                        error={errors.incidentTime}
-                    />
-                </div>
-
                 <FormInput
-                    label="Where did incident occur"
-                    value={formData.incidentLocation ?? ''}
-                    onChange={(e) => updateFormData({ incidentLocation: e.target.value })}
-                    placeholder="Specify location"
-                    error={errors.incidentLocation}
+                    label="Name of the Accused"
+                    value={formData.accusedName}
+                    onChange={(e) =>
+                        updateFormData({ accusedName: e.target.value })
+                    }
+                    placeholder="Enter full name"
+                    error={errors.accusedName}
                 />
 
-                <FormInput
-                    label="Exact location of the incident"
-                    value={formData.incidentExactLocation ?? ''}
-                    onChange={(e) => updateFormData({ incidentExactLocation: e.target.value })}
-                    placeholder="Specify exact location"
-                    error={errors.incidentExactLocation}
-                />
-
-                <FormTextarea
-                    label="What was the cause?"
-                    rows={3}
-                    value={formData.incidentCause ?? ''}
-                    onChange={(e) => updateFormData({ incidentCause: e.target.value })}
-                    placeholder="Describe cause"
-                    error={errors.incidentCause}
-                    spanFull
-                />
-
-                <FormTextarea
-                    label="Describe how the incident happened"
-                    rows={3}
-                    value={formData.incidentDescription ?? ''}
-                    onChange={(e) => updateFormData({ incidentDescription: e.target.value })}
-                    placeholder="Describe incident"
-                    error={errors.incidentDescription}
-                    spanFull
-                />
-
-                <FormTextarea
-                    label="Describe Immediate actions taken"
-                    rows={3}
-                    value={formData.incidentActions ?? ''}
-                    onChange={(e) => updateFormData({ incidentActions: e.target.value })}
-                    placeholder="Describe immediate actions"
-                    error={errors.incidentActions}
-                    spanFull
-                />
-
-                <FormTextarea
-                    label="If the incident resulted in an injury or disease, describe it"
-                    rows={3}
-                    value={formData.incidentInjuries ?? ''}
-                    onChange={(e) => updateFormData({ incidentInjuries: e.target.value })}
-                    placeholder="Describe injury or disease"
-                    error={errors.incidentInjuries}
-                    spanFull
-                />
-
-                <FormTextarea
-                    label="If injury/disease occurred, describe assistance provided"
-                    rows={3}
-                    value={formData.incidentAssistance ?? ''}
-                    onChange={(e) => updateFormData({ incidentAssistance: e.target.value })}
-                    placeholder="Describe assistance"
-                    error={errors.incidentAssistance}
-                    spanFull
+                <FormSelect
+                    label="Sex"
+                    value={formData.accusedSex ?? ''}
+                    onChange={(e) =>
+                        updateFormData({
+                            accusedSex: e.target.value as
+                                | 'male'
+                                | 'female'
+                                | 'prefer_not_to_say'
+                                | null,
+                        })
+                    }
+                    options={sexOptions}
+                    error={errors.accusedSex}
                 />
 
                 <FormInput
-                    label="Who was involved?"
-                    value={formData.incidentInvolved ?? ''}
-                    onChange={(e) => updateFormData({ incidentInvolved: e.target.value })}
-                    placeholder="Specify involved parties"
-                    error={errors.incidentInvolved}
+                    label="Title"
+                    value={formData.accusedTitle}
+                    onChange={(e) =>
+                        updateFormData({ accusedTitle: e.target.value })
+                    }
+                    placeholder="Mr. / Ms. / Prof."
+                    error={errors.accusedTitle}
+                />
+
+                <FormInput
+                    label="Age"
+                    type="number"
+                    value={formData.accusedAge ?? ''}
+                    onChange={(e) =>
+                        updateFormData({ accusedAge: Number(e.target.value) })
+                    }
+                    placeholder="Enter age"
+                    error={errors.accusedAge}
+                />
+
+                <FormInput
+                    label="Phone Number"
+                    type="number"
+                    value={formData.accusedPhone ?? ''}
+                    onChange={(e) =>
+                        updateFormData({ accusedPhone: e.target.value })
+                    }
+                    placeholder="+255..."
+                    error={errors.accusedPhone}
+                />
+
+                <FormInput
+                    label="Email"
+                    type="email"
+                    value={formData.accusedEmail}
+                    onChange={(e) =>
+                        updateFormData({ accusedEmail: e.target.value })
+                    }
+                    placeholder="Enter email"
+                    error={errors.accusedEmail}
+                />
+
+                <FormInput
+                    label="Education"
+                    value={formData.accusedEducation}
+                    onChange={(e) =>
+                        updateFormData({ accusedEducation: e.target.value })
+                    }
+                    placeholder="Specify education"
+                    error={errors.accusedEducation}
+                />
+
+                <FormInput
+                    label="Residence"
+                    value={formData.accusedResidence}
+                    onChange={(e) =>
+                        updateFormData({ accusedResidence: e.target.value })
+                    }
+                    placeholder="Specify residence"
+                    error={errors.accusedResidence}
+                />
+
+                <FormInput
+                    label="Program (Bachelor/Masters/PHD) or School/Collage/ Directorate/Unit/Work place"
+                    value={formData.accusedWorkplace}
+                    onChange={(e) =>
+                        updateFormData({ accusedWorkplace: e.target.value })
+                    }
+                    placeholder="Specify workplace"
+                    error={errors.accusedWorkplace}
                     spanFull
                 />
             </div>

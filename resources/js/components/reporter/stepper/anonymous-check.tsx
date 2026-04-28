@@ -4,18 +4,18 @@ import { ChevronRight, Info, Shield } from 'lucide-react';
 export const AnonymousCheck = () => {
     const isAnonymous = useStepperFormStore((state) => state.isAnonymous);
     const setAnonymous = useStepperFormStore((state) => state.setAnonymous);
-    const setReportPreferenceContinue = useStepperFormStore(
-        (state) => state.setReportPreferenceContinue,
-    );
+    // const setReportPreferenceContinue = useStepperFormStore(
+    //     (state) => state.setReportPreferenceContinue,
+    // );
 
-    const canContinue = isAnonymous !== null;
+    // const canContinue = isAnonymous !== null;
 
-    const handleContinue = () => {
-        setReportPreferenceContinue(true);
-    };
+    // const handleContinue = () => {
+    //     setReportPreferenceContinue(true);
+    // };
 
     return (
-        <div className="h-full min-h-screen w-full overflow-x-hidden px-5 pt-5 transition-all duration-500">
+        <div className="w-full overflow-x-hidden px-5 pt-5 transition-all duration-500">
             <div className="animate-reveal space-y-6 sm:space-y-8">
                 {/* Header */}
                 <div className="flex items-center gap-3 sm:gap-5">
@@ -64,7 +64,7 @@ export const AnonymousCheck = () => {
                         style={
                             isAnonymous === true
                                 ? {
-                                      borderColor: 'var(--accent-primary)',
+                                      borderColor: 'var(--sidebar-primary)',
                                       backgroundColor:
                                           'color-mix(in srgb, var(--accent-primary) 10%, var(--bg-surface))',
                                   }
@@ -93,7 +93,7 @@ export const AnonymousCheck = () => {
                         style={
                             isAnonymous === false
                                 ? {
-                                      borderColor: 'var(--accent-primary)',
+                                      borderColor: 'var(--sidebar-primary)',
                                       backgroundColor:
                                           'color-mix(in srgb, var(--accent-primary) 10%, var(--bg-surface))',
                                   }
@@ -113,46 +113,6 @@ export const AnonymousCheck = () => {
                                 </p>
                             </div>
                         </div>
-                    </button>
-                </div>
-
-                {/* Continue */}
-                <div>
-                    <button
-                        onClick={handleContinue}
-                        type="button"
-                        disabled={!canContinue}
-                        className="flex items-center gap-2 rounded-2xl px-6 py-3 text-xs font-black tracking-widest uppercase transition-all sm:gap-3 sm:px-12 sm:py-4"
-                        style={
-                            canContinue
-                                ? {
-                                      backgroundColor: 'var(--accent-primary)',
-                                      color: 'var(--text-primary)',
-                                      cursor: 'pointer',
-                                      boxShadow: 'var(--card-shadow)',
-                                  }
-                                : {
-                                      backgroundColor: 'var(--bg-surface)',
-                                      color: 'var(--text-primary)',
-                                      cursor: 'not-allowed',
-                                      opacity: 0.5,
-                                  }
-                        }
-                        onMouseEnter={(e) => {
-                            if (canContinue) {
-                                e.currentTarget.style.backgroundColor =
-                                    'var(--accent-hover)';
-                            }
-                        }}
-                        onMouseLeave={(e) => {
-                            if (canContinue) {
-                                e.currentTarget.style.backgroundColor =
-                                    'var(--accent-primary)';
-                            }
-                        }}
-                    >
-                        Continue
-                        <ChevronRight size={14} className="sm:h-4 sm:w-4" />
                     </button>
                 </div>
             </div>
