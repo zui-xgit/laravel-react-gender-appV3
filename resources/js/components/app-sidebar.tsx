@@ -2,9 +2,16 @@ import { Link, usePage } from '@inertiajs/react';
 import {
     Activity,
     BookOpen,
+    CheckCircle2,
     FilePlus2,
     FolderGit2,
+    History,
+    Inbox,
+    LayoutDashboard,
     LayoutGrid,
+    Settings2,
+    User2,
+    UserCheck,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 // import { NavFooter } from '@/components/nav-footer';
@@ -25,13 +32,49 @@ import { UsePageProps } from '@/types/types';
 
 const AdminNavItems: NavItem[] = [
     {
-        title: 'Admin Dashboard',
+        title: 'Overview',
+        href: adminDashboard(),
+        icon: LayoutDashboard,
+    },
+    {
+        title: 'Personal Assignment',
+        href: '',
+        icon: UserCheck,
+    },
+    {
+        title: 'Unassigned',
+        href: '',
+        icon: Inbox,
+    },
+    {
+        title: 'Resolved',
+        href: '',
+        icon: CheckCircle2,
+    },
+    {
+        title: 'Staff Management',
+        href: '',
+        icon: User2,
+    },
+    {
+        title: 'Audit Logs',
+        href: '',
+        icon: History,
+    },
+    {
+        title: 'Settings',
+        href: '',
+        icon: Settings2,
+    },
+];
+
+const OfficerNavItems: NavItem[] = [
+    {
+        title: 'Officer Dashboard',
         href: adminDashboard(),
         icon: LayoutGrid,
     },
 ];
-
-const OfficerNavItems: NavItem[] = [];
 
 const ReporterNavItems: NavItem[] = [
     {
@@ -40,7 +83,7 @@ const ReporterNavItems: NavItem[] = [
         icon: FilePlus2,
     },
     {
-        title: 'Track Status',
+        title: 'Track Case',
         href: reporterTrack(),
         icon: Activity,
     },

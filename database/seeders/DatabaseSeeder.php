@@ -21,11 +21,11 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'role' => 'admin', 
-            'user_name' => 'admin.juma',
+            'username' => 'admin.juma',
         ]);
         User::factory()->create([
             'role' => 'officer', 
-            'user_name' => 'officer.juma',
+            'username' => 'officer.juma',
         ]);
 
         $cases = CaseDetail::factory(10)->create(); 

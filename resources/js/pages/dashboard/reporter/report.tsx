@@ -25,7 +25,7 @@ import { Step5 } from '@/components/reporter/stepper/step5';
 import { Step6 } from '@/components/reporter/stepper/step6';
 import { useForm } from '@inertiajs/react';
 import { InitialFormData } from '@/constants/constants';
-import { reporter } from '@/routes';
+import { reporter, reporterReport } from '@/routes';
 import { PortalLoader } from '@/components/portal-loader';
 import { CaseTrackingId } from '@/components/reporter/case-tracking-id';
 
@@ -163,3 +163,12 @@ const Report = () => {
 };
 
 export default Report;
+
+Report.layout = {
+    breadcrumbs: [
+        {
+            title: 'New Case',
+            href: reporterReport(),
+        },
+    ],
+};

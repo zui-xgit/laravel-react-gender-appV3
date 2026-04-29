@@ -32,7 +32,15 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->instance(LoginResponse::class, new class implements LoginResponse {
             public function toResponse($request)
             {
-                return redirect('/admin');
+                $user = $request->user(); 
+
+                if($user->isAdmin()){
+                    return redirect('/admin');
+                }else if($user->isOfficer()){
+                   return redirect('/officer');
+                }
+
+                return abort(403, 'You do not have permission to access this dashboard.');
             }
         });
     }
