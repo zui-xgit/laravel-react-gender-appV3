@@ -38,32 +38,32 @@ const AdminNavItems: NavItem[] = [
     },
     {
         title: 'Personal Assignment',
-        href: '',
+        href: adminDashboard(),
         icon: UserCheck,
     },
     {
         title: 'Unassigned',
-        href: '',
+        href: adminDashboard(),
         icon: Inbox,
     },
     {
         title: 'Resolved',
-        href: '',
+        href: adminDashboard(),
         icon: CheckCircle2,
     },
     {
         title: 'Staff Management',
-        href: '',
+        href: adminDashboard(),
         icon: User2,
     },
     {
         title: 'Audit Logs',
-        href: '',
+        href: adminDashboard(),
         icon: History,
     },
     {
         title: 'Settings',
-        href: '',
+        href: adminDashboard(),
         icon: Settings2,
     },
 ];
