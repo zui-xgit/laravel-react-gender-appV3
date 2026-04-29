@@ -26,7 +26,12 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { adminOverview, reporterReport, reporterTrack } from '@/routes';
+import {
+    adminAssignments,
+    adminOverview,
+    reporterReport,
+    reporterTrack,
+} from '@/routes';
 import type { NavItem } from '@/types';
 import { UsePageProps } from '@/types/types';
 
@@ -38,7 +43,7 @@ const AdminNavItems: NavItem[] = [
     },
     {
         title: 'Personal Assignment',
-        href: adminOverview(),
+        href: adminAssignments(),
         icon: UserCheck,
     },
     {

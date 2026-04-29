@@ -2,7 +2,8 @@
     "agents": [
         "gemini"
     ],
+    "cloud": false,
     "mcp": true,
-    "nightwatch_mcp": false,
+    "nightwatch": false,
     "sail": false
 }
