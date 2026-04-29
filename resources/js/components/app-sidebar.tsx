@@ -26,44 +26,44 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { adminDashboard, reporterReport, reporterTrack } from '@/routes';
+import { adminOverview, reporterReport, reporterTrack } from '@/routes';
 import type { NavItem } from '@/types';
 import { UsePageProps } from '@/types/types';
 
 const AdminNavItems: NavItem[] = [
     {
         title: 'Overview',
-        href: adminDashboard(),
+        href: adminOverview(),
         icon: LayoutDashboard,
     },
     {
         title: 'Personal Assignment',
-        href: adminDashboard(),
+        href: adminOverview(),
         icon: UserCheck,
     },
     {
         title: 'Unassigned',
-        href: adminDashboard(),
+        href: adminOverview(),
         icon: Inbox,
     },
     {
         title: 'Resolved',
-        href: adminDashboard(),
+        href: adminOverview(),
         icon: CheckCircle2,
     },
     {
         title: 'Staff Management',
-        href: adminDashboard(),
+        href: adminOverview(),
         icon: User2,
     },
     {
         title: 'Audit Logs',
-        href: adminDashboard(),
+        href: adminOverview(),
         icon: History,
     },
     {
         title: 'Settings',
-        href: adminDashboard(),
+        href: adminOverview(),
         icon: Settings2,
     },
 ];
@@ -71,7 +71,7 @@ const AdminNavItems: NavItem[] = [
 const OfficerNavItems: NavItem[] = [
     {
         title: 'Officer Dashboard',
-        href: adminDashboard(),
+        href: adminOverview(),
         icon: LayoutGrid,
     },
 ];
@@ -111,7 +111,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={adminDashboard()} prefetch>
+                            <Link href={adminOverview()} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
