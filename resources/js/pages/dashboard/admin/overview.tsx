@@ -11,6 +11,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { adminOverview } from '@/routes';
+import { AdminOverviewStats } from '@/types/types';
 import { Head } from '@inertiajs/react';
 import {
     Activity,
@@ -25,33 +26,6 @@ import {
     UserPlus,
     Users,
 } from 'lucide-react';
-
-const stats = [
-    {
-        title: 'Total Assignments',
-        value: '42',
-        icon: Clock,
-        color: 'text-blue-600',
-    },
-    {
-        title: 'Pending',
-        value: '12',
-        icon: AlertCircle,
-        color: 'text-amber-600',
-    },
-    {
-        title: 'In Progress',
-        value: '18',
-        icon: Filter,
-        color: 'text-indigo-600',
-    },
-    {
-        title: 'Completed',
-        value: '12',
-        icon: CheckCircle2,
-        color: 'text-green-600',
-    },
-];
 
 const recentActivities = [
     {
@@ -88,7 +62,33 @@ const recentActivities = [
     },
 ];
 
-export default function Overview() {
+export default function Overview({ stats }: AdminOverviewStats) {
+    const statsConfig = [
+        {
+            title: 'Total Cases',
+            value: stats.total_cases,
+            icon: Clock,
+            color: 'text-blue-600',
+        },
+        {
+            title: 'Pending Cases',
+            value: stats.pending,
+            icon: AlertCircle,
+            color: 'text-amber-600',
+        },
+        {
+            title: 'In Progress',
+            value: stats.in_progress,
+            icon: Filter,
+            color: 'text-indigo-600',
+        },
+        {
+            title: 'Completed Cases',
+            value: stats.completed,
+            icon: CheckCircle2,
+            color: 'text-green-600',
+        },
+    ];
     return (
         <>
             <Head title="Admin Overview" />
@@ -108,7 +108,7 @@ export default function Overview() {
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    {stats.map((stat, i) => (
+                    {statsConfig.map((stat, i) => (
                         // StatisticCard
                         <StatCard
                             key={i}
@@ -121,6 +121,7 @@ export default function Overview() {
                 </div>
 
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
+                    {/* TODO:  recent activity (using spatie laravel activity log)*/}
                     <Card className="col-span-4 border-none shadow-sm ring-1 ring-border">
                         <CardHeader className="flex flex-row items-center justify-between">
                             <div className="space-y-1">
@@ -177,6 +178,7 @@ export default function Overview() {
                         </CardContent>
                     </Card>
 
+                    {/* TODO: system lockdown - system managements */}
                     <Card className="col-span-3 border-none shadow-sm ring-1 ring-border">
                         <CardHeader>
                             <CardTitle>System Management</CardTitle>

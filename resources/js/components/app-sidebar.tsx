@@ -9,6 +9,7 @@ import {
     Inbox,
     LayoutDashboard,
     LayoutGrid,
+    RefreshCw,
     Settings2,
     User2,
     UserCheck,
@@ -28,7 +29,10 @@ import {
 } from '@/components/ui/sidebar';
 import {
     adminAssignments,
+    adminCompleted,
+    adminInProgress,
     adminOverview,
+    adminPending,
     reporterReport,
     reporterTrack,
 } from '@/routes';
@@ -47,14 +51,27 @@ const AdminNavItems: NavItem[] = [
         icon: UserCheck,
     },
     {
-        title: 'Unassigned',
-        href: adminOverview(),
+        title: 'Cases',
+        // empty href since this is collapsible
+        href: '',
         icon: Inbox,
-    },
-    {
-        title: 'Resolved',
-        href: adminOverview(),
-        icon: CheckCircle2,
+        items: [
+            {
+                title: 'Pending',
+                href: adminPending(),
+                icon: Inbox,
+            },
+            {
+                title: 'In progress',
+                href: adminInProgress(),
+                icon: RefreshCw,
+            },
+            {
+                title: 'Completed',
+                href: adminCompleted(),
+                icon: CheckCircle2,
+            },
+        ],
     },
     {
         title: 'Staff Management',

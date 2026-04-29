@@ -178,7 +178,6 @@ class ReporterController extends Controller
 
             DB::rollBack();
 
-            dd($e); 
            
 
             Log::error('Report submission failed', [
@@ -193,12 +192,10 @@ class ReporterController extends Controller
             ]);
 
 						
-            // return back()->withErrors([
-            //     'error' => 'Failed to submit report. Please try again or contact support.'
-            // ]); 
-            // TODO: remember to replace this (testing code - insecure) with the comment version original code: (insecure)
+           
+            
             return back()->withErrors([
-                   'error' => $e->getMessage()
+                   'error' => "Failed to submit report. Please try again or contact support."
             ]); 
         }
     }

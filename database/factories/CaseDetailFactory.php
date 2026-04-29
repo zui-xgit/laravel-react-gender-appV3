@@ -29,7 +29,7 @@ class CaseDetailFactory extends Factory
                 strtoupper(Str::random(5))
             ),
             'is_anonymous' => fake()->boolean(), // ✅ random true / false
-            'status' => "unassigned",
+            'status' => "pending",
             // 'status' => fake()->randomElement([
             //     'unassigned', 'assigned', 'resolved'
             // ]),

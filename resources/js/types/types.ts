@@ -255,14 +255,13 @@ export interface PersonalAssignmentsPaginatedCollection {
     total: number;
 }
 
-export interface OverviewProps {
-    totalCases: number;
+export interface AdminOverviewStats {
     stats: {
-        unassigned: number;
-        assigned: number;
-        resolved: number;
+        total_cases: number;
+        pending: number;
+        in_progress: number;
+        completed: number;
     };
-    cases: PaginatedCollection;
 }
 
 export interface AssignedProps {

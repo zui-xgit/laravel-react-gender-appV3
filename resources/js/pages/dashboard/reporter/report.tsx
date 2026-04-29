@@ -28,6 +28,7 @@ import { InitialFormData } from '@/constants/constants';
 import { reporter, reporterReport } from '@/routes';
 import { PortalLoader } from '@/components/portal-loader';
 import { CaseTrackingId } from '@/components/reporter/case-tracking-id';
+import { toast } from 'sonner';
 
 const steps = [1, 2, 3, 4, 5, 6];
 
@@ -77,7 +78,7 @@ const Report = () => {
                     'ERRORS FROM SUBMITING REPORT FORM: ',
                     errors.error,
                 );
-                // toast.error(errors.error);
+                toast.error(errors.error);
             },
             onSuccess: (page) => {
                 // alert('submitted successfully');

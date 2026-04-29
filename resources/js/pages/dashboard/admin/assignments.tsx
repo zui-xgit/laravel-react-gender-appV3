@@ -1,5 +1,4 @@
 import Heading from '@/components/heading';
-import { StatCard } from '@/components/stat-card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {

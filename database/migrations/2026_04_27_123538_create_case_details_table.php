@@ -17,7 +17,7 @@ return new class extends Migration
             
             $table->string('case_tracking_id', 20)->unique();
             $table->boolean('is_anonymous');
-            $table->enum('status', ['unassigned', 'assigned', "in_progress",  'resolved'])->default('unassigned');
+            $table->enum('status', ['pending', "in_progress",  'completed'])->default('pending');
             $table->timestamps();
             // TODO: need to understand what softDeletes does. i need to learn more about it. 
             $table->softDeletes(); 
