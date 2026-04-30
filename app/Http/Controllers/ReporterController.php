@@ -78,6 +78,7 @@ class ReporterController extends Controller
             'incidentTime' => 'required|string',
             'incidentLocation' => 'required|string|max:255',
             'incidentExactLocation' => 'required|string',
+            'incidentType' => 'required|string', 
             'incidentCause' => 'required|string',
             // 'incidentDescription' => 'required|string|min:20',
             'incidentDescription' => 'required|string',
@@ -155,6 +156,7 @@ class ReporterController extends Controller
                 'time' => $validated['incidentTime'],
                 'location' => $validated['incidentLocation'],
                 'exact_location' => $validated['incidentExactLocation'],
+                'incident_type' => $validated['incidentType'], 
                 'cause' => $validated['incidentCause'],
                 'description' => $validated['incidentDescription'],
                 'actions_taken' => $validated['incidentActions'],
@@ -178,7 +180,7 @@ class ReporterController extends Controller
 
             DB::rollBack();
 
-           
+           dd($e);
 
             Log::error('Report submission failed', [
                 'transaction' => 'report submission failed',

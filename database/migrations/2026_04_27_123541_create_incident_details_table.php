@@ -19,6 +19,7 @@ return new class extends Migration
             $table->time('time');
             $table->string('location');
             $table->text('exact_location');
+            $table->string('incident_type');
             $table->text('cause');
             $table->longText('description');
             $table->text('actions_taken');

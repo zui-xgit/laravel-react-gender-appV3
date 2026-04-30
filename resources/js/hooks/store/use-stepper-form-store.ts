@@ -45,6 +45,7 @@ export interface FormData {
     incidentTime: string;
     incidentLocation: string;
     incidentExactLocation: string;
+    incidentType: string;
     incidentCause: string;
     incidentDescription: string;
     incidentActions: string;
@@ -112,6 +113,7 @@ const initialFormData: FormData = {
     incidentTime: '',
     incidentLocation: '',
     incidentExactLocation: '',
+    incidentType: '',
     incidentCause: '',
     incidentDescription: '',
     incidentActions: '',
@@ -163,7 +165,7 @@ export const useStepperFormStore = create<StepperFormState>()(
                     formData: { ...state.formData, ...data },
                 })),
 
-            validateStep: () => {
+            validateStep: (): boolean => {
                 const { currentStep, formData, isAnonymous } = get();
                 const errors: Partial<Record<keyof FormData, string>> = {};
                 let anonymouseError: boolean = false;
@@ -249,6 +251,8 @@ export const useStepperFormStore = create<StepperFormState>()(
                         errors.incidentLocation = 'Required';
                     if (!formData.incidentExactLocation.trim())
                         errors.incidentExactLocation = 'Required';
+                    if (!formData.incidentType.trim())
+                        errors.incidentType = 'Required';
                     if (!formData.incidentCause.trim())
                         errors.incidentCause = 'Required';
                     if (!formData.incidentDescription.trim())
@@ -301,6 +305,8 @@ export const useStepperFormStore = create<StepperFormState>()(
                         top: 0,
                         behavior: 'smooth',
                     });
+                } else {
+                    toast.error('Please fill in all fields to continue');
                 }
             },
 
