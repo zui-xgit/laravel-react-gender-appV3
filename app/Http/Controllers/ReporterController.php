@@ -152,8 +152,8 @@ class ReporterController extends Controller
 
             // 5. Create incident
             $case->incidentDetail()->create([
-                'date' => $validated['incidentDate'],
-                'time' => $validated['incidentTime'],
+                'incident_date' => $validated['incidentDate'],
+                'incident_time' => $validated['incidentTime'],
                 'location' => $validated['incidentLocation'],
                 'exact_location' => $validated['incidentExactLocation'],
                 'incident_type' => $validated['incidentType'], 

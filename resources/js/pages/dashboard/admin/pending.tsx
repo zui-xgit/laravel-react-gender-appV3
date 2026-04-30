@@ -18,113 +18,121 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { adminPending } from '@/routes';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import {
     AlertCircle,
     Calendar,
     Clock,
     Download,
     Eye,
-    Filter,
+    LucideIcon,
     MoreHorizontal,
     Search,
     ShieldCheck,
     UserPlus,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { formatDate, formatTime } from '@/lib/utils';
 
-const pendingCases = [
-    {
-        id: 'GBV-2024-105',
-        title: 'Verbal Harassment - Office A',
-        isAnonymous: false,
-        date: '2024-04-29',
-        time: '10:30 AM',
-    },
-    {
-        id: 'GBV-2024-106',
-        title: 'Physical Intimidation',
-        isAnonymous: true,
-        date: '2024-04-29',
-        time: '11:15 AM',
-    },
-    {
-        id: 'GBV-2024-107',
-        title: 'Cyber Bullying Report',
-        isAnonymous: false,
-        date: '2024-04-28',
-        time: '02:45 PM',
-    },
-    {
-        id: 'GBV-2024-108',
-        title: 'Unfair Treatment Claim',
-        isAnonymous: true,
-        date: '2024-04-28',
-        time: '04:20 PM',
-    },
-    {
-        id: 'GBV-2024-109',
-        title: 'Domestic Abuse Assistance',
-        isAnonymous: false,
-        date: '2024-04-27',
-        time: '09:00 AM',
-    },
-];
+interface Case {
+    uuid: string;
+    case_tracking_id: string;
+    is_anonymous: boolean;
+    status: string;
+    created_at: string;
+    incident_detail?: {
+        incident_type: string;
+    };
+}
 
-const stats = [
-    {
-        title: 'Total Pending',
-        value: '12',
-        icon: Clock,
-        color: 'text-amber-600',
-    },
-    {
-        title: 'Identified',
-        value: '3',
-        icon: AlertCircle,
-        color: 'text-destructive',
-    },
-    {
-        title: 'Anonymous',
-        value: '5',
-        icon: ShieldCheck,
-        color: 'text-indigo-600',
-    },
-    {
-        title: 'Reported Today',
-        value: '2',
-        icon: Calendar,
-        color: 'text-blue-600',
-    },
-];
+interface PaginationLinks {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
 
-const getPriorityBadge = (priority: string) => {
-    switch (priority) {
-        case 'High':
-            return <Badge variant="destructive">{priority}</Badge>;
-        case 'Medium':
-            return (
-                <Badge
-                    variant="outline"
-                    className="border-amber-200 bg-amber-50 text-amber-700"
-                >
-                    {priority}
-                </Badge>
-            );
-        case 'Low':
-            return (
-                <Badge
-                    variant="outline"
-                    className="border-blue-200 bg-blue-50 text-blue-700"
-                >
-                    {priority}
-                </Badge>
-            );
-        default:
-            return <Badge variant="secondary">{priority}</Badge>;
-    }
+interface PaginatedData<T> {
+    data: T[];
+    links: PaginationLinks[];
+    current_page: number;
+    from: number;
+    to: number;
+    total: number;
+}
+
+interface PendingProps {
+    cases: PaginatedData<Case>;
+    stats: {
+        total: number;
+        identified: number;
+        anonymous: number;
+        today: number;
+    };
+    filters: {
+        search?: string;
+        filter?: string;
+    };
+}
+
+type Stats = {
+    title: string;
+    value: string;
+    icon: LucideIcon;
+    color: string;
 };
 
-export default function Pending() {
+export default function Pending({ cases, stats, filters }: PendingProps) {
+    const [search, setSearch] = useState(filters.search || '');
+
+    console.log(cases.data);
+
+    useEffect(() => {
+        setSearch(filters.search || '');
+    }, [filters.search]);
+
+    const handleSearch = (value: string) => {
+        setSearch(value);
+        router.get(
+            adminPending(),
+            { ...filters, search: value },
+            { preserveState: true, replace: true },
+        );
+    };
+
+    const handleFilterChange = (value: string) => {
+        router.get(
+            adminPending(),
+            { ...filters, filter: value === 'all' ? '' : value },
+            { preserveState: true },
+        );
+    };
+
+    const statsConfig: Stats[] = [
+        {
+            title: 'Total Pending',
+            value: stats.total.toString(),
+            icon: Clock,
+            color: 'text-amber-600',
+        },
+        {
+            title: 'Identified',
+            value: stats.identified.toString(),
+            icon: AlertCircle,
+            color: 'text-destructive',
+        },
+        {
+            title: 'Anonymous',
+            value: stats.anonymous.toString(),
+            icon: ShieldCheck,
+            color: 'text-indigo-600',
+        },
+        {
+            title: 'Reported Today',
+            value: stats.today.toString(),
+            icon: Calendar,
+            color: 'text-blue-600',
+        },
+    ];
     return (
         <>
             <Head title="Pending Cases" />
@@ -144,7 +152,7 @@ export default function Pending() {
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    {stats.map((stat, i) => (
+                    {statsConfig.map((stat, i) => (
                         <StatCard
                             key={i}
                             title={stat.title}
@@ -171,18 +179,30 @@ export default function Pending() {
                                     <Input
                                         placeholder="Search cases..."
                                         className="w-[200px] pl-8 md:w-[300px]"
+                                        value={search}
+                                        onChange={(e) =>
+                                            setSearch(e.target.value)
+                                        }
+                                        onKeyDown={(e) =>
+                                            e.key === 'Enter' &&
+                                            handleSearch(search)
+                                        }
                                     />
                                 </div>
-                                <Select defaultValue="all">
+                                <Select
+                                    // defaultValue={filters.filter || 'all'}
+                                    defaultValue="all"
+                                    onValueChange={handleFilterChange}
+                                >
                                     <SelectTrigger className="w-[130px]">
                                         <SelectValue placeholder="Priority" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="all">All</SelectItem>
-                                        <SelectItem value="high">
+                                        <SelectItem value="identified">
                                             Identified
                                         </SelectItem>
-                                        <SelectItem value="medium">
+                                        <SelectItem value="anonymous">
                                             Anonymous
                                         </SelectItem>
                                     </SelectContent>
@@ -214,22 +234,24 @@ export default function Pending() {
                                     </tr>
                                 </thead>
                                 <tbody className="[&_tr:last-child]:border-0">
-                                    {pendingCases.map((item) => (
+                                    {cases.data.map((item, index) => (
                                         <tr
-                                            key={item.id}
+                                            key={index}
                                             className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
                                         >
                                             <td className="p-4 align-middle font-medium">
-                                                {item.id}
+                                                {item.case_tracking_id}
                                             </td>
                                             <td className="p-4 align-middle">
                                                 <span className="font-medium">
-                                                    {item.title}
+                                                    {item.incident_detail
+                                                        ?.incident_type ||
+                                                        'N/A'}
                                                 </span>
                                             </td>
 
                                             <td className="p-4 align-middle">
-                                                {item.isAnonymous ? (
+                                                {item.is_anonymous ? (
                                                     <Badge
                                                         variant="secondary"
                                                         className="gap-1"
@@ -245,8 +267,16 @@ export default function Pending() {
                                             </td>
                                             <td className="p-4 align-middle text-muted-foreground">
                                                 <div className="flex flex-col text-xs">
-                                                    <span>{item.date}</span>
-                                                    <span>{item.time}</span>
+                                                    <span>
+                                                        {formatDate(
+                                                            item.created_at,
+                                                        )}
+                                                    </span>
+                                                    <span>
+                                                        {formatTime(
+                                                            item.created_at,
+                                                        )}
+                                                    </span>
                                                 </div>
                                             </td>
                                             <td className="p-4 text-right align-middle">
@@ -254,7 +284,8 @@ export default function Pending() {
                                                     <Button
                                                         variant="outline"
                                                         size="sm"
-                                                        className="h-8 gap-1"
+                                                        className="h-8 cursor-pointer gap-1"
+                                                        onClick={() => alert(0)}
                                                     >
                                                         <UserPlus className="h-3.5 w-3.5" />
                                                         Assign
@@ -282,16 +313,48 @@ export default function Pending() {
                         </div>
                         <div className="flex items-center justify-between border-t px-4 py-4">
                             <p className="text-xs text-muted-foreground">
-                                Showing <strong>1-5</strong> of{' '}
-                                <strong>12</strong> pending cases
+                                Showing{' '}
+                                <strong>
+                                    {cases.from || 0}-{cases.to || 0}
+                                </strong>{' '}
+                                of <strong>{cases.total}</strong> pending cases
                             </p>
                             <div className="flex gap-2">
-                                <Button variant="outline" size="sm" disabled>
-                                    Previous
-                                </Button>
-                                <Button variant="outline" size="sm">
-                                    Next
-                                </Button>
+                                {cases.links.map((link, i) => {
+                                    if (link.label.includes('Previous')) {
+                                        return (
+                                            <Button
+                                                key={i}
+                                                variant="outline"
+                                                size="sm"
+                                                disabled={!link.url}
+                                                onClick={() =>
+                                                    link.url &&
+                                                    router.get(link.url)
+                                                }
+                                            >
+                                                Previous
+                                            </Button>
+                                        );
+                                    }
+                                    if (link.label.includes('Next')) {
+                                        return (
+                                            <Button
+                                                key={i}
+                                                variant="outline"
+                                                size="sm"
+                                                disabled={!link.url}
+                                                onClick={() =>
+                                                    link.url &&
+                                                    router.get(link.url)
+                                                }
+                                            >
+                                                Next
+                                            </Button>
+                                        );
+                                    }
+                                    return null;
+                                })}
                             </div>
                         </div>
                     </CardContent>

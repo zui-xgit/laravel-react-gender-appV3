@@ -1,0 +1,388 @@
+import Heading from '@/components/heading';
+import StatCard from '@/components/stat-card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { adminPending } from '@/routes';
+import { Head, router, Link } from '@inertiajs/react';
+import {
+    AlertCircle,
+    Calendar,
+    Clock,
+    Download,
+    Eye,
+    MoreHorizontal,
+    Search,
+    ShieldCheck,
+    UserPlus,
+} from 'lucide-react';
+import { useState, useEffect } from 'react';
+
+interface Case {
+    id: number;
+    uuid: string;
+    case_tracking_id: string;
+    is_anonymous: boolean;
+    status: string;
+    created_at: string;
+    incident_detail?: {
+        incident_type: string;
+        date: string;
+        time: string;
+    };
+}
+
+interface PaginationLinks {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
+
+interface PaginatedData<T> {
+    data: T[];
+    links: PaginationLinks[];
+    current_page: number;
+    from: number;
+    to: number;
+    total: number;
+}
+
+interface Props {
+    cases: PaginatedData<Case>;
+    stats: {
+        total: number;
+        identified: number;
+        anonymous: number;
+        today: number;
+    };
+    filters: {
+        search?: string;
+        filter?: string;
+    };
+}
+
+export default function Pending({ cases, stats, filters }: Props) {
+    const [search, setSearch] = useState(filters.search || '');
+
+    useEffect(() => {
+        setSearch(filters.search || '');
+    }, [filters.search]);
+
+    const handleSearch = (value: string) => {
+        setSearch(value);
+        router.get(
+            adminPending(),
+            { ...filters, search: value },
+            { preserveState: true, replace: true },
+        );
+    };
+
+    const handleFilterChange = (value: string) => {
+        router.get(
+            adminPending(),
+            { ...filters, filter: value === 'all' ? '' : value },
+            { preserveState: true },
+        );
+    };
+
+    const statCards = [
+        {
+            title: 'Total Pending',
+            value: stats.total.toString(),
+            icon: Clock,
+            color: 'text-amber-600',
+        },
+        {
+            title: 'Identified',
+            value: stats.identified.toString(),
+            icon: AlertCircle,
+            color: 'text-destructive',
+        },
+        {
+            title: 'Anonymous',
+            value: stats.anonymous.toString(),
+            icon: ShieldCheck,
+            color: 'text-indigo-600',
+        },
+        {
+            title: 'Reported Today',
+            value: stats.today.toString(),
+            icon: Calendar,
+            color: 'text-blue-600',
+        },
+    ];
+
+    return (
+        <>
+            <Head title="Pending Cases" />
+
+            <div className="flex flex-col gap-8 px-4 py-6 md:px-8">
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                    <Heading
+                        title="Pending Cases"
+                        description="Cases awaiting review and officer assignment."
+                    />
+                    <div className="flex items-center gap-2">
+                        <Button variant="outline" size="sm">
+                            <Download className="mr-2 h-4 w-4" />
+                            Export List
+                        </Button>
+                    </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    {statCards.map((stat, i) => (
+                        <StatCard
+                            key={i}
+                            title={stat.title}
+                            value={stat.value}
+                            icon={stat.icon}
+                            iconColor={stat.color}
+                        />
+                    ))}
+                </div>
+
+                <Card className="border-none shadow-sm ring-1 ring-border">
+                    <CardHeader>
+                        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                            <div className="space-y-1">
+                                <CardTitle>Pending Queue</CardTitle>
+                                <CardDescription>
+                                    A list of newly reported cases requiring
+                                    administrative action.
+                                </CardDescription>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="relative">
+                                    <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
+                                    <Input
+                                        placeholder="Search cases..."
+                                        className="w-[200px] pl-8 md:w-[300px]"
+                                        value={search}
+                                        onChange={(e) =>
+                                            setSearch(e.target.value)
+                                        }
+                                        onKeyDown={(e) =>
+                                            e.key === 'Enter' &&
+                                            handleSearch(search)
+                                        }
+                                    />
+                                </div>
+                                <Select
+                                    defaultValue={filters.filter || 'all'}
+                                    onValueChange={handleFilterChange}
+                                >
+                                    <SelectTrigger className="w-[130px]">
+                                        <SelectValue placeholder="Identity" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="all">All</SelectItem>
+                                        <SelectItem value="identified">
+                                            Identified
+                                        </SelectItem>
+                                        <SelectItem value="anonymous">
+                                            Anonymous
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                        <div className="relative w-full overflow-auto">
+                            <table className="w-full caption-bottom text-sm">
+                                <thead className="[&_tr]:border-b">
+                                    <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                                            Case ID
+                                        </th>
+                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                                            Incident Type
+                                        </th>
+
+                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                                            Identity
+                                        </th>
+                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                                            Submitted
+                                        </th>
+                                        <th className="flex h-12 items-center justify-center px-4 text-right align-middle font-medium text-muted-foreground">
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="[&_tr:last-child]:border-0">
+                                    {cases.data.length > 0 ? (
+                                        cases.data.map((item) => (
+                                            <tr
+                                                key={item.id}
+                                                className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                                            >
+                                                <td className="p-4 align-middle font-medium">
+                                                    {item.case_tracking_id}
+                                                </td>
+                                                <td className="p-4 align-middle">
+                                                    <span className="font-medium">
+                                                        {item.incident_detail
+                                                            ?.incident_type ||
+                                                            'N/A'}
+                                                    </span>
+                                                </td>
+
+                                                <td className="p-4 align-middle">
+                                                    {item.is_anonymous ? (
+                                                        <Badge
+                                                            variant="secondary"
+                                                            className="gap-1"
+                                                        >
+                                                            <ShieldCheck className="h-3 w-3" />
+                                                            Anonymous
+                                                        </Badge>
+                                                    ) : (
+                                                        <Badge variant="outline">
+                                                            Identified
+                                                        </Badge>
+                                                    )}
+                                                </td>
+                                                <td className="p-4 align-middle text-muted-foreground">
+                                                    <div className="flex flex-col text-xs">
+                                                        <span>
+                                                            {item
+                                                                .incident_detail
+                                                                ?.date ||
+                                                                new Date(
+                                                                    item.created_at,
+                                                                ).toLocaleDateString()}
+                                                        </span>
+                                                        <span>
+                                                            {item
+                                                                .incident_detail
+                                                                ?.time ||
+                                                                new Date(
+                                                                    item.created_at,
+                                                                ).toLocaleTimeString(
+                                                                    [],
+                                                                    {
+                                                                        hour: '2-digit',
+                                                                        minute: '2-digit',
+                                                                    },
+                                                                )}
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td className="p-4 text-right align-middle">
+                                                    <div className="flex justify-end gap-2">
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            className="h-8 gap-1"
+                                                        >
+                                                            <UserPlus className="h-3.5 w-3.5" />
+                                                            Assign
+                                                        </Button>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-8 w-8"
+                                                        >
+                                                            <Eye className="h-4 w-4" />
+                                                        </Button>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-8 w-8"
+                                                        >
+                                                            <MoreHorizontal className="h-4 w-4" />
+                                                        </Button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td
+                                                colSpan={5}
+                                                className="h-24 text-center align-middle"
+                                            >
+                                                No pending cases found.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="flex items-center justify-between border-t px-4 py-4">
+                            <p className="text-xs text-muted-foreground">
+                                Showing{' '}
+                                <strong>
+                                    {cases.from || 0}-{cases.to || 0}
+                                </strong>{' '}
+                                of <strong>{cases.total}</strong> pending cases
+                            </p>
+                            <div className="flex gap-2">
+                                {cases.links.map((link, i) => {
+                                    if (link.label.includes('Previous')) {
+                                        return (
+                                            <Button
+                                                key={i}
+                                                variant="outline"
+                                                size="sm"
+                                                disabled={!link.url}
+                                                onClick={() =>
+                                                    link.url &&
+                                                    router.get(link.url)
+                                                }
+                                            >
+                                                Previous
+                                            </Button>
+                                        );
+                                    }
+                                    if (link.label.includes('Next')) {
+                                        return (
+                                            <Button
+                                                key={i}
+                                                variant="outline"
+                                                size="sm"
+                                                disabled={!link.url}
+                                                onClick={() =>
+                                                    link.url &&
+                                                    router.get(link.url)
+                                                }
+                                            >
+                                                Next
+                                            </Button>
+                                        );
+                                    }
+                                    return null;
+                                })}
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        </>
+    );
+}
+
+Pending.layout = {
+    breadcrumbs: [
+        {
+            title: 'Pending Cases',
+            href: adminPending(),
+        },
+    ],
+};
