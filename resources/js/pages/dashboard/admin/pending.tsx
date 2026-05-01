@@ -285,7 +285,6 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                                         variant="outline"
                                                         size="sm"
                                                         className="h-8 cursor-pointer gap-1"
-                                                        onClick={() => alert(0)}
                                                     >
                                                         <UserPlus className="h-3.5 w-3.5" />
                                                         Assign
