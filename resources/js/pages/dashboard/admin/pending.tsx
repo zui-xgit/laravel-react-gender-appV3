@@ -31,7 +31,7 @@ import {
     ShieldCheck,
     UserPlus,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { formatDate, formatTime } from '@/lib/utils';
 
 import AssignModal from '@/components/dialogs/assign-case-dialog';
