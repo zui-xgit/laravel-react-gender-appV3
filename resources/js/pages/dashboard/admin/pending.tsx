@@ -10,8 +10,6 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
@@ -19,7 +17,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { adminPending } from '@/routes';
+import { adminPending, adminViewCase } from '@/routes';
 import { Head, router } from '@inertiajs/react';
 import {
     AlertCircle,
@@ -79,23 +77,8 @@ type Stats = {
 };
 
 export default function Pending({ cases, stats, filters }: PendingProps) {
-    // const [search, setSearch] = useState(filters.search || '');
-
     const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
     const [selectedCase, setSelectedCase] = useState<PendingCase | null>(null);
-
-    // useEffect(() => {
-    //     setSearch(filters.search || '');
-    // }, [filters.search]);
-
-    // const handleSearch = (value: string) => {
-    //     setSearch(value);
-    //     router.get(
-    //         adminPending(),
-    //         { ...filters, search: value },
-    //         { preserveState: true, preserveScroll: true, replace: true },
-    //     );
-    // };
 
     const handleFilterChange = (value: string) => {
         router.get(
@@ -108,6 +91,10 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
     const openAssignModal = (caseItem: PendingCase) => {
         setSelectedCase(caseItem);
         setIsAssignModalOpen(true);
+    };
+
+    const viewCase = (uuid: string) => {
+        router.get(adminViewCase({ case: uuid }));
     };
 
     const statsConfig: Stats[] = [
@@ -177,21 +164,6 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                 </CardDescription>
                             </div>
                             <div className="flex items-center gap-2">
-                                {/* <div className="relative">
-                                    <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
-                                    <Input
-                                        placeholder="Search cases..."
-                                        className="w-[200px] pl-8 md:w-[300px]"
-                                        value={search}
-                                        onChange={(e) =>
-                                            setSearch(e.target.value)
-                                        }
-                                        onKeyDown={(e) =>
-                                            e.key === 'Enter' &&
-                                            handleSearch(search)
-                                        }
-                                    />
-                                </div> */}
                                 <SearchInput filters={filters} />
                                 <Select
                                     // defaultValue={filters.filter || 'all'}
@@ -305,6 +277,11 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                                             variant="ghost"
                                                             size="icon"
                                                             className="h-8 w-8 cursor-pointer"
+                                                            onClick={() =>
+                                                                viewCase(
+                                                                    item.uuid,
+                                                                )
+                                                            }
                                                         >
                                                             <Eye className="h-4 w-4" />
                                                         </Button>

@@ -13,5 +13,6 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
 
 
     Route::post("admin/assign-case/{case:uuid}", [AdminController::class, 'assignCase'])->name('admin-assign-case');
+    Route::get('admin/view-case/{case:uuid}', [AdminController::class, 'viewCase'])->name("admin-view-case"); 
 });
 

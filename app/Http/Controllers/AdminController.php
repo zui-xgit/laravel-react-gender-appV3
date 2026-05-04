@@ -149,6 +149,11 @@ class AdminController extends Controller
 
     }
 
+    public function viewCase(CaseDetail $case)
+    {
+            return Inertia::render('dashboard/admin/view-case'); 
+    }
+
     // in_progress
     public function in_progress(){
         return Inertia::render('dashboard/admin/in-progress');
