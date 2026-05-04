@@ -9,7 +9,9 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
@@ -34,16 +36,11 @@ import {
 import { useEffect, useState } from 'react';
 import { formatDate, formatTime } from '@/lib/utils';
 
-interface Case {
-    uuid: string;
-    case_tracking_id: string;
-    is_anonymous: boolean;
-    status: string;
-    created_at: string;
-    incident_detail?: {
-        incident_type: string;
-    };
-}
+import AssignModal from '@/components/dialogs/assign-case-dialog';
+
+import { PendingCase } from '@/types/types';
+import { Hint } from '@/components/hint';
+import SearchInput from '@/components/search-input';
 
 interface PaginationLinks {
     url: string | null;
@@ -61,7 +58,7 @@ interface PaginatedData<T> {
 }
 
 interface PendingProps {
-    cases: PaginatedData<Case>;
+    cases: PaginatedData<PendingCase>;
     stats: {
         total: number;
         identified: number;
@@ -82,29 +79,35 @@ type Stats = {
 };
 
 export default function Pending({ cases, stats, filters }: PendingProps) {
-    const [search, setSearch] = useState(filters.search || '');
+    // const [search, setSearch] = useState(filters.search || '');
 
-    console.log(cases.data);
+    const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+    const [selectedCase, setSelectedCase] = useState<PendingCase | null>(null);
 
-    useEffect(() => {
-        setSearch(filters.search || '');
-    }, [filters.search]);
+    // useEffect(() => {
+    //     setSearch(filters.search || '');
+    // }, [filters.search]);
 
-    const handleSearch = (value: string) => {
-        setSearch(value);
-        router.get(
-            adminPending(),
-            { ...filters, search: value },
-            { preserveState: true, replace: true },
-        );
-    };
+    // const handleSearch = (value: string) => {
+    //     setSearch(value);
+    //     router.get(
+    //         adminPending(),
+    //         { ...filters, search: value },
+    //         { preserveState: true, preserveScroll: true, replace: true },
+    //     );
+    // };
 
     const handleFilterChange = (value: string) => {
         router.get(
             adminPending(),
             { ...filters, filter: value === 'all' ? '' : value },
-            { preserveState: true },
+            { preserveState: true, preserveScroll: true, replace: true },
         );
+    };
+
+    const openAssignModal = (caseItem: PendingCase) => {
+        setSelectedCase(caseItem);
+        setIsAssignModalOpen(true);
     };
 
     const statsConfig: Stats[] = [
@@ -174,7 +177,7 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                 </CardDescription>
                             </div>
                             <div className="flex items-center gap-2">
-                                <div className="relative">
+                                {/* <div className="relative">
                                     <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
                                     <Input
                                         placeholder="Search cases..."
@@ -188,7 +191,8 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                             handleSearch(search)
                                         }
                                     />
-                                </div>
+                                </div> */}
+                                <SearchInput filters={filters} />
                                 <Select
                                     // defaultValue={filters.filter || 'all'}
                                     defaultValue="all"
@@ -281,21 +285,30 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                             </td>
                                             <td className="p-4 text-right align-middle">
                                                 <div className="flex justify-end gap-2">
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        className="h-8 cursor-pointer gap-1"
-                                                    >
-                                                        <UserPlus className="h-3.5 w-3.5" />
-                                                        Assign
-                                                    </Button>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="h-8 w-8"
-                                                    >
-                                                        <Eye className="h-4 w-4" />
-                                                    </Button>
+                                                    <Hint content="Assign Personnel">
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            className="h-8 cursor-pointer gap-1"
+                                                            onClick={() =>
+                                                                openAssignModal(
+                                                                    item,
+                                                                )
+                                                            }
+                                                        >
+                                                            <UserPlus className="h-3.5 w-3.5" />
+                                                            Assign
+                                                        </Button>
+                                                    </Hint>
+                                                    <Hint content="View case">
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-8 w-8 cursor-pointer"
+                                                        >
+                                                            <Eye className="h-4 w-4" />
+                                                        </Button>
+                                                    </Hint>
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
@@ -359,6 +372,12 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                     </CardContent>
                 </Card>
             </div>
+
+            <AssignModal
+                isOpen={isAssignModalOpen}
+                onClose={() => setIsAssignModalOpen(false)}
+                selectedCase={selectedCase}
+            />
         </>
     );
 }

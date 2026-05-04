@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\CaseDetail;
+use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class AdminController extends Controller
@@ -97,6 +101,52 @@ class AdminController extends Controller
             'stats' => $stats,
             'filters' => $request->only(['search', 'filter']),
         ]);
+    }
+    public function assignCase(Request $request, CaseDetail $case)
+    {
+     
+       
+        $validated = $request->validate([
+            'assigned_to' => 'required|exists:users,uuid',
+            'priority'    => 'required|in:low,medium,high,critical',
+        ]);
+
+
+        try{ 
+
+
+
+            DB::beginTransaction(); 
+
+
+            $assigned_to_id = User::where('uuid', $validated['assigned_to'])->value('id'); 
+            $assigned_by_id = Auth::id(); 
+
+            $case->caseAssignment()->create([
+                    'assigned_to' => $assigned_to_id, 
+                    'assigned_by' => $assigned_by_id, 
+                    'priority' => $validated['priority']
+            ]);
+
+
+            $case->update([
+                'status' => 'in_progress',
+            ]);
+
+
+            DB::commit(); 
+            Inertia::flash("message", 'Case Assigned successfully');
+            
+
+
+        }catch(Exception $e){
+            dd($e); 
+            DB::rollBack(); 
+            return back()->withErrors([
+                'error' => 'Failed to assign case. Please contact support'
+            ]); 
+        }
+
     }
 
     // in_progress

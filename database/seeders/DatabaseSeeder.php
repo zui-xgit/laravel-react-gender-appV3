@@ -22,13 +22,21 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'role' => 'admin', 
             'username' => 'admin.juma',
+
+            'first_name'=> 'Admin', 
+            'last_name'=> 'Juma'
         ]);
+
+        
         User::factory()->create([
             'role' => 'officer', 
             'username' => 'officer.juma',
+
+            'first_name'=> 'Officer', 
+            'last_name'=> 'Juma'
         ]);
 
-        $cases = CaseDetail::factory(10)->create(); 
+        $cases = CaseDetail::factory(5)->create(); 
 
         $cases->each(function ($case) {
             if($case->is_anonymous){

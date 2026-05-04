@@ -1,388 +1,214 @@
-import Heading from '@/components/heading';
-import StatCard from '@/components/stat-card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import { adminPending } from '@/routes';
-import { Head, router, Link } from '@inertiajs/react';
-import {
-    AlertCircle,
-    Calendar,
-    Clock,
-    Download,
-    Eye,
-    MoreHorizontal,
-    Search,
-    ShieldCheck,
-    UserPlus,
-} from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useViewCase } from '@/hooks/store/use-view-case';
+import { SharedDataProps } from '@/types/types';
+import { useForm, usePage } from '@inertiajs/react';
+import { CheckCircle2, Loader2, Search, User, UserPlus } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
-interface Case {
-    id: number;
-    uuid: string;
-    case_tracking_id: string;
-    is_anonymous: boolean;
-    status: string;
-    created_at: string;
-    incident_detail?: {
-        incident_type: string;
-        date: string;
-        time: string;
-    };
+type CasePriority = 'low' | 'medium' | 'high' | 'critical' | '';
+
+interface AssignOfficerDialogProps {
+    isAssignOfficerDialogOpen: boolean;
+    setIsAssignOfficerDialogOpen: (open: boolean) => void;
 }
 
-interface PaginationLinks {
-    url: string | null;
-    label: string;
-    active: boolean;
+interface AssignForm {
+    assigned_to: string;
+    priority: CasePriority;
 }
 
-interface PaginatedData<T> {
-    data: T[];
-    links: PaginationLinks[];
-    current_page: number;
-    from: number;
-    to: number;
-    total: number;
-}
 
-interface Props {
-    cases: PaginatedData<Case>;
-    stats: {
-        total: number;
-        identified: number;
-        anonymous: number;
-        today: number;
+export function AssignOfficerDialog({ isAssignOfficerDialogOpen, setIsAssignOfficerDialogOpen }: AssignOfficerDialogProps) {
+    // Accessing shared data from Inertia
+    const { options } = usePage<SharedDataProps>().props;
+    const currentCaseData = useViewCase((state) => state.currentCaseData);
+
+    // Initializing useForm with required fields
+    const { data, setData, processing, errors, post } = useForm<AssignForm>({
+        assigned_to: '', // This matches your backend uuid check
+        priority: 'medium',
+    });
+
+    const users = options?.all_users || [];
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const filteredOfficers = useMemo(() => {
+        return users.filter((user) => {
+            const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
+            return fullName.includes(searchQuery.toLowerCase());
+        });
+    }, [searchQuery, users]);
+
+    const selectedOfficer = users.find((user) => user.uuid === data.assigned_to);
+
+    const handleConfirmAssignment = () => {
+        if (!currentCaseData?.uuid) return;
+
+        post(route('admin.assign-case', { uuid: currentCaseData.uuid }), {
+            onError: (errors) => {
+                if (errors.error) {
+                    toast.error(errors.error);
+                    // console.log(errors.error);
+                }
+            },
+            onSuccess: (page) => {
+                setIsAssignOfficerDialogOpen(false);
+                if (page.flash.message) {
+                    toast.success(page.flash.message as string);
+                }
+            },
+        });
     };
-    filters: {
-        search?: string;
-        filter?: string;
-    };
-}
-
-export default function Pending({ cases, stats, filters }: Props) {
-    const [search, setSearch] = useState(filters.search || '');
-
-    useEffect(() => {
-        setSearch(filters.search || '');
-    }, [filters.search]);
-
-    const handleSearch = (value: string) => {
-        setSearch(value);
-        router.get(
-            adminPending(),
-            { ...filters, search: value },
-            { preserveState: true, replace: true },
-        );
-    };
-
-    const handleFilterChange = (value: string) => {
-        router.get(
-            adminPending(),
-            { ...filters, filter: value === 'all' ? '' : value },
-            { preserveState: true },
-        );
-    };
-
-    const statCards = [
-        {
-            title: 'Total Pending',
-            value: stats.total.toString(),
-            icon: Clock,
-            color: 'text-amber-600',
-        },
-        {
-            title: 'Identified',
-            value: stats.identified.toString(),
-            icon: AlertCircle,
-            color: 'text-destructive',
-        },
-        {
-            title: 'Anonymous',
-            value: stats.anonymous.toString(),
-            icon: ShieldCheck,
-            color: 'text-indigo-600',
-        },
-        {
-            title: 'Reported Today',
-            value: stats.today.toString(),
-            icon: Calendar,
-            color: 'text-blue-600',
-        },
-    ];
 
     return (
-        <>
-            <Head title="Pending Cases" />
+        <Dialog open={isAssignOfficerDialogOpen} onOpenChange={setIsAssignOfficerDialogOpen}>
+            <DialogContent
+                className="bg-surface border-subtle text-primary flex h-[90vh] w-[95vw] max-w-[850px] flex-col gap-0 overflow-hidden rounded-2xl p-0 shadow-2xl"
+                style={{ boxShadow: 'var(--card-shadow)' }}
+            >
+                <DialogDescription className="sr-only">Assign officer and priority level</DialogDescription>
 
-            <div className="flex flex-col gap-8 px-4 py-6 md:px-8">
-                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <Heading
-                        title="Pending Cases"
-                        description="Cases awaiting review and officer assignment."
-                    />
-                    <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm">
-                            <Download className="mr-2 h-4 w-4" />
-                            Export List
-                        </Button>
+                {/* HEADER */}
+                <DialogHeader className="border-subtle shrink-0 border-b px-8 py-4">
+                    <DialogTitle className="text-primary flex items-center gap-2 text-xl font-medium">
+                        <UserPlus className="h-5 w-5" style={{ color: 'var(--accent-primary)' }} />
+                        Assign Case Personnel
+                    </DialogTitle>
+                </DialogHeader>
+
+                {/* PRIORITY LEVEL & ASSIGNED PERSONNEL */}
+                <div className="bg-app/40 border-subtle grid shrink-0 grid-cols-1 gap-4 border-b px-8 py-3 md:grid-cols-2">
+                    {/* PRIORITY LEVEL */}
+                    <div className="flex flex-col space-y-2">
+                        <Label className="text-secondary ml-1 text-sm font-bold tracking-widest uppercase">Priority Level</Label>
+                        <Select value={data.priority} onValueChange={(value) => setData('priority', value as CasePriority)}>
+                            <SelectTrigger
+                                className={`bg-surface text-primary h-10 rounded-xl text-sm shadow-sm transition-all ${
+                                    errors.priority
+                                        ? 'border-red-500 ring-2 ring-red-500/20'
+                                        : 'border-subtle focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20'
+                                }`}
+                            >
+                                <SelectValue placeholder="Select Priority" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-surface border-subtle text-primary rounded-xl">
+                                <SelectItem value="critical">Critical</SelectItem>
+                                <SelectItem value="high">High</SelectItem>
+                                <SelectItem value="medium">Medium ( Default )</SelectItem>
+                                <SelectItem value="low">Low</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        {errors.priority && <p className="text-md text-red-500">{errors.priority}</p>}
+                    </div>
+
+                    {/* ASSIGNED PERSONNEL */}
+                    <div className="flex flex-col space-y-2">
+                        <Label className="text-secondary ml-1 text-sm font-bold tracking-widest uppercase">Assigned Personnel</Label>
+                        <div
+                            className={`text-md flex h-10 items-center rounded-xl border px-4 shadow-sm transition-all ${
+                                errors.assigned_to
+                                    ? 'border-red-500 bg-red-50/5 ring-2 ring-red-500/20'
+                                    : selectedOfficer
+                                      ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/5 font-medium text-[var(--accent-primary)]'
+                                      : 'border-subtle text-secondary border-dashed italic'
+                            }`}
+                        >
+                            {selectedOfficer ? `${selectedOfficer.first_name} ${selectedOfficer.last_name}` : 'Choose an investigator...'}
+                        </div>
+                        {errors.assigned_to && <p className="text-md text-red-500">{errors.assigned_to}</p>}
                     </div>
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    {statCards.map((stat, i) => (
-                        <StatCard
-                            key={i}
-                            title={stat.title}
-                            value={stat.value}
-                            icon={stat.icon}
-                            iconColor={stat.color}
+                {/* SEARCH AREA */}
+                <div className="bg-surface border-subtle shrink-0 border-b px-8 py-3">
+                    <div className="relative">
+                        <Search className="text-secondary absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+                        <input
+                            placeholder="Filter by name..."
+                            className="bg-input border-subtle flex h-10 w-full rounded-xl pl-10 text-sm transition-all focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]/20 focus-visible:outline-none"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                         />
-                    ))}
+                    </div>
                 </div>
 
-                <Card className="border-none shadow-sm ring-1 ring-border">
-                    <CardHeader>
-                        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                            <div className="space-y-1">
-                                <CardTitle>Pending Queue</CardTitle>
-                                <CardDescription>
-                                    A list of newly reported cases requiring
-                                    administrative action.
-                                </CardDescription>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="relative">
-                                    <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
-                                    <Input
-                                        placeholder="Search cases..."
-                                        className="w-[200px] pl-8 md:w-[300px]"
-                                        value={search}
-                                        onChange={(e) =>
-                                            setSearch(e.target.value)
-                                        }
-                                        onKeyDown={(e) =>
-                                            e.key === 'Enter' &&
-                                            handleSearch(search)
-                                        }
-                                    />
-                                </div>
-                                <Select
-                                    defaultValue={filters.filter || 'all'}
-                                    onValueChange={handleFilterChange}
+                {/* HIGH-DENSITY SCROLLABLE LIST AREA */}
+                <div className="custom-scrollbar bg-surface flex-1 overflow-y-auto px-6">
+                    <div className="space-y-1 py-4">
+                        {filteredOfficers.length > 0 ? (
+                            filteredOfficers.map((officer) => (
+                                <div
+                                    key={officer.uuid}
+                                    onClick={() => setData('assigned_to', officer.uuid)}
+                                    className={`group flex cursor-pointer items-center justify-between rounded-xl border px-4 py-2 transition-all ${
+                                        data.assigned_to === officer.uuid
+                                            ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 shadow-sm'
+                                            : 'hover:bg-input border-transparent hover:scale-[1.01] hover:shadow-sm'
+                                    }`}
                                 >
-                                    <SelectTrigger className="w-[130px]">
-                                        <SelectValue placeholder="Identity" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="all">All</SelectItem>
-                                        <SelectItem value="identified">
-                                            Identified
-                                        </SelectItem>
-                                        <SelectItem value="anonymous">
-                                            Anonymous
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                        <div className="relative w-full overflow-auto">
-                            <table className="w-full caption-bottom text-sm">
-                                <thead className="[&_tr]:border-b">
-                                    <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
-                                            Case ID
-                                        </th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
-                                            Incident Type
-                                        </th>
+                                    <div className="flex items-center gap-3">
+                                        <div
+                                            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-all ${
+                                                data.assigned_to === officer.uuid
+                                                    ? 'bg-[var(--accent-primary)] text-white'
+                                                    : 'bg-surface border-subtle text-secondary border group-hover:border-[var(--accent-primary)]/30'
+                                            }`}
+                                        >
+                                            <User className="size-5" />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <p
+                                                className={`text-md transition-colors ${
+                                                    data.assigned_to === officer.uuid ? 'font-medium text-[var(--accent-primary)]' : 'text-primary'
+                                                }`}
+                                            >
+                                                {officer.first_name} {officer.last_name}
+                                            </p>
+                                            <span className="text-secondary text-[10px] leading-none tracking-wider uppercase">{officer.role}</span>
+                                        </div>
+                                    </div>
 
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
-                                            Identity
-                                        </th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
-                                            Submitted
-                                        </th>
-                                        <th className="flex h-12 items-center justify-center px-4 text-right align-middle font-medium text-muted-foreground">
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="[&_tr:last-child]:border-0">
-                                    {cases.data.length > 0 ? (
-                                        cases.data.map((item) => (
-                                            <tr
-                                                key={item.id}
-                                                className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
-                                            >
-                                                <td className="p-4 align-middle font-medium">
-                                                    {item.case_tracking_id}
-                                                </td>
-                                                <td className="p-4 align-middle">
-                                                    <span className="font-medium">
-                                                        {item.incident_detail
-                                                            ?.incident_type ||
-                                                            'N/A'}
-                                                    </span>
-                                                </td>
+                                    {data.assigned_to === officer.uuid && <CheckCircle2 className="size-7 text-[var(--accent-primary)]" />}
+                                </div>
+                            ))
+                        ) : (
+                            <div className="text-secondary py-10 text-center text-sm italic">No personnel found matching "{searchQuery}"</div>
+                        )}
+                    </div>
+                </div>
 
-                                                <td className="p-4 align-middle">
-                                                    {item.is_anonymous ? (
-                                                        <Badge
-                                                            variant="secondary"
-                                                            className="gap-1"
-                                                        >
-                                                            <ShieldCheck className="h-3 w-3" />
-                                                            Anonymous
-                                                        </Badge>
-                                                    ) : (
-                                                        <Badge variant="outline">
-                                                            Identified
-                                                        </Badge>
-                                                    )}
-                                                </td>
-                                                <td className="p-4 align-middle text-muted-foreground">
-                                                    <div className="flex flex-col text-xs">
-                                                        <span>
-                                                            {item
-                                                                .incident_detail
-                                                                ?.date ||
-                                                                new Date(
-                                                                    item.created_at,
-                                                                ).toLocaleDateString()}
-                                                        </span>
-                                                        <span>
-                                                            {item
-                                                                .incident_detail
-                                                                ?.time ||
-                                                                new Date(
-                                                                    item.created_at,
-                                                                ).toLocaleTimeString(
-                                                                    [],
-                                                                    {
-                                                                        hour: '2-digit',
-                                                                        minute: '2-digit',
-                                                                    },
-                                                                )}
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td className="p-4 text-right align-middle">
-                                                    <div className="flex justify-end gap-2">
-                                                        <Button
-                                                            variant="outline"
-                                                            size="sm"
-                                                            className="h-8 gap-1"
-                                                        >
-                                                            <UserPlus className="h-3.5 w-3.5" />
-                                                            Assign
-                                                        </Button>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            className="h-8 w-8"
-                                                        >
-                                                            <Eye className="h-4 w-4" />
-                                                        </Button>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            className="h-8 w-8"
-                                                        >
-                                                            <MoreHorizontal className="h-4 w-4" />
-                                                        </Button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td
-                                                colSpan={5}
-                                                className="h-24 text-center align-middle"
-                                            >
-                                                No pending cases found.
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className="flex items-center justify-between border-t px-4 py-4">
-                            <p className="text-xs text-muted-foreground">
-                                Showing{' '}
-                                <strong>
-                                    {cases.from || 0}-{cases.to || 0}
-                                </strong>{' '}
-                                of <strong>{cases.total}</strong> pending cases
-                            </p>
-                            <div className="flex gap-2">
-                                {cases.links.map((link, i) => {
-                                    if (link.label.includes('Previous')) {
-                                        return (
-                                            <Button
-                                                key={i}
-                                                variant="outline"
-                                                size="sm"
-                                                disabled={!link.url}
-                                                onClick={() =>
-                                                    link.url &&
-                                                    router.get(link.url)
-                                                }
-                                            >
-                                                Previous
-                                            </Button>
-                                        );
-                                    }
-                                    if (link.label.includes('Next')) {
-                                        return (
-                                            <Button
-                                                key={i}
-                                                variant="outline"
-                                                size="sm"
-                                                disabled={!link.url}
-                                                onClick={() =>
-                                                    link.url &&
-                                                    router.get(link.url)
-                                                }
-                                            >
-                                                Next
-                                            </Button>
-                                        );
-                                    }
-                                    return null;
-                                })}
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
-        </>
+                {/* FOOTER */}
+                <DialogFooter className="border-subtle bg-surface flex shrink-0 items-center justify-end gap-3 border-t px-8 py-4">
+                    <Button
+                        onClick={() => setIsAssignOfficerDialogOpen(false)}
+                        variant="ghost"
+                        className="text-secondary hover:text-primary h-10 cursor-pointer rounded-xl px-6 text-sm"
+                        disabled={processing}
+                    >
+                        Cancel
+                    </Button>
+
+                    <Button
+                        disabled={processing}
+                        onClick={handleConfirmAssignment}
+                        className={`h-10 cursor-pointer rounded-xl px-8 text-sm text-white shadow-md transition-all active:scale-95 disabled:pointer-events-none disabled:opacity-50`}
+                        style={{ backgroundColor: 'var(--accent-primary)' }}
+                    >
+                        {processing ? (
+                            <>
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                Assigning...
+                            </>
+                        ) : (
+                            'Confirm Assignment'
+                        )}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 }
-
-Pending.layout = {
-    breadcrumbs: [
-        {
-            title: 'Pending Cases',
-            href: adminPending(),
-        },
-    ],
-};

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreignId('assigned_to')->constrained('users')->cascadeOnDelete(); 
             $table->foreignId('assigned_by')->constrained('users')->cascadeOnDelete(); 
 
-            $table->enum('priority', ['low', 'medium', 'high', 'critical'])->default('medium');
+            $table->enum('priority', ['low', 'medium', 'high'])->default('medium');
             $table->timestamp('last_updated')->nullable();
 
             

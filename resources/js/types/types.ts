@@ -306,27 +306,35 @@ export interface UserData {
 // UsePageProps
 import { PageProps } from '@inertiajs/core';
 
-export interface User {
-    uuid: string;
-    first_name: string;
-    last_name: string;
-    role?: string; // Included because it's used in your 'all_users' selection
-}
-
-export interface AdminOptions {
-    all_users: User[];
-    // roles?: string[]; // Uncomment if you enable these in PHP
-    // statuses?: string[];
-}
-
 export interface UsePageProps extends PageProps {
     name: string;
     auth: {
-        user: User | null;
+        user: {
+            uuid: string;
+            first_name: string;
+            last_name: string;
+            role?: string;
+        };
+        all_users: {
+            uuid: string;
+            first_name: string;
+            last_name: string;
+            role?: string;
+        }[];
     };
     sidebarOpen: boolean;
-    options: AdminOptions | null;
     [key: string]: any; // Allows for additional page-specific props
 }
 
 // end UsePageProps/
+
+export interface PendingCase {
+    uuid: string;
+    case_tracking_id: string;
+    is_anonymous: boolean;
+    status: string;
+    created_at: string;
+    incident_detail?: {
+        incident_type: string;
+    };
+}
