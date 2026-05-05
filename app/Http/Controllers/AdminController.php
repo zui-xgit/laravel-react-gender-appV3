@@ -151,7 +151,68 @@ class AdminController extends Controller
 
     public function viewCase(CaseDetail $case)
     {
-            return Inertia::render('dashboard/admin/view-case'); 
+        $case->load([
+            'incidentDetail',
+            'victimDetail',
+            'accusedDetail',
+            'informantDetail',
+            'caseAssignment.assignedTo',
+            'caseAssignment.assignedBy',
+        ]);
+
+       
+
+        $case->setVisible([
+            'uuid',
+            'case_tracking_id',
+            'is_anonymous',
+            'status',
+            'created_at',
+            'caseAssignment',
+            'informantDetail', 
+            "victimDetail",
+            'accusedDetail', 
+            "incidentDetail"
+
+        ]);
+
+        if ($case->caseAssignment) {
+            $case->caseAssignment->makeHidden(['id', 'case_detail_id', 'assigned_by', 'assigned_to']);
+            $case->caseAssignment->assignedBy?->makeHidden(['id', 'user_name',  'email_verified_at', 'created_at', 'updated_at']);
+            $case->caseAssignment->assignedTo?->makeHidden(['id', 'user_name',  'email_verified_at', 'created_at', 'updated_at']);
+        }
+
+         $case->informantDetail->makeHidden([
+            "id",
+            'case_detail_id', 
+            'created_at',
+            'updated_at'
+        ]);
+
+        $case->victimDetail->makeHidden([
+             "id",
+            'case_detail_id', 
+            'created_at',
+            'updated_at'
+        ]); 
+        $case->accusedDetail->makeHidden([
+             "id",
+            'case_detail_id', 
+            'created_at',
+            'updated_at'
+        ]); 
+        $case->incidentDetail->makeHidden([
+             "id",
+            'case_detail_id', 
+            'created_at',
+            'updated_at'
+        ]); 
+
+
+
+        return Inertia::render('dashboard/admin/view-case', [
+            'caseData' => $case,
+        ]);
     }
 
     // in_progress
