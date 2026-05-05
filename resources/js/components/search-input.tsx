@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { router } from '@inertiajs/react';
+import { InertiaLinkProps, router } from '@inertiajs/react';
 import { Search } from 'lucide-react';
 import { Input } from './ui/input';
 import { useDebouncedCallback } from 'use-debounce';
@@ -8,17 +8,18 @@ import { cn } from '@/lib/utils';
 import { Spinner } from './ui/spinner';
 
 interface SearchInputProps {
+    href: NonNullable<InertiaLinkProps['href']>;
     filters: any;
     className?: string;
 }
 
-const SearchInput = ({ filters, className }: SearchInputProps) => {
+const SearchInput = ({ href, filters, className }: SearchInputProps) => {
     const [search, setSearch] = useState(filters.search || '');
     const [loading, setLoading] = useState<boolean>(false);
 
     const debouncedSearch = useDebouncedCallback((value: string) => {
         router.get(
-            adminPending(),
+            href,
             { ...filters, search: value },
             {
                 preserveState: true,

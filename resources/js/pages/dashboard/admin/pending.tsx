@@ -39,6 +39,7 @@ import AssignModal from '@/components/dialogs/assign-case-dialog';
 import { PendingCase } from '@/types/types';
 import { Hint } from '@/components/hint';
 import SearchInput from '@/components/search-input';
+import RefreshButton from '@/components/refresh-button';
 
 interface PaginationLinks {
     url: string | null;
@@ -164,7 +165,10 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                 </CardDescription>
                             </div>
                             <div className="flex items-center gap-2">
-                                <SearchInput filters={filters} />
+                                <SearchInput
+                                    href={adminPending()}
+                                    filters={filters}
+                                />
                                 <Select
                                     // defaultValue={filters.filter || 'all'}
                                     defaultValue="all"
@@ -183,6 +187,7 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
+                                <RefreshButton href={adminPending()} />
                             </div>
                         </div>
                     </CardHeader>

@@ -41,24 +41,32 @@ class AdminController extends Controller
 
 
     // peresonal assignment
-    public function personalAssignments()
+    public function personalAssignments(Request $request)
     {
        $auth_id = Auth::id();
-       $caseAssignments  = CaseAssignment::where("assigned_to", $auth_id);
-
-
-       $personal_assignments = CaseAssignment::with([
+       $query = CaseAssignment::with([
             'caseDetail', 
             'assignedBy'
         ])
         ->where('assigned_to', $auth_id)
-        ->latest()
-        ->paginate(15) 
-        // Using 'through' is the pagination version of 'map'
+        ->latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('caseDetail', function ($q) use ($search) {
+                $q->where('case_tracking_id', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('filter')) {
+            $query->where('priority', $request->filter);
+        }
+
+       $personal_assignments = $query->paginate(15) 
+        ->withQueryString()
         ->through(function ($assignment) {
             return [
-                'uuid' => $assignment->uuid,
-                // Added ?-> to prevent crashing if a relationship is missing
+                'uuid' => $assignment->caseDetail?->uuid,
                 "case_tracking_id" => $assignment->caseDetail?->case_tracking_id ?? 'N/A', 
                 "is_anonymous"     => $assignment->caseDetail?->is_anonymous ?? false,
                 "status"           => $assignment->caseDetail?->status ?? 'unknown',
@@ -75,6 +83,7 @@ class AdminController extends Controller
 
         return Inertia::render("dashboard/admin/assignments", [
             "assignments" => $personal_assignments,
+            "filters" => $request->only(['search', 'filter']),
         ]);
     }
 

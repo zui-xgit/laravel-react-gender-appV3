@@ -111,3 +111,15 @@ export interface PendingCase {
         incident_type: string;
     };
 }
+
+export interface PersonalAssignment {
+    uuid: string;
+    case_tracking_id: string;
+    is_anonymous: boolean;
+    status: string;
+    assigned_by: string;
+    assigned_by_role: string;
+    priority: string;
+    date_assigned: string;
+    last_updated: string | null;
+}
