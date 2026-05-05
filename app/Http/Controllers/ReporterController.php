@@ -78,6 +78,7 @@ class ReporterController extends Controller
             'incidentTime' => 'required|string',
             'incidentLocation' => 'required|string|max:255',
             'incidentExactLocation' => 'required|string',
+            'incidentType' => 'required|string', 
             'incidentCause' => 'required|string',
             // 'incidentDescription' => 'required|string|min:20',
             'incidentDescription' => 'required|string',
@@ -151,10 +152,11 @@ class ReporterController extends Controller
 
             // 5. Create incident
             $case->incidentDetail()->create([
-                'date' => $validated['incidentDate'],
-                'time' => $validated['incidentTime'],
+                'incident_date' => $validated['incidentDate'],
+                'incident_time' => $validated['incidentTime'],
                 'location' => $validated['incidentLocation'],
                 'exact_location' => $validated['incidentExactLocation'],
+                'incident_type' => $validated['incidentType'], 
                 'cause' => $validated['incidentCause'],
                 'description' => $validated['incidentDescription'],
                 'actions_taken' => $validated['incidentActions'],
@@ -178,8 +180,7 @@ class ReporterController extends Controller
 
             DB::rollBack();
 
-            dd($e); 
-           
+           dd($e);
 
             Log::error('Report submission failed', [
                 'transaction' => 'report submission failed',
@@ -193,12 +194,10 @@ class ReporterController extends Controller
             ]);
 
 						
-            // return back()->withErrors([
-            //     'error' => 'Failed to submit report. Please try again or contact support.'
-            // ]); 
-            // TODO: remember to replace this (testing code - insecure) with the comment version original code: (insecure)
+           
+            
             return back()->withErrors([
-                   'error' => $e->getMessage()
+                   'error' => "Failed to submit report. Please try again or contact support."
             ]); 
         }
     }

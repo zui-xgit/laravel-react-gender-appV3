@@ -149,14 +149,104 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+
+const INCIDENT_TYPES = [
+    // Physical & Grave Harm
+    {
+        value: 'Physical Assault / Battery',
+        label: 'Physical Assault / Battery',
+    },
+    { value: 'Sexual Assault / Rape', label: 'Sexual Assault / Rape' },
+    {
+        value: 'Attempted Physical/Sexual Assault',
+        label: 'Attempted Physical/Sexual Assault',
+    },
+
+    // Sexual & Harassment
+    {
+        value: 'Sexual Harassment (Work/Public)',
+        label: 'Sexual Harassment (Work/Public)',
+    },
+    {
+        value: 'Indecent Exposure / Flashing',
+        label: 'Indecent Exposure / Flashing',
+    },
+    {
+        value: 'Non-Consensual Sharing of Intimate Images',
+        label: 'Non-Consensual Sharing of Intimate Images',
+    },
+
+    // Emotional & Psychological
+    {
+        value: 'Emotional / Psychological Abuse',
+        label: 'Emotional / Psychological Abuse',
+    },
+    {
+        value: 'Verbal Abuse / Hate Speech',
+        label: 'Verbal Abuse / Hate Speech',
+    },
+    {
+        value: 'Systemic Gaslighting / Manipulation',
+        label: 'Systemic Gaslighting / Manipulation',
+    },
+    { value: 'Blackmail / Coercion', label: 'Blackmail / Coercion' },
+
+    // Digital & Modern Threats
+    {
+        value: 'Cyber Stalking / Digital Tracking',
+        label: 'Cyber Stalking / Digital Tracking',
+    },
+    {
+        value: 'Doxing / Personal Data Leakage',
+        label: 'Doxing / Personal Data Leakage',
+    },
+    {
+        value: 'Identity Theft / Impersonation',
+        label: 'Identity Theft / Impersonation',
+    },
+
+    // Domestic & Structural
+    {
+        value: 'Domestic / Intimate Partner Violence',
+        label: 'Domestic / Intimate Partner Violence',
+    },
+    {
+        value: 'Economic Abuse (Withholding Funds/Documents)',
+        label: 'Economic Abuse (Withholding Funds/Documents)',
+    },
+    {
+        value: 'Denial of Education or Resources',
+        label: 'Denial of Education or Resources',
+    },
+
+    // Traditional & Institutional
+    { value: 'Forced / Child Marriage', label: 'Forced / Child Marriage' },
+    {
+        value: 'Female Genital Mutilation (FGM)',
+        label: 'Female Genital Mutilation (FGM)',
+    },
+    {
+        value: 'Institutional Gender Discrimination',
+        label: 'Institutional Gender Discrimination',
+    },
+
+    { value: 'Other / Not Listed', label: 'Other / Not Listed' },
+];
 export const Step5 = () => {
     const { formData, errors, updateFormData } = useStepperFormStore();
 
     return (
-        <div className="animate-reveal space-y-6 sm:space-y-8 w-full md:w-[90%]">
+        <div className="animate-reveal w-full space-y-6 sm:space-y-8 md:w-[90%]">
             {/* Header */}
-            <div className="flex items-center gap-3 sm:gap-5">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-border bg-muted text-primary sm:h-14 sm:w-14">
+            <div className="flex flex-row items-center justify-start gap-3 sm:gap-5">
+                <div className="tborder flex shrink-0 items-center justify-center rounded-2xl border border-border bg-muted text-primary sm:h-14 sm:w-14">
                     <ClipboardList size={20} className="sm:h-6 sm:w-6" />
                 </div>
                 <div className="min-w-0">
@@ -258,6 +348,51 @@ export const Step5 = () => {
                     {errors.incidentExactLocation && (
                         <p className="text-xs text-destructive">
                             {errors.incidentExactLocation}
+                        </p>
+                    )}
+                </div>
+
+                <div className="space-y-2">
+                    <Label
+                        htmlFor="incidentType"
+                        className={
+                            errors.incidentType ? 'text-destructive' : ''
+                        }
+                    >
+                        Incident Type
+                    </Label>
+
+                    <Select
+                        value={formData.incidentType ?? ''}
+                        onValueChange={(value) =>
+                            updateFormData({
+                                incidentType: value,
+                            })
+                        }
+                    >
+                        <SelectTrigger
+                            id="incidentType"
+                            className={
+                                errors.incidentType
+                                    ? 'border-destructive focus:ring-destructive'
+                                    : ''
+                            }
+                        >
+                            <SelectValue placeholder="Select the type of incident" />
+                        </SelectTrigger>
+
+                        <SelectContent>
+                            {INCIDENT_TYPES.map((type) => (
+                                <SelectItem key={type.value} value={type.value}>
+                                    {type.label}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+
+                    {errors.incidentType && (
+                        <p className="text-xs text-destructive">
+                            {errors.incidentType}
                         </p>
                     )}
                 </div>

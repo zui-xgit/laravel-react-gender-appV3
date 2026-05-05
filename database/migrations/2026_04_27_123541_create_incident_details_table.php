@@ -15,10 +15,11 @@ return new class extends Migration
         Schema::create('incident_details', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(CaseDetail::class)->constrained()->onDelete('cascade');
-            $table->date('date');
-            $table->time('time');
+            $table->date('incident_date');
+            $table->time('incident_time');
             $table->string('location');
             $table->text('exact_location');
+            $table->string('incident_type');
             $table->text('cause');
             $table->longText('description');
             $table->text('actions_taken');

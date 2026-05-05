@@ -48,27 +48,11 @@ class HandleInertiaRequests extends Middleware
                     'phone' => $request->user()->phone,
                     'role' => $request->user()->role,
                 ] : null,
+                "all_users" => $request->user() ? User::select('uuid', 'first_name', 'last_name', "role")->get() : null ,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
 
-            
-            "options" => function () use ($request) {
-                  $user = $request->user(); 
 
-                  if(!$user){
-                      return null; 
-                  }
-
-                  if($user->role !== 'admin'){
-                     return null; 
-                  }
-
-                  return [
-                    // 'roles' => User::getRoles(), 
-                    // 'statuses' => User::getStatuses(), 
-                    'all_users' => User::select('uuid', "first_name", 'last_name', 'role')->get(),  
-                  ]; 
-            },
 
         ];
     }

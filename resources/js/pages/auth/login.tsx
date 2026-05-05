@@ -305,11 +305,11 @@ export default function Login({
                         <button
                             type="submit"
                             disabled={processing}
-                            className="flex w-full transform cursor-pointer items-center justify-center gap-5 rounded-lg bg-[#2563eb] py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-[#1d4ed8] active:scale-[0.98] sm:py-4 sm:text-base"
+                            className="flex w-full transform cursor-pointer items-center justify-center gap-5 rounded-lg bg-[#2563eb] py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-[#1d4ed8] active:scale-[0.98] disabled:pointer-events-auto disabled:cursor-not-allowed sm:py-4 sm:text-base"
                         >
                             {processing && (
                                 // <LoaderCircle className="size-5 animate-spin" />
-                                <Spinner />
+                                <Spinner className="text-sidebar" />
                             )}
                             Log in
                         </button>
