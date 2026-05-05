@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CaseAssignment;
 use App\Models\CaseDetail;
 use App\Models\User;
 use Exception;
@@ -42,7 +43,39 @@ class AdminController extends Controller
     // peresonal assignment
     public function personalAssignments()
     {
-        return Inertia::render("dashboard/admin/assignments");
+       $auth_id = Auth::id();
+       $caseAssignments  = CaseAssignment::where("assigned_to", $auth_id);
+
+
+       $personal_assignments = CaseAssignment::with([
+            'caseDetail', 
+            'assignedBy'
+        ])
+        ->where('assigned_to', $auth_id)
+        ->latest()
+        ->paginate(15) 
+        // Using 'through' is the pagination version of 'map'
+        ->through(function ($assignment) {
+            return [
+                'uuid' => $assignment->uuid,
+                // Added ?-> to prevent crashing if a relationship is missing
+                "case_tracking_id" => $assignment->caseDetail?->case_tracking_id ?? 'N/A', 
+                "is_anonymous"     => $assignment->caseDetail?->is_anonymous ?? false,
+                "status"           => $assignment->caseDetail?->status ?? 'unknown',
+                
+                "assigned_by" => $assignment->assignedBy?->first_name . ' ' . $assignment->assignedBy?->last_name,
+                'assigned_by_role'=> $assignment->assignedBy?->role,   
+                
+                "priority"      => $assignment->priority,
+                "date_assigned" => $assignment->created_at->toIso8601String(),
+                "last_updated" => $assignment->last_updated
+            ];
+        });
+
+
+        return Inertia::render("dashboard/admin/assignments", [
+            "assignments" => $personal_assignments,
+        ]);
     }
 
     // pending

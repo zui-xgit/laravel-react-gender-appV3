@@ -2,16 +2,25 @@ import { PageProps } from '@inertiajs/core';
 
 export type Sex = 'Male' | 'Female' | 'Other' | null;
 
-// overview props
-export interface CaseDetail {
-    uuid: number;
-    case_tracking_id: string;
-    is_anonymous: boolean;
-    status: 'pending' | 'completed' | 'in_progress';
-    created_at: string;
+export interface UsePageProps extends PageProps {
+    name: string;
+    auth: {
+        user: {
+            uuid: string;
+            first_name: string;
+            last_name: string;
+            role?: string;
+        };
+        all_users: {
+            uuid: string;
+            first_name: string;
+            last_name: string;
+            role?: string;
+        }[];
+    };
+    sidebarOpen: boolean;
+    [key: string]: any; // Allows for additional page-specific props
 }
-
-// case assignment with relationships
 
 export interface CaseAssignment {
     assigned_by: {
@@ -76,9 +85,9 @@ export interface IncidentDetail {
 }
 
 export interface ViewCaseDetail {
-    uuid: number;
+    uuid: string;
     case_tracking_id: string;
-    is_anonymous: number;
+    is_anonymous: boolean;
     status: 'pending' | 'completed' | 'in_progress';
     created_at: string;
 
@@ -91,31 +100,6 @@ export interface ViewCaseDetail {
     accused_detail: AccusedDetail;
     incident_detail: IncidentDetail;
 }
-// end case detail
-
-// UsePageProps
-
-export interface UsePageProps extends PageProps {
-    name: string;
-    auth: {
-        user: {
-            uuid: string;
-            first_name: string;
-            last_name: string;
-            role?: string;
-        };
-        all_users: {
-            uuid: string;
-            first_name: string;
-            last_name: string;
-            role?: string;
-        }[];
-    };
-    sidebarOpen: boolean;
-    [key: string]: any; // Allows for additional page-specific props
-}
-
-// end UsePageProps/
 
 export interface PendingCase {
     uuid: string;
