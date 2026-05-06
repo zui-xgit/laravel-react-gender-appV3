@@ -135,7 +135,7 @@ const AssignModal = ({ isOpen, onClose, selectedCase }: AssignModalProps) => {
                     <div className="space-y-3">
                         <Label className="flex items-center gap-2 text-sm font-semibold">
                             <UserCheck className="h-4 w-4 text-muted-foreground" />
-                            Assigning Personell
+                            Assigning Personnel
                         </Label>
                         <Select
                             onValueChange={(value) =>

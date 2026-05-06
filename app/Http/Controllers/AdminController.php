@@ -191,7 +191,7 @@ class AdminController extends Controller
 
     }
 
-    public function viewCase(CaseDetail $case)
+    public function viewCase(Request $request, CaseDetail $case)
     {
         $case->load([
             'incidentDetail',
@@ -254,6 +254,8 @@ class AdminController extends Controller
 
         return Inertia::render('dashboard/admin/view-case', [
             'caseData' => $case,
+            'from_page' => $request->query('from_page'), 
+            'from_url' => $request->query("from_url"), 
         ]);
     }
 

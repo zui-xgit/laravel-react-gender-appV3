@@ -95,7 +95,10 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
     };
 
     const viewCase = (uuid: string) => {
-        router.get(adminViewCase({ case: uuid }));
+        router.get(adminViewCase({ case: uuid }), {
+            from_page: 'Pending Cases',
+            from_url: window.location.pathname,
+        });
     };
 
     const statsConfig: Stats[] = [
@@ -218,7 +221,8 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                     {cases.data.map((item, index) => (
                                         <tr
                                             key={index}
-                                            className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                                            className="cursor-pointer border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                                            // onClick={() => viewCase(item.uuid)}
                                         >
                                             <td className="p-4 align-middle font-medium">
                                                 {item.case_tracking_id}
@@ -281,7 +285,7 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                                         <Button
                                                             variant="ghost"
                                                             size="icon"
-                                                            className="h-8 w-8 cursor-pointer"
+                                                            className="z-50 h-8 w-8 cursor-pointer"
                                                             onClick={() =>
                                                                 viewCase(
                                                                     item.uuid,

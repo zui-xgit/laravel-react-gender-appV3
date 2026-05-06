@@ -11,9 +11,9 @@ import {
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { formatDate, formatTime } from '@/lib/utils';
-import { adminPending } from '@/routes';
+import { adminPending, adminViewCase } from '@/routes';
 import { PendingCase, ViewCaseDetail } from '@/types/types';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import {
     AlertCircle,
     CheckCircle2,
@@ -550,15 +550,23 @@ const TextAreaDetail = ({ label, value }: { label: string; value: string }) => (
 
 export default ViewCase;
 
-ViewCase.layout = {
-    breadcrumbs: [
-        {
-            title: 'Pending Cases',
-            href: adminPending(),
-        },
-        {
-            title: 'View Case',
-            href: '#',
-        },
-    ],
+interface ViewCaseLayout {
+    caseData: ViewCaseDetail;
+    from_page: string;
+    from_url: URL;
+}
+
+ViewCase.layout = ({ caseData, from_page, from_url }: ViewCaseLayout) => {
+    return {
+        breadcrumbs: [
+            {
+                title: from_page,
+                href: from_url,
+            },
+            {
+                title: 'View Case',
+                href: adminViewCase({ case: caseData.uuid }),
+            },
+        ],
+    };
 };

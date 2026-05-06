@@ -67,7 +67,10 @@ export default function PersonalAssignments({
     };
 
     const viewCase = (uuid: string) => {
-        router.get(adminViewCase({ case: uuid }));
+        router.get(adminViewCase({ case: uuid }), {
+            from_page: 'My Assignments',
+            from_url: window.location.pathname,
+        });
     };
 
     const getPriorityColor = (priority: string) => {
@@ -241,13 +244,16 @@ export default function PersonalAssignments({
                                                                 <Eye className="h-4 w-4" />
                                                             </Button>
                                                         </Hint>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            className="h-8 w-8"
-                                                        >
-                                                            <MoreHorizontal className="h-4 w-4" />
-                                                        </Button>
+
+                                                        <Hint content="Options">
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                className="h-8 w-8 cursor-pointer"
+                                                            >
+                                                                <MoreHorizontal className="h-4 w-4" />
+                                                            </Button>
+                                                        </Hint>
                                                     </div>
                                                 </td>
                                             </tr>

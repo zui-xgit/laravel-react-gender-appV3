@@ -11,7 +11,6 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { adminOverview } from '@/routes';
-import { AdminOverviewStats } from '@/types/types';
 import { Head } from '@inertiajs/react';
 import {
     Activity,
@@ -26,6 +25,15 @@ import {
     UserPlus,
     Users,
 } from 'lucide-react';
+
+interface OverviewProps {
+    stats: {
+        total_cases: string;
+        pending: string;
+        in_progress: string;
+        completed: string;
+    };
+}
 
 const recentActivities = [
     {
@@ -62,7 +70,7 @@ const recentActivities = [
     },
 ];
 
-export default function Overview({ stats }: AdminOverviewStats) {
+export default function Overview({ stats }: OverviewProps) {
     const statsConfig = [
         {
             title: 'Total Cases',
