@@ -8,6 +8,8 @@ Route::inertia('/', 'welcome', [
 ])->name('home');
 
 
+Route::inertia('/test', 'test' )->name("test");
+
 
 require __DIR__.'/admin.php';
 require __DIR__.'/officer.php';

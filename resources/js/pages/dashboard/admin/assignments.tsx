@@ -15,14 +15,25 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { adminAssignments, adminViewCase } from '@/routes';
 import { Head, router } from '@inertiajs/react';
 import {
     Download,
     Eye,
+    FileText,
     MoreHorizontal,
     RefreshCcw,
     ShieldCheck,
+    SquarePen,
+    TrendingUp,
 } from 'lucide-react';
 import { formatDate, formatTime } from '@/lib/utils';
 
@@ -245,15 +256,56 @@ export default function PersonalAssignments({
                                                             </Button>
                                                         </Hint>
 
-                                                        <Hint content="Options">
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="icon"
-                                                                className="h-8 w-8 cursor-pointer"
+                                                        <DropdownMenu>
+                                                            <Hint content="More Actions">
+                                                                <DropdownMenuTrigger
+                                                                    asChild
+                                                                >
+                                                                    <Button
+                                                                        variant="ghost"
+                                                                        size="icon"
+                                                                        className="h-8 w-8 cursor-pointer"
+                                                                    >
+                                                                        <MoreHorizontal className="h-4 w-4" />
+                                                                    </Button>
+                                                                </DropdownMenuTrigger>
+                                                            </Hint>
+
+                                                            <DropdownMenuContent
+                                                                align="end"
+                                                                className="w-48"
                                                             >
-                                                                <MoreHorizontal className="h-4 w-4" />
-                                                            </Button>
-                                                        </Hint>
+                                                                <DropdownMenuLabel>
+                                                                    Actions
+                                                                </DropdownMenuLabel>
+                                                                <DropdownMenuSeparator />
+                                                                <DropdownMenuItem
+                                                                    onClick={() =>
+                                                                        viewCase(
+                                                                            item.uuid,
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <Eye className="mr-2 h-4 w-4" />
+                                                                    View Details
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem>
+                                                                    <TrendingUp className="mr-2 h-4 w-4" />
+                                                                    Update
+                                                                    Status
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuItem>
+                                                                    <SquarePen className="mr-2 h-4 w-4" />
+                                                                    Edit
+                                                                    Assignment
+                                                                </DropdownMenuItem>
+                                                                <DropdownMenuSeparator />
+                                                                <DropdownMenuItem>
+                                                                    <FileText className="mr-2 h-4 w-4" />
+                                                                    Export Case
+                                                                </DropdownMenuItem>
+                                                            </DropdownMenuContent>
+                                                        </DropdownMenu>
                                                     </div>
                                                 </td>
                                             </tr>
