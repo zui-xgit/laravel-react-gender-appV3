@@ -11,7 +11,7 @@ import {
     InvestigationView,
     ResolutionView,
     STEPS,
-} from '@/components/case-workflow';
+} from '@/components/workflow';
 import Heading from '@/components/heading';
 
 const CaseWorkFlow = () => {
