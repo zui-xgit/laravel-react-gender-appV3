@@ -252,11 +252,21 @@ class AdminController extends Controller
 
 
 
-        return Inertia::render('dashboard/admin/view-case', [
+        return Inertia::render('dashboard/view-case', [
             'caseData' => $case,
             'from_page' => $request->query('from_page'), 
             'from_url' => $request->query("from_url"), 
         ]);
+    }
+
+    public function caseWorkFlow(Request $request, CaseDetail $case)
+    {
+
+       return Inertia::render('dashboard/case-workflow', [
+            'case_id' => $case->case_tracking_id,
+            'from_page' => $request->query('from_page'), 
+            'from_url' => $request->query("from_url"), 
+       ]); 
     }
 
     // in_progress

@@ -23,7 +23,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { adminAssignments, adminViewCase } from '@/routes';
+import { adminAssignments, adminCaseWorkflow, adminViewCase } from '@/routes';
 import { Head, router } from '@inertiajs/react';
 import {
     Download,
@@ -80,6 +80,13 @@ export default function PersonalAssignments({
     const viewCase = (uuid: string) => {
         router.get(adminViewCase({ case: uuid }), {
             from_page: 'My Assignments',
+            from_url: window.location.pathname,
+        });
+    };
+
+    const caseWorkFlow = (uuid: string) => {
+        router.get(adminCaseWorkflow({ case: uuid }), {
+            from_page: 'My assignments',
             from_url: window.location.pathname,
         });
     };
@@ -289,21 +296,27 @@ export default function PersonalAssignments({
                                                                     <Eye className="mr-2 h-4 w-4" />
                                                                     View Details
                                                                 </DropdownMenuItem>
-                                                                <DropdownMenuItem>
+                                                                {/* <DropdownMenuItem>
                                                                     <TrendingUp className="mr-2 h-4 w-4" />
                                                                     Update
                                                                     Status
-                                                                </DropdownMenuItem>
-                                                                <DropdownMenuItem>
+                                                                </DropdownMenuItem> */}
+                                                                <DropdownMenuItem
+                                                                    onClick={() => {
+                                                                        caseWorkFlow(
+                                                                            item.uuid,
+                                                                        );
+                                                                    }}
+                                                                >
                                                                     <SquarePen className="mr-2 h-4 w-4" />
-                                                                    Edit
-                                                                    Assignment
+                                                                    Deal with
+                                                                    Case
                                                                 </DropdownMenuItem>
                                                                 <DropdownMenuSeparator />
-                                                                <DropdownMenuItem>
+                                                                {/* <DropdownMenuItem>
                                                                     <FileText className="mr-2 h-4 w-4" />
                                                                     Export Case
-                                                                </DropdownMenuItem>
+                                                                </DropdownMenuItem> */}
                                                             </DropdownMenuContent>
                                                         </DropdownMenu>
                                                     </div>

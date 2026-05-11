@@ -1,25 +1,10 @@
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Hint } from '@/components/hint';
 import { Head } from '@inertiajs/react';
-import {
-    ChevronLeft,
-    ChevronRight,
-    Clock,
-    Landmark,
-    Scale,
-    Search,
-    Shield,
-} from 'lucide-react';
+import { ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 import {
     EscalationView,
     IntakeView,
@@ -29,7 +14,7 @@ import {
 } from '@/components/case-workflow';
 import Heading from '@/components/heading';
 
-const CaseWorkflow = () => {
+const CaseWorkFlow = () => {
     return (
         <div className="px-4 py-6 font-sans md:px-8">
             <Head title="Case Workflow" />
@@ -142,4 +127,29 @@ const CaseWorkflow = () => {
     );
 };
 
-export default CaseWorkflow;
+export default CaseWorkFlow;
+
+interface CaseWorkFlowLayout {
+    case_id: string;
+    from_page: string;
+    from_url: URL;
+}
+CaseWorkFlow.layout = ({
+    case_id,
+    from_page,
+    from_url,
+}: CaseWorkFlowLayout) => {
+    console.log(case_id);
+    return {
+        breadcrumbs: [
+            {
+                title: from_page,
+                href: from_url,
+            },
+            {
+                title: 'Case Workflow',
+                href: '',
+            },
+        ],
+    };
+};
