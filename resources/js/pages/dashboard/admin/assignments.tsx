@@ -28,12 +28,9 @@ import { Head, router } from '@inertiajs/react';
 import {
     Download,
     Eye,
-    FileText,
     MoreHorizontal,
-    RefreshCcw,
     ShieldCheck,
     SquarePen,
-    TrendingUp,
 } from 'lucide-react';
 import { formatDate, formatTime } from '@/lib/utils';
 

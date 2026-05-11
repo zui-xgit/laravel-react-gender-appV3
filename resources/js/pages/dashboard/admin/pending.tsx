@@ -27,7 +27,6 @@ import {
     Eye,
     LucideIcon,
     MoreHorizontal,
-    Search,
     ShieldCheck,
     UserPlus,
 } from 'lucide-react';
