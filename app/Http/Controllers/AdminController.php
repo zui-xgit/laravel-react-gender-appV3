@@ -43,6 +43,7 @@ class AdminController extends Controller
     // peresonal assignment
     public function personalAssignments(Request $request)
     {
+
        $auth_id = Auth::id();
        $query = CaseAssignment::with([
             'caseDetail', 
@@ -70,6 +71,7 @@ class AdminController extends Controller
                 "case_tracking_id" => $assignment->caseDetail?->case_tracking_id ?? 'N/A', 
                 "is_anonymous"     => $assignment->caseDetail?->is_anonymous ?? false,
                 "status"           => $assignment->caseDetail?->status ?? 'unknown',
+                "caseWorkflowPercentage" => $assignment->caseDetail?->caseWorkflowPercentage, 
                 
                 "assigned_by" => $assignment->assignedBy?->first_name . ' ' . $assignment->assignedBy?->last_name,
                 'assigned_by_role'=> $assignment->assignedBy?->role,   
@@ -79,6 +81,7 @@ class AdminController extends Controller
                 "last_updated" => $assignment->last_updated
             ];
         });
+
 
 
         return Inertia::render("dashboard/admin/assignments", [
@@ -261,10 +264,10 @@ class AdminController extends Controller
 
     public function caseWorkFlow(Request $request, CaseDetail $case)
     {
-        $intake_data = $case->caseWorkflowData()->where("phase", 'intake')->value('form_data');
-        $investigation_data = $case->caseWorkflowData()->where("phase", 'investigation')->value('form_data');
-        $escalation_data = $case->caseWorkflowData()->where("phase", 'escalation')->value('form_data');
-        $resolution_data = $case->caseWorkflowData()->where("phase", 'resolution')->value('form_data');
+        $intake_data = $case->caseWorkflow()->where("phase", 'intake')->value('form_data');
+        $investigation_data = $case->caseWorkflow()->where("phase", 'investigation')->value('form_data');
+        $escalation_data = $case->caseWorkflow()->where("phase", 'escalation')->value('form_data');
+        $resolution_data = $case->caseWorkflow()->where("phase", 'resolution')->value('form_data');
 
        return Inertia::render('dashboard/case-workflow', [
             'case_uuid' => $case->uuid,
@@ -274,9 +277,10 @@ class AdminController extends Controller
 
             // Tabs data (if or if not available is handled in the frontend); 
             'intake_data' => $intake_data,
-            'investigation_data' => $investigation_data, 
+            'investigation_data' => $investigation_data,    
             "escalation_data" => $escalation_data, 
-            "resolution_data" => $resolution_data
+            "resolution_data" => $resolution_data,
+            "caseWorkflowPercentage" => $case->caseWorkflowPercentage
             
        ]); 
     }

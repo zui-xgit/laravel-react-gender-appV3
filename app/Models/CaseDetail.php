@@ -6,22 +6,38 @@ use App\Models\AccusedDetail;
 use App\Models\CaseActivity;
 use App\Models\CaseAssignment;
 use App\Models\CaseEvidence;
-use App\Models\CaseWorkflowData;
+use App\Models\CaseWorkflow;
 use App\Models\IncidentDetail;
 use App\Models\InformantDetail;
 use App\Models\VictimDetail;
+use Illuminate\Database\Eloquent\Attributes\Guarded;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+
+#[Guarded(["id", "uuid", "created_at", 'updated_at'])]
 class CaseDetail extends Model
 {
     /** @use HasFactory<\Database\Factories\CaseDetailFactory> */
     use HasFactory, HasUuids;
 
-    protected $guarded = ["id", "uuid", "created_at", 'updated_at'];
+    // protected $guarded = ["id", "uuid", "created_at", 'updated_at'];
+
+    protected function caseWorkflowPercentage(): Attribute
+    {
+      return Attribute::make(
+         get: function (){
+            $workflow_phases = ['intake', 'investigation', 'escalation', 'resolution']; 
+            $completedPhaseCount = $this->caseWorkflow()->whereIn('phase', $workflow_phases)->count(); 
+            $totalPhases = count($workflow_phases);
+            return  ($completedPhaseCount / $totalPhases) * 100;
+         }
+      ); 
+    }
 
     /**
      * Get the columns that should receive a unique identifier.
@@ -72,9 +88,9 @@ class CaseDetail extends Model
         return $this->hasMany(CaseEvidence::class);
     }
 
-    public function caseWorkflowData(): HasMany
+    public function caseWorkflow(): HasMany
     {
-        return $this->hasMany(CaseWorkflowData::class);
+        return $this->hasMany(CaseWorkflow::class);
     }
 
 

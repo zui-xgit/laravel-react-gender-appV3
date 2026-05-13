@@ -13,13 +13,14 @@ import {
     STEPS,
 } from '@/components/workflow';
 import Heading from '@/components/heading';
-import CaseProgressBar from '@/components/case-progress-bar';
+import CaseProgressBar, { IntRange } from '@/components/case-progress-bar';
 
 interface CaseWorkFlowProps {
     case_uuid: string;
     case_tracking_id: string;
     from_page: string;
     from_url: URL;
+    caseWorkflowPercentage: IntRange<0, 100>;
     intake_data: {
         checklist: {
             identity: boolean;
@@ -54,6 +55,7 @@ const CaseWorkFlow = ({
     investigation_data,
     escalation_data,
     resolution_data,
+    caseWorkflowPercentage,
 }: CaseWorkFlowProps) => {
     return (
         <div className="px-4 py-6 font-sans md:px-8">
@@ -79,7 +81,10 @@ const CaseWorkFlow = ({
             </div>
             {/* case progress bar */}
             <div className="mb-8 md:flex md:items-center md:justify-end">
-                <CaseProgressBar progress={70} className="md:w-[50%]" />
+                <div className="flex flex-col md:w-[50%]">
+                    <span>Case Progress</span>
+                    <CaseProgressBar progress={caseWorkflowPercentage} />
+                </div>
             </div>
             {/* ── Main Grid ── */}
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">

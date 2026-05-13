@@ -38,6 +38,7 @@ import { PersonalAssignment } from '@/types/types';
 import { Hint } from '@/components/hint';
 import SearchInput from '@/components/search-input';
 import RefreshButton from '@/components/refresh-button';
+import CaseProgressBar from '@/components/case-progress-bar';
 
 interface PaginationLinks {
     url: string | null;
@@ -176,6 +177,9 @@ export default function PersonalAssignments({
                                             Identity
                                         </th>
                                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                                            Progress
+                                        </th>
+                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
                                             Date Assigned
                                         </th>
                                         <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">
@@ -228,6 +232,13 @@ export default function PersonalAssignments({
                                                             Identified
                                                         </Badge>
                                                     )}
+                                                </td>
+                                                <td className="p-4 align-middle">
+                                                    <CaseProgressBar
+                                                        progress={
+                                                            item.caseWorkflowPercentage
+                                                        }
+                                                    />
                                                 </td>
                                                 <td className="p-4 align-middle text-muted-foreground">
                                                     <div className="flex flex-col text-xs">

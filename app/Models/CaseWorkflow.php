@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\CaseDetail;
+use Illuminate\Database\Eloquent\Attributes\Guarded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class CaseWorkflowData extends Model
-{
-    protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    /**
+#[Guarded(['id', 'created_at', 'updated_at'])]
+class CaseWorkflow extends Model
+{
+
+ /**
      * DATA TRANSFORMATION (The Translator)
      * 
      * This tells Laravel how to convert database columns into PHP types.
@@ -29,4 +32,5 @@ class CaseWorkflowData extends Model
     {
         return $this->belongsTo(User::class, 'completed_by');
     }
+   
 }

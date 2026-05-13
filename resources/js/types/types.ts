@@ -1,3 +1,4 @@
+import { IntRange } from '@/components/case-progress-bar';
 import { PageProps } from '@inertiajs/core';
 
 export type Sex = 'Male' | 'Female' | 'Other' | null;
@@ -117,6 +118,7 @@ export interface PersonalAssignment {
     case_tracking_id: string;
     is_anonymous: boolean;
     status: string;
+    caseWorkflowPercentage: IntRange<0, 100>;
     assigned_by: string;
     assigned_by_role: string;
     priority: string;

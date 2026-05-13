@@ -27,7 +27,7 @@ class CaseWorkflowController extends Controller
        try{
           DB::beginTransaction(); 
 
-          $case->caseWorkflowData()->updateOrCreate(
+          $case->caseWorkflow()->updateOrCreate(
               ["phase" => 'intake'],
               [
                 'form_data' => $validated, 
@@ -63,7 +63,7 @@ class CaseWorkflowController extends Controller
             DB::beginTransaction(); 
 
 
-            $case->caseWorkflowData()->updateOrCreate(
+            $case->caseWorkflow()->updateOrCreate(
               ["phase" => 'investigation'],
               [
                 'form_data' => $validated, 
@@ -97,7 +97,7 @@ class CaseWorkflowController extends Controller
             DB::beginTransaction(); 
 
 
-            $case->caseWorkflowData()->updateOrCreate(
+            $case->caseWorkflow()->updateOrCreate(
               ["phase" => 'escalation'],
               [
                 'form_data' => $validated, 
@@ -135,7 +135,7 @@ class CaseWorkflowController extends Controller
             DB::beginTransaction(); 
 
 
-            $case->caseWorkflowData()->updateOrCreate(
+            $case->caseWorkflow()->updateOrCreate(
               ["phase" => 'resolution'],
               [
                 'form_data' => $validated, 

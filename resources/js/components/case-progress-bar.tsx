@@ -8,24 +8,26 @@ type Enumerate<
     ? Acc[number]
     : Enumerate<N, [...Acc, Acc['length']]>;
 
-type IntRange<F extends number, T extends number> = Exclude<
+export type IntRange<F extends number, T extends number> = Exclude<
     Enumerate<T>,
     Enumerate<F>
 >;
 
 interface CaseProgressBarProps {
-    progress: IntRange<0, 101>;
+    progress: IntRange<0, 100>;
     className?: string;
 }
 
 const CaseProgressBar = ({ progress, className }: CaseProgressBarProps) => {
     return (
-        <div className={cn(className)}>
-            <div className="mb-2 flex items-center justify-between text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
+        <div className={cn(className, 'flex flex-row items-center gap-3')}>
+            {/* <div className="mb-2 flex items-center justify-between text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
                 <span>Case Progress</span>
-                <span className="text-sm text-foreground">{progress}%</span>
-            </div>
-            <Progress value={progress} className="h-2.5 w-full shadow-sm" />
+            </div> */}
+            <Progress value={progress} className="h-2 shadow-sm" />
+            <span className="text-xs font-bold text-foreground">
+                {progress}%
+            </span>
         </div>
     );
 };
