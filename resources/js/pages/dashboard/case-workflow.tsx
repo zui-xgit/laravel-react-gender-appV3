@@ -13,12 +13,51 @@ import {
     STEPS,
 } from '@/components/workflow';
 import Heading from '@/components/heading';
+import CaseProgressBar from '@/components/case-progress-bar';
 
-const CaseWorkFlow = () => {
+interface CaseWorkFlowProps {
+    case_uuid: string;
+    case_tracking_id: string;
+    from_page: string;
+    from_url: URL;
+    intake_data: {
+        checklist: {
+            identity: boolean;
+            jurisdiction: boolean;
+            safety: boolean;
+        };
+        observations: string;
+    } | null;
+    investigation_data: {
+        subjectName: string;
+        relationship: string;
+        summary: string;
+    } | null;
+    escalation_data: {
+        targetUnit: string;
+        reason: string;
+        notes: string;
+    } | null;
+    resolution_data: {
+        coordinatorName: string;
+        phone: string;
+        comment: string;
+        date: string;
+        time: string;
+    } | null;
+}
+
+const CaseWorkFlow = ({
+    case_uuid,
+    case_tracking_id,
+    intake_data,
+    investigation_data,
+    escalation_data,
+    resolution_data,
+}: CaseWorkFlowProps) => {
     return (
         <div className="px-4 py-6 font-sans md:px-8">
             <Head title="Case Workflow" />
-
             {/* ── Page Header ── */}
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
@@ -33,12 +72,15 @@ const CaseWorkFlow = () => {
                     </Hint>
                     <Heading
                         variant="small"
-                        title="Case:    PS-2026-08-21-XTFQU"
-                        description="Assigned to Bernard"
+                        title={case_tracking_id}
+                        description="Assigned to You"
                     />
                 </div>
             </div>
-
+            {/* case progress bar */}
+            <div className="mb-8 md:flex md:items-center md:justify-end">
+                <CaseProgressBar progress={70} className="md:w-[50%]" />
+            </div>
             {/* ── Main Grid ── */}
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
                 {/* ── LEFT: Work Area with Tabs ── */}
@@ -74,16 +116,28 @@ const CaseWorkFlow = () => {
 
                         {/* Tab Content Card */}
                         <TabsContent value="intake" className="mt-0">
-                            <IntakeView />
+                            <IntakeView
+                                case_uuid={case_uuid}
+                                intake_data={intake_data}
+                            />
                         </TabsContent>
                         <TabsContent value="investigation" className="mt-0">
-                            <InvestigationView />
+                            <InvestigationView
+                                case_uuid={case_uuid}
+                                investigation_data={investigation_data}
+                            />
                         </TabsContent>
                         <TabsContent value="escalation" className="mt-0">
-                            <EscalationView />
+                            <EscalationView
+                                case_uuid={case_uuid}
+                                escalation_data={escalation_data}
+                            />
                         </TabsContent>
                         <TabsContent value="resolution" className="mt-0">
-                            <ResolutionView />
+                            <ResolutionView
+                                case_uuid={case_uuid}
+                                resolution_data={resolution_data}
+                            />
                         </TabsContent>
                     </Tabs>
                 </div>
@@ -129,17 +183,8 @@ const CaseWorkFlow = () => {
 
 export default CaseWorkFlow;
 
-interface CaseWorkFlowLayout {
-    case_id: string;
-    from_page: string;
-    from_url: URL;
-}
-CaseWorkFlow.layout = ({
-    case_id,
-    from_page,
-    from_url,
-}: CaseWorkFlowLayout) => {
-    console.log(case_id);
+CaseWorkFlow.layout = ({ from_page, from_url }: CaseWorkFlowProps) => {
+    // console.log(case_id);
     return {
         breadcrumbs: [
             {

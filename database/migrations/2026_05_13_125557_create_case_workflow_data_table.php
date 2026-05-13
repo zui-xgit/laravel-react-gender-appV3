@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('completed_by')->constrained('users')->onDelete('cascade');
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
-
+    
             $table->index(['case_detail_id', 'phase']);
         });
     }

@@ -45,6 +45,15 @@ import { Checkbox } from './ui/checkbox';
 import { cn } from '@/lib/utils';
 import { useForm } from '@inertiajs/react';
 import InputError from '@/components/input-error';
+import { Spinner } from './ui/spinner';
+import {
+    caseEscalation,
+    caseIntake,
+    caseInvestigation,
+    caseResolution,
+} from '@/routes';
+import { toast } from 'sonner';
+import { useEffect } from 'react';
 
 interface StepCardProps {
     title: string;
@@ -130,16 +139,47 @@ export function StepCard({
     );
 }
 
-export const IntakeView = () => {
-    const { data, setData, errors, setError, clearErrors, processing } =
-        useForm({
-            checklist: {
+type IntakeViewUseForm = {
+    checklist: {
+        identity: boolean;
+        jurisdiction: boolean;
+        safety: boolean;
+    };
+    observations: string;
+};
+
+interface IntakeViewProps {
+    case_uuid: string;
+    intake_data: {
+        checklist: {
+            identity: boolean;
+            jurisdiction: boolean;
+            safety: boolean;
+        };
+        observations: string;
+    } | null;
+}
+
+export const IntakeView = ({ case_uuid, intake_data }: IntakeViewProps) => {
+    const { data, setData, errors, setError, clearErrors, processing, post } =
+        useForm<IntakeViewUseForm>({
+            checklist: intake_data?.checklist ?? {
                 identity: false,
                 jurisdiction: false,
                 safety: false,
             },
-            observations: '',
+            observations: intake_data?.observations ?? '',
         });
+
+    // useEffect(() => {
+    //     if (intake_data) {
+    //         setData((prevData) => ({
+    //             ...prevData,
+    //             checklist: intake_data.checklist,
+    //             observations: intake_data.observations,
+    //         }));
+    //     }
+    // }, [intake_data]);
 
     const handleCheckChange = (id: string, checked: boolean) => {
         setData('checklist', {
@@ -165,7 +205,21 @@ export const IntakeView = () => {
 
         if (hasErrors) return;
 
-        console.log('Intake Review Verified Successfully:', data);
+        // console.log('Intake Review Verified Successfully:', data);
+
+        post(caseIntake({ case: case_uuid }).url, {
+            onSuccess: (page) => {
+                if (page.flash) {
+                    toast.success(page.flash.message as string);
+                }
+            },
+            onError: (errors) => {
+                if (errors) {
+                    toast.error(errors.error);
+                }
+            },
+            preserveScroll: true,
+        });
     };
 
     return (
@@ -274,7 +328,10 @@ export const IntakeView = () => {
                                             ]
                                         }
                                         onCheckedChange={(checked) =>
-                                            handleCheckChange(item.id, !!checked)
+                                            handleCheckChange(
+                                                item.id,
+                                                !!checked,
+                                            )
                                         }
                                     />
                                     <Label
@@ -309,12 +366,21 @@ export const IntakeView = () => {
                     </div>
 
                     <Button
-                        className="h-11 w-full font-semibold"
+                        className="h-11 w-full cursor-pointer font-semibold"
                         onClick={handleSubmit}
                         disabled={processing}
                     >
-                        <CheckCircle className="mr-2 h-4 w-4" />
-                        Verify & Lock Intake Review
+                        {processing ? (
+                            <Spinner />
+                        ) : (
+                            <>
+                                <CheckCircle className="mr-2 h-4 w-4" />
+
+                                {intake_data
+                                    ? 'Update Intake Review'
+                                    : 'Verify & Lock Intake Review'}
+                            </>
+                        )}
                     </Button>
                 </div>
             </StepCard>
@@ -322,12 +388,23 @@ export const IntakeView = () => {
     );
 };
 
-export const InvestigationView = () => {
-    const { data, setData, errors, setError, clearErrors, processing } =
+interface InvetigationViewProps {
+    case_uuid: string;
+    investigation_data: {
+        subjectName: string;
+        relationship: string;
+        summary: string;
+    } | null;
+}
+export const InvestigationView = ({
+    case_uuid,
+    investigation_data,
+}: InvetigationViewProps) => {
+    const { data, setData, errors, setError, clearErrors, processing, post } =
         useForm({
-            subjectName: '',
-            relationship: '',
-            summary: '',
+            subjectName: investigation_data?.subjectName ?? '',
+            relationship: investigation_data?.relationship ?? '',
+            summary: investigation_data?.summary ?? '',
         });
 
     const handleSubmit = () => {
@@ -349,7 +426,20 @@ export const InvestigationView = () => {
 
         if (hasErrors) return;
 
-        console.log('Investigation Log Updated Successfully:', data);
+        // console.log('Investigation Log Updated Successfully:', data);
+        post(caseInvestigation({ case: case_uuid }).url, {
+            onSuccess: (page) => {
+                if (page.flash) {
+                    toast.success(page.flash.message as string);
+                }
+            },
+            onError: (errors) => {
+                if (errors) {
+                    toast.error(errors.error);
+                }
+            },
+            preserveScroll: true,
+        });
     };
 
     return (
@@ -463,16 +553,26 @@ export const InvestigationView = () => {
                             <InputError message={errors.summary} />
                         </div>
                         <div className="flex justify-end gap-2 pt-1">
-                            <Button variant="outline" size="sm">
+                            {/* <Button variant="outline" size="sm">
                                 Save Draft
-                            </Button>
+                            </Button> */}
                             <Button
                                 size="sm"
                                 className="px-6"
                                 onClick={handleSubmit}
                                 disabled={processing}
                             >
-                                Update Case Log
+                                {processing ? (
+                                    <>
+                                        <Spinner />
+                                    </>
+                                ) : (
+                                    <>
+                                        {investigation_data
+                                            ? 'Update investigation'
+                                            : 'Save Investigation'}
+                                    </>
+                                )}
                             </Button>
                         </div>
                     </CardContent>
@@ -503,12 +603,23 @@ export const InvestigationView = () => {
     );
 };
 
-export const EscalationView = () => {
-    const { data, setData, errors, setError, clearErrors, processing } =
+interface EscalationViewProps {
+    case_uuid: string;
+    escalation_data: {
+        targetUnit: string;
+        reason: string;
+        notes: string;
+    } | null;
+}
+export const EscalationView = ({
+    case_uuid,
+    escalation_data,
+}: EscalationViewProps) => {
+    const { data, setData, errors, setError, clearErrors, processing, post } =
         useForm({
-            targetUnit: '',
-            reason: '',
-            notes: '',
+            targetUnit: escalation_data?.targetUnit ?? '',
+            reason: escalation_data?.reason ?? '',
+            notes: escalation_data?.notes ?? '',
         });
 
     const handleSubmit = () => {
@@ -530,7 +641,19 @@ export const EscalationView = () => {
 
         if (hasErrors) return;
 
-        console.log('Case Escalated Successfully:', data);
+        post(caseEscalation({ case: case_uuid }).url, {
+            onSuccess: (page) => {
+                if (page.flash) {
+                    toast.success(page.flash.message as string);
+                }
+            },
+            onError: (errors) => {
+                if (errors) {
+                    toast.error(errors.error);
+                }
+            },
+            preserveScroll: true,
+        });
     };
 
     return (
@@ -661,8 +784,18 @@ export const EscalationView = () => {
                                 onClick={handleSubmit}
                                 disabled={processing}
                             >
-                                <ArrowUpRight className="mr-2 h-4 w-4" />
-                                Initiate Transfer
+                                {processing ? (
+                                    <>
+                                        <Spinner />
+                                    </>
+                                ) : (
+                                    <>
+                                        <ArrowUpRight className="mr-2 h-4 w-4" />
+                                        {escalation_data
+                                            ? 'Update Initiation Transfer'
+                                            : 'Initiate Transfer'}
+                                    </>
+                                )}
                             </Button>
                             <Button variant="outline" className="flex-1">
                                 <Scale className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -684,14 +817,27 @@ export const EscalationView = () => {
     );
 };
 
-export const ResolutionView = () => {
-    const { data, setData, errors, setError, clearErrors, processing } =
+interface ResolutionViewProps {
+    case_uuid: string;
+    resolution_data: {
+        coordinatorName: string;
+        phone: string;
+        comment: string;
+        date: string;
+        time: string;
+    } | null;
+}
+export const ResolutionView = ({
+    case_uuid,
+    resolution_data,
+}: ResolutionViewProps) => {
+    const { data, setData, errors, setError, clearErrors, processing, post } =
         useForm({
-            coordinatorName: '',
-            phone: '',
-            comment: '',
-            date: '',
-            time: '',
+            coordinatorName: resolution_data?.coordinatorName ?? '',
+            phone: resolution_data?.phone ?? '',
+            comment: resolution_data?.comment ?? '',
+            date: resolution_data?.date ?? '',
+            time: resolution_data?.time ?? '',
         });
 
     const handleSubmit = () => {
@@ -721,7 +867,19 @@ export const ResolutionView = () => {
 
         if (hasErrors) return;
 
-        console.log('Case Finalized Successfully:', data);
+        post(caseResolution({ case: case_uuid }).url, {
+            onSuccess: (page) => {
+                if (page.flash) {
+                    toast.success(page.flash.message as string);
+                }
+            },
+            onError: (errors) => {
+                if (errors) {
+                    toast.error(errors.error);
+                }
+            },
+            preserveScroll: true,
+        });
     };
 
     return (
@@ -761,7 +919,10 @@ export const ResolutionView = () => {
                                     placeholder="Enter full name..."
                                     value={data.coordinatorName}
                                     onChange={(e) =>
-                                        setData('coordinatorName', e.target.value)
+                                        setData(
+                                            'coordinatorName',
+                                            e.target.value,
+                                        )
                                     }
                                     className={cn(
                                         errors.coordinatorName &&
@@ -775,6 +936,7 @@ export const ResolutionView = () => {
                                     <Phone size={11} /> Phone Number
                                 </Label>
                                 <Input
+                                    type="number"
                                     placeholder="+255..."
                                     value={data.phone}
                                     onChange={(e) =>
@@ -864,11 +1026,21 @@ export const ResolutionView = () => {
                                 onClick={handleSubmit}
                                 disabled={processing}
                             >
-                                Finalize & Archive Case Record
+                                {processing ? (
+                                    <>
+                                        <Spinner />
+                                    </>
+                                ) : (
+                                    <>
+                                        {resolution_data
+                                            ? 'Update & Archive Case Record'
+                                            : 'Finalize & Archive Case Record'}
+                                    </>
+                                )}
                             </Button>
                             <p className="px-4 text-center text-[10px] text-muted-foreground italic">
-                                By finalizing, you certify this case was handled per
-                                GBV standard operating procedures.
+                                By finalizing, you certify this case was handled
+                                per GBV standard operating procedures.
                             </p>
                         </div>
                     </CardContent>

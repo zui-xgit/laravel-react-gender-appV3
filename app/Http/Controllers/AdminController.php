@@ -261,11 +261,23 @@ class AdminController extends Controller
 
     public function caseWorkFlow(Request $request, CaseDetail $case)
     {
+        $intake_data = $case->caseWorkflowData()->where("phase", 'intake')->value('form_data');
+        $investigation_data = $case->caseWorkflowData()->where("phase", 'investigation')->value('form_data');
+        $escalation_data = $case->caseWorkflowData()->where("phase", 'escalation')->value('form_data');
+        $resolution_data = $case->caseWorkflowData()->where("phase", 'resolution')->value('form_data');
 
        return Inertia::render('dashboard/case-workflow', [
-            'case_id' => $case->case_tracking_id,
+            'case_uuid' => $case->uuid,
+            'case_tracking_id' => $case->case_tracking_id,
             'from_page' => $request->query('from_page'), 
             'from_url' => $request->query("from_url"), 
+
+            // Tabs data (if or if not available is handled in the frontend); 
+            'intake_data' => $intake_data,
+            'investigation_data' => $investigation_data, 
+            "escalation_data" => $escalation_data, 
+            "resolution_data" => $resolution_data
+            
        ]); 
     }
 
