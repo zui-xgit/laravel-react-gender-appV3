@@ -3,13 +3,17 @@
 namespace App\Models;
 
 use App\Models\AccusedDetail;
+use App\Models\CaseActivity;
 use App\Models\CaseAssignment;
+use App\Models\CaseEvidence;
+use App\Models\CaseWorkflowData;
 use App\Models\IncidentDetail;
 use App\Models\InformantDetail;
 use App\Models\VictimDetail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CaseDetail extends Model
@@ -55,6 +59,22 @@ class CaseDetail extends Model
     public function caseAssignment(): HasOne
     {
           return $this->hasOne(CaseAssignment::class); 
+    }
+
+    // ========================RELATIONSHIP TO WORKFLOW TABLES ======================
+    public function caseActivities(): HasMany
+    {
+        return $this->hasMany(CaseActivity::class);
+    }
+
+    public function caseEvidences(): HasMany
+    {
+        return $this->hasMany(CaseEvidence::class);
+    }
+
+    public function caseWorkflowData(): HasMany
+    {
+        return $this->hasMany(CaseWorkflowData::class);
     }
 
 

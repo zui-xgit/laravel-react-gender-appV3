@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Hint } from '@/components/hint';
@@ -13,8 +14,12 @@ import {
     STEPS,
 } from '@/components/workflow';
 import Heading from '@/components/heading';
+import CaseProgressBar from '@/components/case-progress-bar';
 
 const CaseWorkFlow = () => {
+    // Dummy data for case progress
+    const progress = 90;
+
     return (
         <div className="px-4 py-6 font-sans md:px-8">
             <Head title="Case Workflow" />
@@ -37,6 +42,11 @@ const CaseWorkFlow = () => {
                         description="Assigned to Bernard"
                     />
                 </div>
+            </div>
+
+            {/* ── Case Progress ── */}
+            <div className="mb-8 md:flex md:items-center md:justify-end">
+                <CaseProgressBar progress={progress} className="md:w-[50%]" />
             </div>
 
             {/* ── Main Grid ── */}
