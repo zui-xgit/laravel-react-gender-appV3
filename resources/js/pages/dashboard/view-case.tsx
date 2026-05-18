@@ -100,37 +100,16 @@ const ViewCase = ({ caseData }: ViewCaseProps) => {
                 <Tabs defaultValue="overview" className="w-full">
                     <TabsList
                         variant="line"
-                        className="mb-6 h-auto w-full justify-start gap-4 rounded-none border-b bg-transparent p-0"
+                        className="mb-3 grid h-auto grid-cols-5 gap-3 rounded-none border-b bg-transparent p-0"
                     >
-                        <TabsTrigger
-                            value="overview"
-                            className="h-11 rounded-none border-b-2 border-transparent bg-transparent px-4 shadow-none! data-[state=active]:border-primary"
-                        >
-                            Overview
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="incident"
-                            className="h-11 rounded-none border-b-2 border-transparent bg-transparent px-4 shadow-none! data-[state=active]:border-primary"
-                        >
+                        <TabsTrigger value="overview">Overview</TabsTrigger>
+                        <TabsTrigger value="incident">
                             Incident Details
                         </TabsTrigger>
-                        <TabsTrigger
-                            value="victim"
-                            className="h-11 rounded-none border-b-2 border-transparent bg-transparent px-4 shadow-none! data-[state=active]:border-primary"
-                        >
-                            Victim Info
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="accused"
-                            className="h-11 rounded-none border-b-2 border-transparent bg-transparent px-4 shadow-none! data-[state=active]:border-primary"
-                        >
-                            Accused Info
-                        </TabsTrigger>
+                        <TabsTrigger value="victim">Victim Info</TabsTrigger>
+                        <TabsTrigger value="accused">Accused Info</TabsTrigger>
                         {!caseData.is_anonymous && (
-                            <TabsTrigger
-                                value="informant"
-                                className="h-11 rounded-none border-b-2 border-transparent bg-transparent px-4 shadow-none! data-[state=active]:border-primary"
-                            >
+                            <TabsTrigger value="informant">
                                 Informant Info
                             </TabsTrigger>
                         )}

@@ -8,7 +8,16 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
+    CardFooter,
 } from '@/components/ui/card';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 
 import {
     Select,
@@ -172,7 +181,6 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                     filters={filters}
                                 />
                                 <Select
-                                    // defaultValue={filters.filter || 'all'}
                                     defaultValue="all"
                                     onValueChange={handleFilterChange}
                                 >
@@ -194,47 +202,33 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                         </div>
                     </CardHeader>
                     <CardContent className="p-0">
-                        <div className="relative w-full overflow-auto">
-                            <table className="w-full caption-bottom text-sm">
-                                <thead className="[&_tr]:border-b">
-                                    <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
-                                            Case ID
-                                        </th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
-                                            Incident Type
-                                        </th>
-
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
-                                            Identity
-                                        </th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
-                                            Submitted
-                                        </th>
-                                        <th className="flex h-12 items-center justify-center px-4 text-right align-middle font-medium text-muted-foreground">
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="[&_tr:last-child]:border-0">
-                                    {cases.data.map((item, index) => (
-                                        <tr
-                                            key={index}
-                                            className="cursor-pointer border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
-                                            // onClick={() => viewCase(item.uuid)}
-                                        >
-                                            <td className="p-4 align-middle font-medium">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Case ID</TableHead>
+                                    <TableHead>Incident Type</TableHead>
+                                    <TableHead>Identity</TableHead>
+                                    <TableHead>Submitted</TableHead>
+                                    <TableHead className="text-right">
+                                        Actions
+                                    </TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {cases.data.length > 0 ? (
+                                    cases.data.map((item, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell className="font-medium">
                                                 {item.case_tracking_id}
-                                            </td>
-                                            <td className="p-4 align-middle">
+                                            </TableCell>
+                                            <TableCell>
                                                 <span className="font-medium">
                                                     {item.incident_detail
                                                         ?.incident_type ||
                                                         'N/A'}
                                                 </span>
-                                            </td>
-
-                                            <td className="p-4 align-middle">
+                                            </TableCell>
+                                            <TableCell>
                                                 {item.is_anonymous ? (
                                                     <Badge
                                                         variant="secondary"
@@ -248,8 +242,8 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                                         Identified
                                                     </Badge>
                                                 )}
-                                            </td>
-                                            <td className="p-4 align-middle text-muted-foreground">
+                                            </TableCell>
+                                            <TableCell className="text-muted-foreground">
                                                 <div className="flex flex-col text-xs">
                                                     <span>
                                                         {formatDate(
@@ -262,8 +256,8 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                                         )}
                                                     </span>
                                                 </div>
-                                            </td>
-                                            <td className="p-4 text-right align-middle">
+                                            </TableCell>
+                                            <TableCell className="text-right">
                                                 <div className="flex justify-end gap-2">
                                                     <Hint content="Assign Personnel">
                                                         <Button
@@ -302,13 +296,25 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                                         <MoreHorizontal className="h-4 w-4" />
                                                     </Button>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className="flex items-center justify-between border-t px-4 py-4">
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell
+                                            colSpan={5}
+                                            className="h-24 text-center text-muted-foreground"
+                                        >
+                                            No pending cases found.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+
+                    {cases.total > 0 && (
+                        <CardFooter className="flex items-center justify-between border-t px-6 py-3">
                             <p className="text-xs text-muted-foreground">
                                 Showing{' '}
                                 <strong>
@@ -318,7 +324,10 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                             </p>
                             <div className="flex gap-2">
                                 {cases.links.map((link, i) => {
-                                    if (link.label.includes('Previous')) {
+                                    if (
+                                        link.label.includes('Previous') ||
+                                        link.label.includes('Next')
+                                    ) {
                                         return (
                                             <Button
                                                 key={i}
@@ -330,31 +339,17 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                                     router.get(link.url)
                                                 }
                                             >
-                                                Previous
-                                            </Button>
-                                        );
-                                    }
-                                    if (link.label.includes('Next')) {
-                                        return (
-                                            <Button
-                                                key={i}
-                                                variant="outline"
-                                                size="sm"
-                                                disabled={!link.url}
-                                                onClick={() =>
-                                                    link.url &&
-                                                    router.get(link.url)
-                                                }
-                                            >
-                                                Next
+                                                {link.label.includes('Previous')
+                                                    ? 'Previous'
+                                                    : 'Next'}
                                             </Button>
                                         );
                                     }
                                     return null;
                                 })}
                             </div>
-                        </div>
-                    </CardContent>
+                        </CardFooter>
+                    )}
                 </Card>
             </div>
 

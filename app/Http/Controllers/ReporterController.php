@@ -92,7 +92,6 @@ class ReporterController extends Controller
         
         
         try{
-             // Start database transaction
 
 						 
             $datePart = now()->format('Y-m-d'); // 2025-12-26
@@ -100,6 +99,7 @@ class ReporterController extends Controller
             $case_tracking_id = "PS-{$datePart}-{$randomPart}";
 
 
+             // Start database transaction
 
             DB::beginTransaction();
 
@@ -180,7 +180,7 @@ class ReporterController extends Controller
 
             DB::rollBack();
 
-           dd($e);
+        //    dd($e);
 
             Log::error('Report submission failed', [
                 'transaction' => 'report submission failed',
@@ -199,6 +199,8 @@ class ReporterController extends Controller
             return back()->withErrors([
                    'error' => "Failed to submit report. Please try again or contact support."
             ]); 
+
+            
         }
     }
 

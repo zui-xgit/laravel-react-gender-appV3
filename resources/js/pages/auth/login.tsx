@@ -133,7 +133,7 @@ import { Spinner } from '@/components/ui/spinner';
 
 import { store } from '@/routes/login';
 // import { request } from '@/routes/password';
-import { register } from '@/routes';
+// import { register } from '@/routes';
 import { toast } from 'sonner';
 
 import { PortalLoader } from '@/components/portal-loader';
@@ -151,7 +151,7 @@ type Props = {
 export default function Login({
     status,
     // canResetPassword,
-    canRegister,
+    // canRegister,
 }: Props) {
     // Initialize useForm with your fields
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -314,19 +314,6 @@ export default function Login({
                             Log in
                         </button>
                     </form>
-
-                    {canRegister && (
-                        <div className="mt-6 text-center text-sm text-[#64748b]">
-                            Don't have an account?{' '}
-                            <Link
-                                prefetch="hover"
-                                href={register()}
-                                className="font-bold text-[#2563eb] hover:underline"
-                            >
-                                Register
-                            </Link>
-                        </div>
-                    )}
 
                     <div className="mt-8 text-center text-[10px] text-[#64748b] sm:text-xs">
                         © 2026 MUHAS Gender Reporting Unit. Version 1.0.2

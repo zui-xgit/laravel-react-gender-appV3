@@ -44,6 +44,8 @@ class CaseWorkflowController extends Controller
        }catch(Exception $e){
           DB::rollBack(); 
 
+          dd($e);
+
           return back()->withErrors([
             'error' => 'An internal error occurred while processing the intake.'
         ]);

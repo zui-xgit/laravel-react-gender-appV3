@@ -69,7 +69,6 @@ interface WorkflowStep {
     id: StepId;
     label: string;
     shortLabel: string;
-    desc: string;
     icon: React.ElementType;
 }
 
@@ -78,28 +77,24 @@ export const STEPS: WorkflowStep[] = [
         id: 'intake',
         label: 'Intake & Review',
         shortLabel: 'Intake',
-        desc: 'Statement validation',
         icon: Search,
     },
     {
         id: 'investigation',
         label: 'Investigation',
         shortLabel: 'Investigate',
-        desc: 'Evidence & interviews',
         icon: Shield,
     },
     {
         id: 'escalation',
         label: 'Escalation',
         shortLabel: 'Escalate',
-        desc: 'Legal & Referrals',
         icon: Landmark,
     },
     {
         id: 'resolution',
         label: 'Final Resolution',
         shortLabel: 'Resolve',
-        desc: 'Closing report',
         icon: Scale,
     },
 ];

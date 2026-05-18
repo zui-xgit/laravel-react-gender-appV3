@@ -90,7 +90,7 @@ const CaseWorkFlow = ({
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
                 {/* ── LEFT: Work Area with Tabs ── */}
                 <div className="lg:col-span-9">
-                    <Tabs defaultValue="intake" className="flex flex-col gap-8">
+                    <Tabs defaultValue="intake" className="flex flex-col">
                         <TabsList
                             variant={'line'}
                             className="grid h-auto w-full grid-cols-4 rounded-xl"
@@ -102,7 +102,7 @@ const CaseWorkFlow = ({
                                     <TabsTrigger
                                         key={index}
                                         value={step.id}
-                                        className="flex h-11 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg px-2 py-2 transition-all data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                                        className="flex h-auto cursor-pointer items-center justify-center gap-1 rounded-lg px-2 py-1 transition-all data-[state=active]:bg-background data-[state=active]:shadow-sm"
                                     >
                                         <div className="flex items-center gap-1.5">
                                             <Icon className="h-3.5 w-3.5" />
@@ -110,9 +110,6 @@ const CaseWorkFlow = ({
                                                 {step.shortLabel}
                                             </span>
                                         </div>
-                                        <span className="hidden text-[9px] font-medium tracking-wide text-muted-foreground uppercase md:block">
-                                            {step.desc}
-                                        </span>
                                     </TabsTrigger>
                                     // </Hint>
                                 );

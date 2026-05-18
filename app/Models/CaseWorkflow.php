@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use App\Models\CaseDetail;
+use App\Observers\CaseWorkflowObserver;
 use Illuminate\Database\Eloquent\Attributes\Guarded;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 
 #[Guarded(['id', 'created_at', 'updated_at'])]
+#[ObservedBy([CaseWorkflowObserver::class])]
 class CaseWorkflow extends Model
 {
 
@@ -20,7 +23,6 @@ class CaseWorkflow extends Model
      */
     protected $casts = [
         'form_data' => 'array',
-        // 'completed_at' => 'datetime',
     ];
 
     public function caseDetail(): BelongsTo

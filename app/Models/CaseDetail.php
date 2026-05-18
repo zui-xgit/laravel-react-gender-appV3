@@ -25,7 +25,6 @@ class CaseDetail extends Model
     /** @use HasFactory<\Database\Factories\CaseDetailFactory> */
     use HasFactory, HasUuids;
 
-    // protected $guarded = ["id", "uuid", "created_at", 'updated_at'];
 
     protected function caseWorkflowPercentage(): Attribute
     {
@@ -35,7 +34,7 @@ class CaseDetail extends Model
             $completedPhaseCount = $this->caseWorkflow()->whereIn('phase', $workflow_phases)->count(); 
             $totalPhases = count($workflow_phases);
             return  ($completedPhaseCount / $totalPhases) * 100;
-         }
+         },
       ); 
     }
 

@@ -1,15 +1,20 @@
 <?php
 
 use App\Http\Controllers\CaseWorkflowController;
+use App\Http\Controllers\ReporterController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
+// use Laravel\Fortify\Features;
 
-Route::inertia('/', 'welcome', [
-    'canRegister' => Features::enabled(Features::registration()),
-])->name('home');
-
+Route::inertia('/', 'welcome')->name('home');
 
 Route::inertia('/test', 'test' )->name("test");
+
+
+// Route::middleware(['guest'])->group(function () {
+    Route::post("reporter", [ReporterController::class, 'store'])->name('reporter');
+    Route::inertia('reporter/report', 'reporter/report')->name('reporter-report'); 
+    Route::inertia('reporter/track', 'reporter/track')->name('reporter-track'); 
+// });
 
 
 
@@ -24,5 +29,4 @@ Route::middleware(['auth', 'verified', 'role:admin,officer'])->group(function ()
 
 require __DIR__.'/admin.php';
 require __DIR__.'/officer.php';
-require __DIR__.'/reporter.php';
 require __DIR__.'/settings.php';

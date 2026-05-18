@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->nullable(); 
             // Role
-            $table->enum('role', ['admin', 'officer'])->nullable();
+            $table->enum('role', ['admin', 'officer'])->required();
 
 
             // Basic Identity
