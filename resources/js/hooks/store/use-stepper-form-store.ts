@@ -1,6 +1,6 @@
-import { toast } from 'sonner';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { z } from 'zod';
 
 /* =========================================================
    TYPES
@@ -8,20 +8,83 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type Sex = 'male' | 'female' | 'prefer_not_to_say';
 
+const requiredString = z.string().trim().min(1, 'This Field is Required');
+const sexSchema = z.enum(['male', 'female', 'prefer_not_to_say'], {
+    message: 'Select a valid option',
+});
+const requiredAge = z
+    .number()
+    .min(0, 'This Field is Required')
+    .max(120, 'Enter a valid age');
+
+const Step2Schema = z.object({
+    informantName: requiredString,
+    informantTitle: requiredString,
+    informantSex: sexSchema,
+    informantAge: requiredAge,
+    informantPhone: requiredString,
+    informantWorkplace: requiredString,
+});
+
+const Step3Schema = z.object({
+    victimName: requiredString,
+    victimTitle: requiredString,
+    victimSex: sexSchema,
+    victimAge: requiredAge,
+    victimPhone: requiredString,
+    victimEmail: z.email('Invalid email address'),
+    victimEducation: requiredString,
+    victimResidence: requiredString,
+    victimDisability: requiredString,
+    victimWorkplace: requiredString,
+});
+
+const Step4Schema = z.object({
+    accusedName: requiredString,
+    accusedTitle: requiredString,
+    accusedSex: sexSchema,
+    accusedAge: requiredAge,
+    accusedPhone: requiredString,
+    accusedEmail: z.email('Invalid email address').trim(),
+    accusedEducation: requiredString,
+    accusedResidence: requiredString,
+    accusedWorkplace: requiredString,
+});
+
+const Step5Schema = z.object({
+    incidentDate: requiredString,
+    incidentTime: requiredString,
+    incidentLocation: requiredString,
+    incidentExactLocation: requiredString,
+    incidentType: requiredString,
+    incidentCause: requiredString,
+    incidentDescription: requiredString,
+    incidentActions: requiredString,
+    incidentInjuries: requiredString,
+    incidentAssistance: requiredString,
+    incidentInvolved: requiredString,
+});
+
+const Step6Schema = z.object({
+    confirmationChecked: z.literal(true, {
+        message: 'Confirmation is Required',
+    }),
+});
+
 export interface FormData {
     // COMPLAINANT / INFORMANT (Step 2)
     informantName: string;
     informantTitle: string;
-    informantSex: Sex | null;
-    informantAge: number | null;
+    informantSex: string;
+    informantAge: string | number;
     informantPhone: string;
     informantWorkplace: string;
 
     // VICTIM INFORMATION (Step 3)
     victimName: string;
     victimTitle: string;
-    victimSex: Sex | null;
-    victimAge: number | null;
+    victimSex: string;
+    victimAge: string | number;
     victimPhone: string;
     victimEmail: string;
     victimEducation: string;
@@ -31,9 +94,9 @@ export interface FormData {
 
     // ACCUSED DETAILS (Step 4)
     accusedName: string;
-    accusedSex: Sex | null;
+    accusedSex: string;
     accusedTitle: string;
-    accusedAge: number | null;
+    accusedAge: string | number;
     accusedPhone: string;
     accusedEmail: string;
     accusedEducation: string;
@@ -66,7 +129,6 @@ interface StepperFormState {
 
     setCurrentStep: (value: 1 | 2 | 3 | 4 | 5 | 6) => void;
     setAnonymous: (value: boolean) => void;
-    setErrors: (newErrors: Partial<Record<keyof FormData, string>>) => void;
     setIsCaseSubmitted: (value: boolean) => void;
     updateFormData: (data: Partial<FormData>) => void;
     validateStep: () => boolean;
@@ -83,15 +145,15 @@ interface StepperFormState {
 const initialFormData: FormData = {
     informantName: '',
     informantTitle: '',
-    informantSex: null,
-    informantAge: null,
+    informantSex: '',
+    informantAge: '',
     informantPhone: '',
     informantWorkplace: '',
 
     victimName: '',
     victimTitle: '',
-    victimSex: null,
-    victimAge: null,
+    victimSex: '',
+    victimAge: '',
     victimPhone: '',
     victimEmail: '',
     victimEducation: '',
@@ -100,9 +162,9 @@ const initialFormData: FormData = {
     victimWorkplace: '',
 
     accusedName: '',
-    accusedSex: null,
+    accusedSex: '',
     accusedTitle: '',
-    accusedAge: null,
+    accusedAge: '',
     accusedPhone: '',
     accusedEmail: '',
     accusedEducation: '',
@@ -125,13 +187,6 @@ const initialFormData: FormData = {
 };
 
 /* =========================================================
-   HELPERS
-========================================================= */
-
-const isValidSex = (value: unknown): value is Sex =>
-    value === 'male' || value === 'female' || value === 'prefer_not_to_say';
-
-/* =========================================================
    STORE
 ========================================================= */
 
@@ -148,134 +203,63 @@ export const useStepperFormStore = create<StepperFormState>()(
                 set({ currentStep: value });
             },
 
-            //TODO:  i am supposed to implement this to the validate function
-            setErrors: (newErrors: Partial<Record<keyof FormData, string>>) => {
-                set((state) => ({
-                    errors: {
-                        ...state.errors, // Keep what's already there
-                        ...newErrors, // Overwrite only what you passed in
-                    },
-                }));
-            },
-
             setAnonymous: (value: boolean) => set({ isAnonymous: value }),
 
             updateFormData: (data) =>
-                set((state) => ({
-                    formData: { ...state.formData, ...data },
-                })),
+                set((state) => ({ formData: { ...state.formData, ...data } })),
 
             validateStep: (): boolean => {
                 const { currentStep, formData, isAnonymous } = get();
                 const errors: Partial<Record<keyof FormData, string>> = {};
-                let anonymouseError: boolean = false;
-
-                // step 1 - checking the anonymous thing
+                let stepSchema: z.ZodSchema | null = null;
 
                 if (currentStep === 1) {
                     if (isAnonymous === null) {
-                        anonymouseError = true;
-                        toast.info(
-                            'Choose to report anonymously or identfy yourself please',
-                        );
+                        return false;
+                    } else if (isAnonymous === true) {
+                        set((state) => ({
+                            formData: {
+                                ...state.formData,
+                                informantName: '',
+                                informantTitle: '',
+                                informantSex: '',
+                                informantAge: '',
+                                informantPhone: '',
+                                informantWorkplace: '',
+                            },
+                        }));
+                        return true;
                     }
                 }
 
-                // Step 2 - Informant (required only if identified)
-                if (currentStep === 2 && isAnonymous === false) {
-                    if (!formData.informantName.trim())
-                        errors.informantName = 'Required';
-                    if (!formData.informantTitle.trim())
-                        errors.informantTitle = 'Required';
-                    if (!isValidSex(formData.informantSex))
-                        errors.informantSex = 'Select a valid option';
-                    if (!formData.informantAge)
-                        errors.informantAge = 'Required';
-                    if (!formData.informantPhone.trim())
-                        errors.informantPhone = 'Required';
-                    if (!formData.informantWorkplace.trim())
-                        errors.informantWorkplace = 'Required';
+                // Assign schemas per step
+                if (currentStep === 2) stepSchema = Step2Schema;
+                if (currentStep === 3) stepSchema = Step3Schema;
+                if (currentStep === 4) stepSchema = Step4Schema;
+                if (currentStep === 5) stepSchema = Step5Schema;
+                if (currentStep === 6) stepSchema = Step6Schema;
+
+                // If anonymous skips step 2 or no specific schema maps out, it automatically passes
+                if (!stepSchema) {
+                    set({ errors: {} });
+                    return true;
                 }
 
-                // Step 3 - Victim
-                if (currentStep === 3) {
-                    if (!formData.victimName.trim())
-                        errors.victimName = 'Required';
-                    if (!formData.victimTitle.trim())
-                        errors.victimTitle = 'Required';
-                    if (!isValidSex(formData.victimSex))
-                        errors.victimSex = 'Select a valid option';
-                    if (!formData.victimAge) errors.victimAge = 'Required';
-                    if (!formData.victimPhone.trim())
-                        errors.victimPhone = 'Required';
-                    if (!formData.victimEmail.trim())
-                        errors.victimEmail = 'Required';
-                    if (!formData.victimEducation.trim())
-                        errors.victimEducation = 'Required';
-                    if (!formData.victimResidence.trim())
-                        errors.victimResidence = 'Required';
-                    if (!formData.victimDisability.trim())
-                        errors.victimDisability = 'Required';
-                    if (!formData.victimWorkplace.trim())
-                        errors.victimWorkplace = 'Required';
+                // RUN ZOD VALIDATION ENGINE
+                const result = stepSchema.safeParse(formData);
+
+                if (!result.success) {
+                    result.error.issues.forEach((issue) => {
+                        const issueFieldName = issue.path[0] as keyof FormData;
+                        const issueMessage = issue.message;
+                        errors[issueFieldName] = issueMessage;
+                    });
+                    set({ errors });
+                    return false;
                 }
 
-                // Step 4 - Accused
-                if (currentStep === 4) {
-                    if (!formData.accusedName.trim())
-                        errors.accusedName = 'Required';
-                    if (!formData.accusedTitle.trim())
-                        errors.accusedTitle = 'Required';
-                    if (!isValidSex(formData.accusedSex))
-                        errors.accusedSex = 'Select a valid option';
-                    if (!formData.accusedAge) errors.accusedAge = 'Required';
-                    if (!formData.accusedPhone.trim())
-                        errors.accusedPhone = 'Required';
-                    if (!formData.accusedEmail.trim())
-                        errors.accusedEmail = 'Required';
-                    if (!formData.accusedEducation.trim())
-                        errors.accusedEducation = 'Required';
-                    if (!formData.accusedResidence.trim())
-                        errors.accusedResidence = 'Required';
-                    if (!formData.accusedWorkplace.trim())
-                        errors.accusedWorkplace = 'Required';
-                }
-
-                // Step 5 - Incident
-                if (currentStep === 5) {
-                    if (!formData.incidentDate.trim())
-                        errors.incidentDate = 'Required';
-                    if (!formData.incidentTime.trim())
-                        errors.incidentTime = 'Required';
-                    if (!formData.incidentLocation.trim())
-                        errors.incidentLocation = 'Required';
-                    if (!formData.incidentExactLocation.trim())
-                        errors.incidentExactLocation = 'Required';
-                    if (!formData.incidentType.trim())
-                        errors.incidentType = 'Required';
-                    if (!formData.incidentCause.trim())
-                        errors.incidentCause = 'Required';
-                    if (!formData.incidentDescription.trim())
-                        errors.incidentDescription = 'Required';
-                    if (!formData.incidentActions.trim())
-                        errors.incidentActions = 'Required';
-                    if (!formData.incidentInjuries.trim())
-                        errors.incidentInjuries = 'Required';
-                    if (!formData.incidentAssistance.trim())
-                        errors.incidentAssistance = 'Required';
-                    if (!formData.incidentInvolved.trim())
-                        errors.incidentInvolved = 'Required';
-                }
-
-                // step 6 - Statement verification
-                if (currentStep === 6) {
-                    if (formData.confirmationChecked === false) {
-                        errors.confirmationChecked = 'Confirmation is Required';
-                    }
-                }
-
-                set({ errors });
-                return Object.keys(errors).length === 0 && !anonymouseError;
+                set({ errors: {} });
+                return true;
             },
 
             nextStep: () => {
@@ -306,7 +290,13 @@ export const useStepperFormStore = create<StepperFormState>()(
                         behavior: 'smooth',
                     });
                 } else {
-                    toast.error('Please fill in all fields to continue');
+                    if (get().isAnonymous === null) {
+                        alert(
+                            'Please select whether you want to report anonymously or not to continue',
+                        );
+                    } else {
+                        alert('Please fill in all fields to continue');
+                    }
                 }
             },
 

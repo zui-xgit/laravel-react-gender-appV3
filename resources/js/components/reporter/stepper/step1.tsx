@@ -1,7 +1,8 @@
 import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
 import { ChevronRight, Info, Shield } from 'lucide-react';
 
-export const AnonymousCheck = () => {
+// Anonymous Check
+export const Step1 = () => {
     const isAnonymous = useStepperFormStore((state) => state.isAnonymous);
     const setAnonymous = useStepperFormStore((state) => state.setAnonymous);
 

@@ -1,152 +1,3 @@
-// import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
-// import { User } from 'lucide-react';
-// import { FormInput } from '../form-input';
-// import { FormSelect } from '../form-select';
-// import { FormTextarea } from '../form-text-area';
-
-// export const Step3 = () => {
-//     const { formData, errors, updateFormData } = useStepperFormStore();
-
-//     const sexOptions = [
-//         { value: '', label: 'Select' },
-//         { value: 'male', label: 'Male' },
-//         { value: 'female', label: 'Female' },
-//         { value: 'prefer_not_to_say', label: 'Prefer not to say' },
-//     ];
-
-//     return (
-//         <div className="animate-reveal space-y-6 sm:space-y-8">
-//             <div className="flex items-center gap-3 sm:gap-5">
-//                 <div className="border-subtle bg-surface flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border text-[var(--accent-primary)] sm:h-14 sm:w-14">
-//                     <User size={20} className="sm:h-6 sm:w-6" />
-//                 </div>
-//                 <div className="min-w-0">
-//                     <h2 className="text-lg font-bold tracking-tight break-words text-primary sm:text-xl md:text-3xl">
-//                         Victim Information
-//                     </h2>
-//                     <p className="mt-1 text-xs text-secondary sm:text-sm">
-//                         Details of the person affected.
-//                     </p>
-//                 </div>
-//             </div>
-
-//             <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2">
-//                 <FormInput
-//                     label="Victim Full Name"
-//                     type="text"
-//                     value={formData.victimName}
-//                     onChange={(e) =>
-//                         updateFormData({ victimName: e.target.value })
-//                     }
-//                     placeholder="Enter full name"
-//                     error={errors.victimName}
-//                 />
-
-//                 <FormInput
-//                     label="Title"
-//                     type="text"
-//                     value={formData.victimTitle}
-//                     onChange={(e) =>
-//                         updateFormData({ victimTitle: e.target.value })
-//                     }
-//                     placeholder="Mr. / Ms. / Prof."
-//                     error={errors.victimTitle}
-//                 />
-
-//                 <FormSelect
-//                     label="Sex"
-//                     value={formData.victimSex ?? ''}
-//                     onChange={(e) =>
-//                         updateFormData({
-//                             victimSex: e.target.value as
-//                                 | 'male'
-//                                 | 'female'
-//                                 | 'prefer_not_to_say'
-//                                 | null,
-//                         })
-//                     }
-//                     options={sexOptions}
-//                     error={errors.victimSex}
-//                 />
-
-//                 <FormInput
-//                     label="Age"
-//                     type="number"
-//                     value={formData.victimAge ?? ''}
-//                     onChange={(e) =>
-//                         updateFormData({ victimAge: Number(e.target.value) })
-//                     }
-//                     error={errors.victimAge}
-//                 />
-
-//                 <FormInput
-//                     label="Phone number"
-//                     type="number"
-//                     value={formData.victimPhone}
-//                     onChange={(e) =>
-//                         updateFormData({ victimPhone: e.target.value })
-//                     }
-//                     placeholder="+255..."
-//                     error={errors.victimPhone}
-//                 />
-
-//                 <FormInput
-//                     label="Email"
-//                     type="email"
-//                     value={formData.victimEmail}
-//                     onChange={(e) =>
-//                         updateFormData({ victimEmail: e.target.value })
-//                     }
-//                     placeholder="example@email.com"
-//                     error={errors.victimEmail}
-//                 />
-
-//                 <FormInput
-//                     label="Education Level"
-//                     type="text"
-//                     value={formData.victimEducation}
-//                     onChange={(e) =>
-//                         updateFormData({ victimEducation: e.target.value })
-//                     }
-//                     placeholder="Bachelor / Masters / PhD"
-//                     error={errors.victimEducation}
-//                 />
-
-//                 <FormInput
-//                     label="Primary Residence"
-//                     type="text"
-//                     value={formData.victimResidence}
-//                     onChange={(e) =>
-//                         updateFormData({ victimResidence: e.target.value })
-//                     }
-//                     error={errors.victimResidence}
-//                 />
-
-//                 <FormInput
-//                     label="Disability (State)"
-//                     type="text"
-//                     value={formData.victimDisability}
-//                     onChange={(e) =>
-//                         updateFormData({ victimDisability: e.target.value })
-//                     }
-//                     error={errors.victimDisability}
-//                 />
-
-//                 <FormTextarea
-//                     label="Workplace / Unit"
-//                     rows={3}
-//                     value={formData.victimWorkplace}
-//                     onChange={(e) =>
-//                         updateFormData({ victimWorkplace: e.target.value })
-//                     }
-//                     error={errors.victimWorkplace}
-//                     spanFull
-//                 />
-//             </div>
-//         </div>
-//     );
-// };
-
 import { User } from 'lucide-react';
 import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
 
@@ -161,6 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import InputError from '@/components/input-error';
 
 export const Step3 = () => {
     const { formData, errors, updateFormData } = useStepperFormStore();
@@ -199,9 +51,7 @@ export const Step3 = () => {
                         }
                     />
                     {errors.victimName && (
-                        <p className="text-xs text-destructive">
-                            {errors.victimName}
-                        </p>
+                        <InputError message={errors.victimName} />
                     )}
                 </div>
 
@@ -220,9 +70,7 @@ export const Step3 = () => {
                         }
                     />
                     {errors.victimTitle && (
-                        <p className="text-xs text-destructive">
-                            {errors.victimTitle}
-                        </p>
+                        <InputError message={errors.victimTitle} />
                     )}
                 </div>
 
@@ -251,9 +99,7 @@ export const Step3 = () => {
                         </SelectContent>
                     </Select>
                     {errors.victimSex && (
-                        <p className="text-xs text-destructive">
-                            {errors.victimSex}
-                        </p>
+                        <InputError message={errors.victimSex} />
                     )}
                 </div>
 
@@ -264,20 +110,19 @@ export const Step3 = () => {
                         id="victimAge"
                         type="number"
                         placeholder="Age"
-                        value={formData.victimAge ?? ''}
+                        value={formData.victimAge}
                         onChange={(e) =>
                             updateFormData({
-                                victimAge: e.target.value
-                                    ? Number(e.target.value)
-                                    : null,
+                                victimAge:
+                                    e.target.value !== ''
+                                        ? Number(e.target.value)
+                                        : '',
                             })
                         }
                         className={errors.victimAge ? 'border-destructive' : ''}
                     />
                     {errors.victimAge && (
-                        <p className="text-xs text-destructive">
-                            {errors.victimAge}
-                        </p>
+                        <InputError message={errors.victimAge} />
                     )}
                 </div>
 
@@ -297,9 +142,7 @@ export const Step3 = () => {
                         }
                     />
                     {errors.victimPhone && (
-                        <p className="text-xs text-destructive">
-                            {errors.victimPhone}
-                        </p>
+                        <InputError message={errors.victimPhone} />
                     )}
                 </div>
 
@@ -319,9 +162,7 @@ export const Step3 = () => {
                         }
                     />
                     {errors.victimEmail && (
-                        <p className="text-xs text-destructive">
-                            {errors.victimEmail}
-                        </p>
+                        <InputError message={errors.victimEmail} />
                     )}
                 </div>
 
@@ -340,9 +181,7 @@ export const Step3 = () => {
                         }
                     />
                     {errors.victimEducation && (
-                        <p className="text-xs text-destructive">
-                            {errors.victimEducation}
-                        </p>
+                        <InputError message={errors.victimEducation} />
                     )}
                 </div>
 
@@ -361,9 +200,7 @@ export const Step3 = () => {
                         }
                     />
                     {errors.victimResidence && (
-                        <p className="text-xs text-destructive">
-                            {errors.victimResidence}
-                        </p>
+                        <InputError message={errors.victimResidence} />
                     )}
                 </div>
 
@@ -382,9 +219,7 @@ export const Step3 = () => {
                         }
                     />
                     {errors.victimDisability && (
-                        <p className="text-xs text-destructive">
-                            {errors.victimDisability}
-                        </p>
+                        <InputError message={errors.victimDisability} />
                     )}
                 </div>
 
@@ -404,9 +239,7 @@ export const Step3 = () => {
                         }
                     />
                     {errors.victimWorkplace && (
-                        <p className="text-xs text-destructive">
-                            {errors.victimWorkplace}
-                        </p>
+                        <InputError message={errors.victimWorkplace} />
                     )}
                 </div>
             </div>

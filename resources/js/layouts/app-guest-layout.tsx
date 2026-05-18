@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import {
     Shield,
     Menu,
@@ -7,6 +7,7 @@ import {
     HelpCircle,
     Home,
     LogIn,
+    ArrowLeft,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,19 +16,22 @@ import {
     SheetTrigger,
     SheetTitle,
 } from '@/components/ui/sheet';
+import QuickExitButton from '@/components/quick-exit-button';
+import { reporterReport, reporterSuccess } from '@/routes';
 
 interface AppLayoutProps {
     children: React.ReactNode;
 }
 
-export default function AppGuestLayout({ children }: AppLayoutProps) {
-    const navLinks = [
-        { href: '/', label: 'Home', icon: Home },
-        { href: '/faq', label: 'FAQ', icon: HelpCircle },
-        { href: '/education', label: 'Education', icon: GraduationCap },
-        { href: '/login', label: 'Login', icon: GraduationCap },
-    ];
+const navLinks = [
+    { href: '/', label: 'Home', icon: Home },
+    { href: '/faq', label: 'FAQ', icon: HelpCircle },
+    { href: '/education', label: 'Education', icon: GraduationCap },
+    { href: '/login', label: 'Login', icon: GraduationCap },
+];
 
+export default function AppGuestLayout({ children }: AppLayoutProps) {
+    const { url } = usePage();
     return (
         <div className="flex min-h-screen flex-col bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground">
             {/* Navigation Bar */}
@@ -42,25 +46,42 @@ export default function AppGuestLayout({ children }: AppLayoutProps) {
                             <Shield className="h-5 w-5" />
                         </div>
                         <span className="text-lg font-semibold tracking-tight text-primary">
-                            Gender Reporting System
+                            GRS
                         </span>
                     </Link>
 
                     {/* Desktop Navigation */}
                     <nav className="hidden items-center gap-1 md:flex">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.href}
-                                href={link.href}
-                                className="rounded-md px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-                            >
-                                {link.label}
-                            </Link>
-                        ))}
+                        {url === reporterReport.url() ? (
+                            <>
+                                <button
+                                    onClick={() => window.history.back()}
+                                    className="flex items-center gap-1 rounded-md px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                                >
+                                    <ArrowLeft className="h-4 w-4" />
+                                    Back
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                {navLinks.map((link) => (
+                                    <Link
+                                        key={link.href}
+                                        href={link.href}
+                                        className="rounded-md px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                                    >
+                                        {link.label}
+                                    </Link>
+                                ))}
+                            </>
+                        )}
+
+                        <QuickExitButton />
                     </nav>
 
                     {/* Mobile Menu (Shadcn Sheet) */}
-                    <div className="flex md:hidden">
+                    <div className="flex items-center md:hidden">
+                        <QuickExitButton />
                         <Sheet>
                             <SheetTrigger asChild>
                                 <Button

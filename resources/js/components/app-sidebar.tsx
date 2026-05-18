@@ -98,19 +98,6 @@ const OfficerNavItems: NavItem[] = [
     },
 ];
 
-const ReporterNavItems: NavItem[] = [
-    {
-        title: 'New Case',
-        href: reporterReport(),
-        icon: FilePlus2,
-    },
-    {
-        title: 'Track Case',
-        href: reporterTrack(),
-        icon: Activity,
-    },
-];
-
 // const footerNavItems: NavItem[] = [
 //     {
 //         title: 'Repository',
@@ -142,14 +129,8 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                {auth.user ? (
-                    <>
-                        {auth.user.role === 'admin' && (
-                            <NavMain items={AdminNavItems} />
-                        )}
-                    </>
-                ) : (
-                    <NavMain items={ReporterNavItems} />
+                {auth.user.role === 'admin' && (
+                    <NavMain items={AdminNavItems} />
                 )}
             </SidebarContent>
 

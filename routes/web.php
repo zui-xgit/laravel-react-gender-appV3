@@ -14,6 +14,7 @@ Route::inertia('/test', 'test' )->name("test");
     Route::post("reporter", [ReporterController::class, 'store'])->name('reporter');
     Route::inertia('reporter/report', 'reporter/report')->name('reporter-report'); 
     Route::inertia('reporter/track', 'reporter/track')->name('reporter-track'); 
+    Route::inertia('reporter/success', 'reporter/success')->name('reporter-success'); 
 // });
 
 

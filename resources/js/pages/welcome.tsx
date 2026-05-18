@@ -116,7 +116,10 @@ export default function Home() {
                             size="lg"
                             className="w-full bg-primary font-medium text-primary-foreground shadow-md hover:bg-primary/90 sm:w-auto"
                         >
-                            <Link href="" className="flex items-center gap-2">
+                            <Link
+                                href={reporterReport()}
+                                className="flex items-center gap-2"
+                            >
                                 <FileText className="h-5 w-5" />
                                 File a Secure Report
                                 <ArrowRight className="ml-1 h-4 w-4" />
