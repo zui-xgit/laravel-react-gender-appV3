@@ -15,6 +15,7 @@ Route::inertia('/test', 'test' )->name("test");
     Route::inertia('reporter/report', 'reporter/report')->name('reporter-report'); 
     Route::inertia('reporter/track', 'reporter/track')->name('reporter-track'); 
     Route::inertia('reporter/success', 'reporter/success')->name('reporter-success'); 
+    
     Route::inertia('faq', 'reporter/faq')->name('faq');
     Route::inertia('education', 'reporter/education')->name('education');
 // });
