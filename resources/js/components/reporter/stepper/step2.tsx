@@ -76,7 +76,7 @@ export const Step2 = () => {
                     <Select
                         value={formData.informantSex ?? ''}
                         onValueChange={(value) =>
-                            updateFormData({ informantSex: value as any })
+                            updateFormData({ informantSex: value })
                         }
                     >
                         <SelectTrigger

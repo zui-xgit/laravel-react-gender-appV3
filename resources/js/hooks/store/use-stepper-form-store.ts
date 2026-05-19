@@ -9,14 +9,19 @@ import { toast } from 'sonner';
 
 export type Sex = 'male' | 'female' | 'prefer_not_to_say';
 
-const requiredString = z.string().trim().min(1, 'This Field is Required');
+const requiredString = z
+    .string()
+    .trim()
+    .min(1, { error: 'This Field is Required' });
+
 const sexSchema = z.enum(['male', 'female', 'prefer_not_to_say'], {
-    message: 'Select a valid option',
+    error: 'Select a valid option',
 });
+
 const requiredAge = z
-    .number()
-    .min(0, 'This Field is Required')
-    .max(120, 'Enter a valid age');
+    .number({ error: 'Age is Required' })
+    .min(1, { error: 'Enter a valid age' })
+    .max(120, { error: 'Enter a valid age' });
 
 const Step2Schema = z.object({
     informantName: requiredString,
@@ -204,7 +209,9 @@ export const useStepperFormStore = create<StepperFormState>()(
             setAnonymous: (value: boolean) => set({ isAnonymous: value }),
 
             updateFormData: (data) =>
-                set((state) => ({ formData: { ...state.formData, ...data } })),
+                set((state) => ({
+                    formData: { ...state.formData, ...data },
+                })),
 
             validateStep: (): boolean => {
                 const { currentStep, formData, isAnonymous } = get();
@@ -272,6 +279,12 @@ export const useStepperFormStore = create<StepperFormState>()(
                                 | 5
                                 | 6,
                         }));
+                        toast.success(
+                            'Step 1 and 2 completed successfully! Proceeding to Step 3.',
+                            {
+                                duration: 2000,
+                            },
+                        );
                     } else {
                         set((state) => ({
                             currentStep: Math.min(state.currentStep + 1, 6) as
@@ -282,6 +295,16 @@ export const useStepperFormStore = create<StepperFormState>()(
                                 | 5
                                 | 6,
                         }));
+                        toast.success(
+                            'Step ' +
+                                (get().currentStep - 1) +
+                                ' completed successfully! Proceeding to the Step ' +
+                                get().currentStep +
+                                '.',
+                            {
+                                duration: 2000,
+                            },
+                        );
                     }
                     window.scrollTo({
                         top: 0,
@@ -291,14 +314,9 @@ export const useStepperFormStore = create<StepperFormState>()(
                     if (get().isAnonymous === null) {
                         toast.error(
                             'Please select whether you want to report anonymously or not to continue',
-                            {
-                                className: '!bg-red-100 !text-red-600',
-                            },
                         );
                     } else {
-                        toast.error('Please fill in all fields to continue', {
-                            className: '!bg-red-100 !text-red-600',
-                        });
+                        toast.error('Please fill in all fields to continue');
                     }
                 }
             },
