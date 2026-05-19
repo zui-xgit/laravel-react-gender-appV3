@@ -22,6 +22,7 @@ import {
     AlertCircle,
     LifeBuoy,
 } from 'lucide-react';
+import Heading from '@/components/heading';
 
 const faqCategories = [
     {
@@ -101,7 +102,7 @@ const Faq = () => {
                         <span>Support Center</span>
                     </div>
 
-                    <h1 className="text-4xl font-extrabold tracking-tight text-primary md:text-5xl">
+                    <h1 className="text-2xl font-extrabold tracking-tight text-primary md:text-3xl">
                         Frequently Asked Questions
                     </h1>
 
@@ -134,7 +135,7 @@ const Faq = () => {
                                             value={`item-${idx}-${qIdx}`}
                                             className="border-border/60"
                                         >
-                                            <AccordionTrigger className="text-base font-semibold text-primary hover:no-underline hover:text-chart-1">
+                                            <AccordionTrigger className="text-base font-semibold text-primary hover:text-chart-1 hover:no-underline">
                                                 {item.q}
                                             </AccordionTrigger>
                                             <AccordionContent className="text-muted-foreground">
@@ -176,4 +177,3 @@ const Faq = () => {
 };
 
 export default Faq;
-

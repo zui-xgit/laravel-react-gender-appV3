@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { z } from 'zod';
+import { toast } from 'sonner';
 
 /* =========================================================
    TYPES
@@ -125,11 +126,9 @@ interface StepperFormState {
     isAnonymous: boolean | null;
     formData: FormData;
     errors: Partial<Record<keyof FormData, string>>;
-    isCaseSubmitted: boolean;
 
     setCurrentStep: (value: 1 | 2 | 3 | 4 | 5 | 6) => void;
     setAnonymous: (value: boolean) => void;
-    setIsCaseSubmitted: (value: boolean) => void;
     updateFormData: (data: Partial<FormData>) => void;
     validateStep: () => boolean;
     nextStep: () => void;
@@ -197,7 +196,6 @@ export const useStepperFormStore = create<StepperFormState>()(
             isAnonymous: null,
             formData: initialFormData,
             errors: {},
-            isCaseSubmitted: false,
 
             setCurrentStep: (value) => {
                 set({ currentStep: value });
@@ -291,11 +289,16 @@ export const useStepperFormStore = create<StepperFormState>()(
                     });
                 } else {
                     if (get().isAnonymous === null) {
-                        alert(
+                        toast.error(
                             'Please select whether you want to report anonymously or not to continue',
+                            {
+                                className: '!bg-red-100 !text-red-600',
+                            },
                         );
                     } else {
-                        alert('Please fill in all fields to continue');
+                        toast.error('Please fill in all fields to continue', {
+                            className: '!bg-red-100 !text-red-600',
+                        });
                     }
                 }
             },
@@ -334,15 +337,10 @@ export const useStepperFormStore = create<StepperFormState>()(
                     isAnonymous: null,
                     formData: initialFormData,
                     errors: {},
-                    isCaseSubmitted: false,
                 }),
 
             resetErrors: () => {
                 set({ errors: {} });
-            },
-
-            setIsCaseSubmitted(value: boolean) {
-                set({ isCaseSubmitted: value });
             },
         }),
         {

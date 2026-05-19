@@ -13,6 +13,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import InputError from '@/components/input-error';
+import StepHeader from './step-header';
 
 export const Step2 = () => {
     const { formData, errors, updateFormData } = useStepperFormStore();
@@ -20,19 +21,12 @@ export const Step2 = () => {
     return (
         <div className="animate-reveal w-full space-y-6 sm:space-y-8 md:w-[90%]">
             {/* Header */}
-            <div className="flex items-center gap-3 sm:gap-5">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-border bg-muted text-primary sm:h-14 sm:w-14">
-                    <User size={20} className="sm:h-6 sm:w-6" />
-                </div>
-                <div className="min-w-0">
-                    <h2 className="text-lg font-bold tracking-tight break-words text-primary sm:text-xl md:text-3xl">
-                        DETAILS OF THE COMPLAINANT/INFORMANT
-                    </h2>
-                    <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
-                        Reports can be filed anonymously.
-                    </p>
-                </div>
-            </div>
+
+            <StepHeader
+                icon={User}
+                title="Details of  the complainant/informant"
+                description="Information about the person submitting the report."
+            />
 
             {/* Form */}
             <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2">
@@ -125,7 +119,6 @@ export const Step2 = () => {
                             errors.informantAge ? 'border-destructive' : ''
                         }
                     />
-                    sdfsfd
                     {errors.informantAge && (
                         <InputError message={errors.informantAge} />
                     )}

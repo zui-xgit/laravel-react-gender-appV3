@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/sheet';
 import QuickExitButton from '@/components/quick-exit-button';
 import { reporterReport, reporterSuccess } from '@/routes';
+import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
 
 interface AppLayoutProps {
     children: React.ReactNode;
@@ -32,6 +33,7 @@ const navLinks = [
 
 export default function AppGuestLayout({ children }: AppLayoutProps) {
     const { url } = usePage();
+    const resetForm = useStepperFormStore((state) => state.resetForm);
     return (
         <div className="flex min-h-screen flex-col bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground">
             {/* Navigation Bar */}
@@ -55,7 +57,10 @@ export default function AppGuestLayout({ children }: AppLayoutProps) {
                         {url === reporterReport.url() ? (
                             <>
                                 <button
-                                    onClick={() => window.history.back()}
+                                    onClick={() => {
+                                        resetForm();
+                                        window.history.back();
+                                    }}
                                     className="flex items-center gap-1 rounded-md px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                                 >
                                     <ArrowLeft className="h-4 w-4" />

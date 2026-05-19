@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { useEffect } from 'react';
 import { Input } from '@headlessui/react';
 import InputError from '@/components/input-error';
+import StepHeader from './step-header';
 
 export const Step6 = () => {
     const { formData, errors, updateFormData, isAnonymous } =
@@ -37,20 +38,11 @@ export const Step6 = () => {
 
     return (
         <div className="animate-reveal space-y-8 sm:space-y-12">
-            {/* Header */}
-            <div className="flex items-center gap-3 sm:gap-5">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-border bg-muted text-primary sm:h-14 sm:w-14">
-                    <Eye size={20} className="sm:h-6 sm:w-6" />
-                </div>
-                <div className="min-w-0">
-                    <h2 className="text-lg font-bold tracking-tight break-words text-foreground sm:text-xl md:text-3xl">
-                        Statement Verification
-                    </h2>
-                    <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
-                        Review your report data carefully before submission.
-                    </p>
-                </div>
-            </div>
+            <StepHeader
+                icon={Eye}
+                title="Statement Verification"
+                description="Review your report data carefully before submission"
+            />
 
             <div className="space-y-8 sm:space-y-12">
                 {/* Informant Section (Conditional) */}

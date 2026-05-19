@@ -69,12 +69,7 @@ const Report = () => {
     const nextStep = useStepperFormStore((state) => state.nextStep);
     const formData = useStepperFormStore((state) => state.formData);
     const isAnonymous = useStepperFormStore((state) => state.isAnonymous);
-    const isCaseSubmitted = useStepperFormStore(
-        (state) => state.isCaseSubmitted,
-    );
-    const setIsCaseSubmitted = useStepperFormStore(
-        (state) => state.setIsCaseSubmitted,
-    );
+
     const [caseTrackingId, setCaseTrackingId] = useState<string>('');
 
     const { data, setData, post, processing } = useForm<
@@ -103,7 +98,6 @@ const Report = () => {
         //         toast.error(errors.error);
         //     },
         //     onSuccess: (page) => {
-        //         setIsCaseSubmitted(true);
         //         setCaseTrackingId(page.flash.case_report_id as string);
         //     },
         // });
@@ -116,11 +110,11 @@ const Report = () => {
     return (
         <>
             <AppGuestLayout>
-                <div className="pt-7 pb-20 md:mx-auto md:w-[70%]">
+                <div className="pt-7 pb-32 md:mx-auto md:w-[70%]">
                     {processing && <PortalLoader />}
-                    {isCaseSubmitted && (
+                    {/* {isCaseSubmitted && (
                         <CaseTrackingId caseTrackingId={caseTrackingId} />
-                    )}
+                    )} */}
                     <Stepper
                         value={currentStep}
                         onValueChange={setCurrentStep as any}

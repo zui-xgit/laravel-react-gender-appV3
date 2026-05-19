@@ -128,9 +128,14 @@
     --destructive-foreground: #fef2f2;
 
     /* Borders & Inputs - Low-glare gray */
-    --border: #e5e7eb;
+    /* --border: #e5e7eb;
     --input: #e5e7eb;
-    --ring: #9ca3af;
+    --ring: #9ca3af; */
+
+    /* Borders & Inputs - Enhanced visibility slate-grays */
+    --border: #cbd5e1; /* Clearer separation (Tailwind slate-300) */
+    --input: #cbd5e1; /* Makes your input fields stand out distinctly */
+    --ring: #94a3b8; /* A matching slate focus ring tint */
 
     /* Chart Palette - Slightly desaturated to match the softer theme */
     --chart-1: #4f46e5; /* Indigo */
