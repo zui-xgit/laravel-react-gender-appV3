@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Activity, useEffect, useState } from 'react';
 import {
     Stepper,
     StepperContent,
@@ -9,7 +9,6 @@ import {
     StepperNav,
     StepperPanel,
     StepperSeparator,
-    StepperTitle,
     StepperTrigger,
 } from '@/components/reui/stepper';
 
@@ -17,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import {
     useStepperFormStore,
     FormData,
+    InitialFormData,
 } from '@/hooks/store/use-stepper-form-store';
 import { Step1 } from '@/components/reporter/stepper/step1';
 import { Step2 } from '@/components/reporter/stepper/step2';
@@ -24,17 +24,16 @@ import { Step3 } from '@/components/reporter/stepper/step3';
 import { Step4 } from '@/components/reporter/stepper/step4';
 import { Step5 } from '@/components/reporter/stepper/step5';
 import { Step6 } from '@/components/reporter/stepper/step6';
+import { Step7 } from '@/components/reporter/stepper/step7';
 import { useForm } from '@inertiajs/react';
-import { InitialFormData } from '@/constants/constants';
-import { reporter, reporterReport } from '@/routes';
+import { reporterReport } from '@/routes';
 import { PortalLoader } from '@/components/portal-loader';
 import { CaseTrackingId } from '@/components/reporter/case-tracking-id';
-import { toast } from 'sonner';
 import AppGuestLayout from '@/layouts/app-guest-layout';
 import { Badge } from '@/components/ui/badge';
 import { CheckIcon, LoaderCircle } from 'lucide-react';
+import { toast } from 'sonner';
 
-// const steps = [1, 2, 3, 4, 5, 6];
 const steps = [
     {
         id: 1,
@@ -60,6 +59,10 @@ const steps = [
         id: 6,
         title: 'Step 6',
     },
+    {
+        id: 7,
+        title: 'Step 7',
+    },
 ];
 
 const Report = () => {
@@ -68,15 +71,11 @@ const Report = () => {
     const previousStep = useStepperFormStore((state) => state.previousStep);
     const nextStep = useStepperFormStore((state) => state.nextStep);
     const formData = useStepperFormStore((state) => state.formData);
-    const isAnonymous = useStepperFormStore((state) => state.isAnonymous);
 
     const [caseTrackingId, setCaseTrackingId] = useState<string>('');
 
-    const { data, setData, post, processing } = useForm<
-        FormData & { isAnonymous: boolean | null }
-    >({
+    const { data, setData, post, processing } = useForm<FormData>({
         ...InitialFormData,
-        isAnonymous: null,
     });
 
     const handlePreviousStep = () => {
@@ -84,7 +83,7 @@ const Report = () => {
     };
 
     const handleNextStep = () => {
-        if (currentStep === 6 && formData.confirmationChecked) {
+        if (currentStep === 7 && formData.confirmationChecked) {
             handleSubmit();
         } else {
             nextStep();
@@ -92,6 +91,12 @@ const Report = () => {
     };
 
     const handleSubmit = () => {
+        // make sure the file is uploaded before submission.
+        if (formData.evidenceFiles.length < 1) {
+            toast.error('Please upload at least one evidence file on Step 6.');
+            return;
+        }
+
         console.log(data);
         // post(reporter().url, {
         //     onError: (errors) => {
@@ -103,18 +108,11 @@ const Report = () => {
         // });
     };
 
-    useEffect(() => {
-        setData({ ...formData, isAnonymous });
-    }, [formData, isAnonymous]);
-
     return (
         <>
+            {processing && <PortalLoader />}
             <AppGuestLayout>
-                <div className="pt-7 pb-32 md:mx-auto md:w-[70%]">
-                    {processing && <PortalLoader />}
-                    {/* {isCaseSubmitted && (
-                        <CaseTrackingId caseTrackingId={caseTrackingId} />
-                    )} */}
+                <div className="pt-7 pb-32 md:mx-auto md:w-[80%]">
                     <Stepper
                         value={currentStep}
                         onValueChange={setCurrentStep as any}
@@ -133,7 +131,7 @@ const Report = () => {
                                     step={index + 1}
                                     className="relative flex-1 items-start"
                                 >
-                                    <StepperTrigger className="flex flex-col gap-2.5">
+                                    <StepperTrigger className="pointer-events-none flex flex-col gap-2.5">
                                         <StepperIndicator className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=completed]:bg-blue-600 data-[state=completed]:text-white data-[state=inactive]:text-gray-500">
                                             {index + 1}
                                         </StepperIndicator>
@@ -179,6 +177,7 @@ const Report = () => {
                                     {step.id === 4 && <Step4 />}
                                     {step.id === 5 && <Step5 />}
                                     {step.id === 6 && <Step6 />}
+                                    {step.id === 7 && <Step7 />}
                                 </StepperContent>
                             ))}
                         </StepperPanel>
@@ -202,7 +201,7 @@ const Report = () => {
                                 //     currentStep === steps.length || isAnonymous === null
                                 // }
                             >
-                                {currentStep === 6 ? <>Submit</> : <>Next</>}
+                                {currentStep === 7 ? <>Submit</> : <>Next</>}
                             </Button>
                         </div>
                     </Stepper>

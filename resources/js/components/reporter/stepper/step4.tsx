@@ -15,7 +15,7 @@ import InputError from '@/components/input-error';
 import StepHeader from './step-header';
 
 export const Step4 = () => {
-    const { formData, errors, updateFormData } = useStepperFormStore();
+    const { formData, errors, setFormData } = useStepperFormStore();
 
     return (
         <div className="animate-reveal w-full space-y-6 sm:space-y-8 md:w-[90%]">
@@ -35,7 +35,7 @@ export const Step4 = () => {
                         placeholder="Enter full name"
                         value={formData.accusedName}
                         onChange={(e) =>
-                            updateFormData({ accusedName: e.target.value })
+                            setFormData({ accusedName: e.target.value })
                         }
                         className={
                             errors.accusedName ? 'border-destructive' : ''
@@ -52,7 +52,7 @@ export const Step4 = () => {
                     <Select
                         value={formData.accusedSex ?? ''}
                         onValueChange={(value) =>
-                            updateFormData({ accusedSex: value as any })
+                            setFormData({ accusedSex: value as any })
                         }
                     >
                         <SelectTrigger
@@ -83,7 +83,7 @@ export const Step4 = () => {
                         placeholder="Mr. / Ms. / Prof."
                         value={formData.accusedTitle}
                         onChange={(e) =>
-                            updateFormData({ accusedTitle: e.target.value })
+                            setFormData({ accusedTitle: e.target.value })
                         }
                         className={
                             errors.accusedTitle ? 'border-destructive' : ''
@@ -103,7 +103,7 @@ export const Step4 = () => {
                         placeholder="Enter age"
                         value={formData.accusedAge}
                         onChange={(e) =>
-                            updateFormData({
+                            setFormData({
                                 accusedAge:
                                     e.target.value !== ''
                                         ? Number(e.target.value)
@@ -128,7 +128,7 @@ export const Step4 = () => {
                         placeholder="+255..."
                         value={formData.accusedPhone ?? ''}
                         onChange={(e) =>
-                            updateFormData({ accusedPhone: e.target.value })
+                            setFormData({ accusedPhone: e.target.value })
                         }
                         className={
                             errors.accusedPhone ? 'border-destructive' : ''
@@ -148,7 +148,7 @@ export const Step4 = () => {
                         placeholder="Enter email"
                         value={formData.accusedEmail}
                         onChange={(e) =>
-                            updateFormData({ accusedEmail: e.target.value })
+                            setFormData({ accusedEmail: e.target.value })
                         }
                         className={
                             errors.accusedEmail ? 'border-destructive' : ''
@@ -167,7 +167,7 @@ export const Step4 = () => {
                         placeholder="Specify education"
                         value={formData.accusedEducation}
                         onChange={(e) =>
-                            updateFormData({ accusedEducation: e.target.value })
+                            setFormData({ accusedEducation: e.target.value })
                         }
                         className={
                             errors.accusedEducation ? 'border-destructive' : ''
@@ -186,7 +186,7 @@ export const Step4 = () => {
                         placeholder="Specify residence"
                         value={formData.accusedResidence}
                         onChange={(e) =>
-                            updateFormData({ accusedResidence: e.target.value })
+                            setFormData({ accusedResidence: e.target.value })
                         }
                         className={
                             errors.accusedResidence ? 'border-destructive' : ''
@@ -208,7 +208,7 @@ export const Step4 = () => {
                         placeholder="Specify workplace"
                         value={formData.accusedWorkplace}
                         onChange={(e) =>
-                            updateFormData({ accusedWorkplace: e.target.value })
+                            setFormData({ accusedWorkplace: e.target.value })
                         }
                         className={
                             errors.accusedWorkplace ? 'border-destructive' : ''

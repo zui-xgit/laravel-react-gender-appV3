@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create, createStore } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { z } from 'zod';
 import { toast } from 'sonner';
@@ -72,12 +72,22 @@ const Step5Schema = z.object({
 });
 
 const Step6Schema = z.object({
+    evidenceFiles: z
+        .array(z.unknown())
+        .min(1, { message: 'At least one evidence file is required' }),
+    evidenceDescription: requiredString,
+});
+
+const Step7Schema = z.object({
     confirmationChecked: z.literal(true, {
-        message: 'Confirmation is Required',
+        error: 'Confirmation is Required  sfdsf',
     }),
 });
 
 export interface FormData {
+    // Step 1
+    isAnonymous: boolean | null;
+
     // COMPLAINANT / INFORMANT (Step 2)
     informantName: string;
     informantTitle: string;
@@ -122,19 +132,22 @@ export interface FormData {
     incidentAssistance: string;
     incidentInvolved: string;
 
-    // CONFIRMATION (Step 6)
+    // INCIDENT DETAILS (Step 6)
+    evidenceFiles: File[];
+    evidenceDescription: string;
+
+    // CONFIRMATION (Step 7)
     confirmationChecked: boolean;
 }
 
 interface StepperFormState {
-    currentStep: 1 | 2 | 3 | 4 | 5 | 6;
-    isAnonymous: boolean | null;
+    currentStep: 1 | 2 | 3 | 4 | 5 | 6 | 7;
     formData: FormData;
     errors: Partial<Record<keyof FormData, string>>;
 
-    setCurrentStep: (value: 1 | 2 | 3 | 4 | 5 | 6) => void;
-    setAnonymous: (value: boolean) => void;
-    updateFormData: (data: Partial<FormData>) => void;
+    setCurrentStep: (value: 1 | 2 | 3 | 4 | 5 | 6 | 7) => void;
+    setFormData: (data: Partial<FormData>) => void;
+    setErrors: (errors: Partial<Record<keyof FormData, string>>) => void;
     validateStep: () => boolean;
     nextStep: () => void;
     previousStep: () => void;
@@ -146,7 +159,11 @@ interface StepperFormState {
    INITIAL DATA
 ========================================================= */
 
-const initialFormData: FormData = {
+export const InitialFormData: FormData = {
+    // Step 1
+    isAnonymous: null,
+
+    // Step 2
     informantName: '',
     informantTitle: '',
     informantSex: '',
@@ -154,6 +171,7 @@ const initialFormData: FormData = {
     informantPhone: '',
     informantWorkplace: '',
 
+    // Step 3
     victimName: '',
     victimTitle: '',
     victimSex: '',
@@ -165,6 +183,7 @@ const initialFormData: FormData = {
     victimDisability: '',
     victimWorkplace: '',
 
+    // Step 4
     accusedName: '',
     accusedSex: '',
     accusedTitle: '',
@@ -175,6 +194,7 @@ const initialFormData: FormData = {
     accusedResidence: '',
     accusedWorkplace: '',
 
+    // Step
     incidentDate: '',
     incidentTime: '',
     incidentLocation: '',
@@ -187,6 +207,10 @@ const initialFormData: FormData = {
     incidentAssistance: '',
     incidentInvolved: '',
 
+    // Step 6
+    evidenceFiles: [],
+    evidenceDescription: '',
+
     confirmationChecked: false,
 };
 
@@ -198,30 +222,36 @@ export const useStepperFormStore = create<StepperFormState>()(
     persist(
         (set, get) => ({
             currentStep: 1,
-            isAnonymous: null,
-            formData: initialFormData,
+            formData: InitialFormData,
             errors: {},
 
             setCurrentStep: (value) => {
                 set({ currentStep: value });
             },
 
-            setAnonymous: (value: boolean) => set({ isAnonymous: value }),
+            setErrors: (newErrors) => {
+                set((state) => ({
+                    errors: {
+                        ...state.errors,
+                        ...newErrors,
+                    },
+                }));
+            },
 
-            updateFormData: (data) =>
+            setFormData: (data) =>
                 set((state) => ({
                     formData: { ...state.formData, ...data },
                 })),
 
             validateStep: (): boolean => {
-                const { currentStep, formData, isAnonymous } = get();
+                const { currentStep, formData } = get();
                 const errors: Partial<Record<keyof FormData, string>> = {};
                 let stepSchema: z.ZodSchema | null = null;
 
                 if (currentStep === 1) {
-                    if (isAnonymous === null) {
+                    if (formData.isAnonymous === null) {
                         return false;
-                    } else if (isAnonymous === true) {
+                    } else if (formData.isAnonymous === true) {
                         set((state) => ({
                             formData: {
                                 ...state.formData,
@@ -243,6 +273,8 @@ export const useStepperFormStore = create<StepperFormState>()(
                 if (currentStep === 4) stepSchema = Step4Schema;
                 if (currentStep === 5) stepSchema = Step5Schema;
                 if (currentStep === 6) stepSchema = Step6Schema;
+
+                if (currentStep === 7) stepSchema = Step7Schema;
 
                 // If anonymous skips step 2 or no specific schema maps out, it automatically passes
                 if (!stepSchema) {
@@ -269,7 +301,7 @@ export const useStepperFormStore = create<StepperFormState>()(
 
             nextStep: () => {
                 if (get().validateStep()) {
-                    if (get().currentStep === 1 && get().isAnonymous) {
+                    if (get().currentStep === 1 && get().formData.isAnonymous) {
                         set((state) => ({
                             currentStep: (state.currentStep + 2) as
                                 | 1
@@ -277,23 +309,22 @@ export const useStepperFormStore = create<StepperFormState>()(
                                 | 3
                                 | 4
                                 | 5
-                                | 6,
+                                | 6
+                                | 7,
                         }));
                         toast.success(
                             'Step 1 and 2 completed successfully! Proceeding to Step 3.',
-                            {
-                                duration: 2000,
-                            },
                         );
                     } else {
                         set((state) => ({
-                            currentStep: Math.min(state.currentStep + 1, 6) as
+                            currentStep: Math.min(state.currentStep + 1, 7) as
                                 | 1
                                 | 2
                                 | 3
                                 | 4
                                 | 5
-                                | 6,
+                                | 6
+                                | 7,
                         }));
                         toast.success(
                             'Step ' +
@@ -301,9 +332,6 @@ export const useStepperFormStore = create<StepperFormState>()(
                                 ' completed successfully! Proceeding to the Step ' +
                                 get().currentStep +
                                 '.',
-                            {
-                                duration: 2000,
-                            },
                         );
                     }
                     window.scrollTo({
@@ -311,7 +339,7 @@ export const useStepperFormStore = create<StepperFormState>()(
                         behavior: 'smooth',
                     });
                 } else {
-                    if (get().isAnonymous === null) {
+                    if (get().formData.isAnonymous === null) {
                         toast.error(
                             'Please select whether you want to report anonymously or not to continue',
                         );
@@ -322,7 +350,7 @@ export const useStepperFormStore = create<StepperFormState>()(
             },
 
             previousStep: () => {
-                if (get().currentStep === 3 && get().isAnonymous) {
+                if (get().currentStep === 3 && get().formData.isAnonymous) {
                     set((state) => ({
                         currentStep: (state.currentStep - 2) as
                             | 1
@@ -330,7 +358,8 @@ export const useStepperFormStore = create<StepperFormState>()(
                             | 3
                             | 4
                             | 5
-                            | 6,
+                            | 6
+                            | 7,
                     }));
                 } else {
                     set((state) => ({
@@ -340,7 +369,8 @@ export const useStepperFormStore = create<StepperFormState>()(
                             | 3
                             | 4
                             | 5
-                            | 6,
+                            | 6
+                            | 7,
                     }));
                 }
                 window.scrollTo({
@@ -352,8 +382,7 @@ export const useStepperFormStore = create<StepperFormState>()(
             resetForm: () =>
                 set({
                     currentStep: 1,
-                    isAnonymous: null,
-                    formData: initialFormData,
+                    formData: InitialFormData,
                     errors: {},
                 }),
 
@@ -364,6 +393,14 @@ export const useStepperFormStore = create<StepperFormState>()(
         {
             name: '@gender-app:stepper-form-storage',
             storage: createJSONStorage(() => localStorage),
+            partialize: (state) => ({
+                currentStep: state.currentStep,
+                formData: {
+                    ...state.formData,
+                    evidenceFiles: [],
+                },
+                errors: state.errors,
+            }),
         },
     ),
 );

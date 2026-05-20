@@ -16,7 +16,7 @@ import InputError from '@/components/input-error';
 import StepHeader from './step-header';
 
 export const Step3 = () => {
-    const { formData, errors, updateFormData } = useStepperFormStore();
+    const { formData, errors, setFormData } = useStepperFormStore();
 
     return (
         <div className="animate-reveal w-full space-y-6 sm:space-y-8 md:w-[90%]">
@@ -38,7 +38,7 @@ export const Step3 = () => {
                         placeholder="Enter full name"
                         value={formData.victimName}
                         onChange={(e) =>
-                            updateFormData({ victimName: e.target.value })
+                            setFormData({ victimName: e.target.value })
                         }
                         className={
                             errors.victimName ? 'border-destructive' : ''
@@ -57,7 +57,7 @@ export const Step3 = () => {
                         placeholder="Mr. / Ms. / Prof."
                         value={formData.victimTitle}
                         onChange={(e) =>
-                            updateFormData({ victimTitle: e.target.value })
+                            setFormData({ victimTitle: e.target.value })
                         }
                         className={
                             errors.victimTitle ? 'border-destructive' : ''
@@ -74,7 +74,7 @@ export const Step3 = () => {
                     <Select
                         value={formData.victimSex ?? ''}
                         onValueChange={(value) =>
-                            updateFormData({ victimSex: value as any })
+                            setFormData({ victimSex: value as any })
                         }
                     >
                         <SelectTrigger
@@ -106,7 +106,7 @@ export const Step3 = () => {
                         placeholder="Age"
                         value={formData.victimAge}
                         onChange={(e) =>
-                            updateFormData({
+                            setFormData({
                                 victimAge:
                                     e.target.value !== ''
                                         ? Number(e.target.value)
@@ -129,7 +129,7 @@ export const Step3 = () => {
                         placeholder="+255..."
                         value={formData.victimPhone}
                         onChange={(e) =>
-                            updateFormData({ victimPhone: e.target.value })
+                            setFormData({ victimPhone: e.target.value })
                         }
                         className={
                             errors.victimPhone ? 'border-destructive' : ''
@@ -149,7 +149,7 @@ export const Step3 = () => {
                         placeholder="example@email.com"
                         value={formData.victimEmail}
                         onChange={(e) =>
-                            updateFormData({ victimEmail: e.target.value })
+                            setFormData({ victimEmail: e.target.value })
                         }
                         className={
                             errors.victimEmail ? 'border-destructive' : ''
@@ -168,7 +168,7 @@ export const Step3 = () => {
                         placeholder="Bachelor / Masters / PhD"
                         value={formData.victimEducation}
                         onChange={(e) =>
-                            updateFormData({ victimEducation: e.target.value })
+                            setFormData({ victimEducation: e.target.value })
                         }
                         className={
                             errors.victimEducation ? 'border-destructive' : ''
@@ -187,7 +187,7 @@ export const Step3 = () => {
                         placeholder="Current city/district"
                         value={formData.victimResidence}
                         onChange={(e) =>
-                            updateFormData({ victimResidence: e.target.value })
+                            setFormData({ victimResidence: e.target.value })
                         }
                         className={
                             errors.victimResidence ? 'border-destructive' : ''
@@ -206,7 +206,7 @@ export const Step3 = () => {
                         placeholder="None / Specify disability if any"
                         value={formData.victimDisability}
                         onChange={(e) =>
-                            updateFormData({ victimDisability: e.target.value })
+                            setFormData({ victimDisability: e.target.value })
                         }
                         className={
                             errors.victimDisability ? 'border-destructive' : ''
@@ -226,7 +226,7 @@ export const Step3 = () => {
                         placeholder="Specify Workplace or Unit"
                         value={formData.victimWorkplace}
                         onChange={(e) =>
-                            updateFormData({ victimWorkplace: e.target.value })
+                            setFormData({ victimWorkplace: e.target.value })
                         }
                         className={
                             errors.victimWorkplace ? 'border-destructive' : ''

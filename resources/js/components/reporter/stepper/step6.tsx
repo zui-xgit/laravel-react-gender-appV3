@@ -1,248 +1,252 @@
-import { Eye } from 'lucide-react';
+import {
+    UploadCloud,
+    FileText,
+    X,
+    ShieldIcon,
+    Image as ImageIcon,
+} from 'lucide-react';
 import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
+import { useState, ChangeEvent, useEffect } from 'react';
+import { toast } from 'sonner';
 
 // Shadcn UI Components
-import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { useEffect } from 'react';
-import { Input } from '@headlessui/react';
-import InputError from '@/components/input-error';
+import { Textarea } from '@/components/ui/textarea';
 import StepHeader from './step-header';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import InputError from '@/components/input-error';
 
 export const Step6 = () => {
-    const { formData, errors, updateFormData, isAnonymous } =
-        useStepperFormStore();
+    const { formData, errors, setFormData, setErrors } = useStepperFormStore();
 
-    // Reusable Read-only Field Component
-    const renderField = (label: string, value?: string, spanFull = false) => (
-        <div
-            className={`rounded-2xl border border-border bg-muted/50 p-4 ${
-                spanFull ? 'sm:col-span-2' : ''
-            }`}
-        >
-            <label className="mb-2 block text-[10px] font-black tracking-widest text-muted-foreground uppercase">
-                {label}
-            </label>
-            <div className="text-sm font-medium break-words text-foreground">
-                {value ? (
-                    <span>{value}</span>
-                ) : (
-                    <span className="text-muted-foreground italic">
-                        Not provided
-                    </span>
-                )}
-            </div>
-        </div>
-    );
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || []);
+        const validTypes = [
+            'application/pdf',
+            'image/png',
+            'image/jpeg',
+            'image/jpg',
+        ];
+
+        const filteredFiles = files.filter((file) => {
+            const isValidType = validTypes.includes(file.type);
+            if (!isValidType) {
+                toast.error(
+                    `"${file.name}" is not a supported format (PDF, PNG, JPG, JPEG only).`,
+                );
+                return false;
+            }
+
+            const isDuplicate = formData.evidenceFiles.some(
+                (f) => f.name === file.name,
+            );
+
+            if (isDuplicate) {
+                toast.error(`"${file.name}" has already been added.`);
+                return false;
+            }
+
+            return true;
+        });
+
+        if (filteredFiles.length > 0) {
+            setFormData({
+                evidenceFiles: [...formData.evidenceFiles, ...filteredFiles],
+            });
+
+            if (errors.evidenceFiles) {
+                setErrors({ evidenceFiles: '' });
+            }
+        }
+
+        e.target.value = '';
+    };
+
+    const removeFile = (index: number) => {
+        setFormData({
+            evidenceFiles: formData.evidenceFiles.filter((_, i) => i !== index),
+        });
+    };
+
+    const formatFileSize = (bytes: number) => {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    };
 
     return (
         <div className="animate-reveal space-y-8 sm:space-y-12">
             <StepHeader
-                icon={Eye}
-                title="Statement Verification"
-                description="Review your report data carefully before submission"
+                icon={UploadCloud}
+                title="Incident Evidence"
+                description="Upload any supporting documents, photos, or evidence related to the incident."
             />
 
-            <div className="space-y-8 sm:space-y-12">
-                {/* Informant Section (Conditional) */}
-                {!isAnonymous && (
-                    <section className="space-y-4 sm:space-y-6">
-                        <div className="flex items-center gap-3">
-                            <Separator className="flex-1" />
-                            <h3 className="text-[10px] font-black tracking-[0.4em] whitespace-nowrap text-primary uppercase">
-                                Informant / Complainant Details
-                            </h3>
-                            <Separator className="flex-1" />
-                        </div>
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            {renderField(
-                                'Name of Informant/Complainant',
-                                formData.informantName,
-                            )}
-                            {renderField('Title', formData.informantTitle)}
-                            {renderField(
-                                'Sex',
-                                formData.informantSex?.toString(),
-                            )}
-                            {renderField(
-                                'Age',
-                                formData.informantAge?.toString(),
-                            )}
-                            {renderField(
-                                'Phone Number',
-                                formData.informantPhone,
-                            )}
-                            {renderField(
-                                'Workplace/Unit',
-                                formData.informantWorkplace,
-                                true,
-                            )}
-                        </div>
-                    </section>
-                )}
-
-                {/* Victim Section */}
-                <section className="space-y-4 sm:space-y-6">
-                    <div className="flex items-center gap-3">
-                        <Separator className="flex-1" />
-                        <h3 className="text-[10px] font-black tracking-[0.4em] whitespace-nowrap text-primary uppercase">
-                            Victim Information
-                        </h3>
-                        <Separator className="flex-1" />
-                    </div>
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        {renderField('Victim Full Name', formData.victimName)}
-                        {renderField('Title', formData.victimTitle)}
-                        {renderField('Sex', formData.victimSex as string)}
-                        {renderField('Age', formData.victimAge?.toString())}
-                        {renderField('Phone Number', formData.victimPhone)}
-                        {renderField('Email', formData.victimEmail)}
-                        {renderField(
-                            'Education Level',
-                            formData.victimEducation,
-                        )}
-                        {renderField(
-                            'Primary Residence',
-                            formData.victimResidence,
-                        )}
-                        {renderField('Disability', formData.victimDisability)}
-                        {renderField(
-                            'Workplace/Unit',
-                            formData.victimWorkplace,
-                            true,
-                        )}
-                    </div>
-                </section>
-
-                {/* Accused Section */}
-                <section className="space-y-4 sm:space-y-6">
-                    <div className="flex items-center gap-3">
-                        <Separator className="flex-1" />
-                        <h3 className="text-[10px] font-black tracking-[0.4em] whitespace-nowrap text-primary uppercase">
-                            Accused Details
-                        </h3>
-                        <Separator className="flex-1" />
-                    </div>
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        {renderField('Name of Accused', formData.accusedName)}
-                        {renderField('Sex', formData.accusedSex?.toString())}
-                        {renderField('Title', formData.accusedTitle)}
-                        {renderField('Age', formData.accusedAge?.toString())}
-                        {renderField('Phone Number', formData.accusedPhone)}
-                        {renderField('Email', formData.accusedEmail)}
-                        {renderField('Education', formData.accusedEducation)}
-                        {renderField('Residence', formData.accusedResidence)}
-                        {renderField(
-                            'Program/School/Workplace',
-                            formData.accusedWorkplace,
-                            true,
-                        )}
-                    </div>
-                </section>
-
-                {/* Incident Section */}
-                <section className="space-y-4 sm:space-y-6">
-                    <div className="flex items-center gap-3">
-                        <Separator className="flex-1" />
-                        <h3 className="text-[10px] font-black tracking-[0.4em] whitespace-nowrap text-primary uppercase">
-                            Incident Details
-                        </h3>
-                        <Separator className="flex-1" />
-                    </div>
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        {renderField('Date of Incident', formData.incidentDate)}
-                        {renderField('Time of Incident', formData.incidentTime)}
-                        {renderField(
-                            'Where Did Incident Occur',
-                            formData.incidentLocation,
-                        )}
-                        {renderField(
-                            'Exact Location',
-                            formData.incidentExactLocation,
-                        )}
-                        {renderField(
-                            'What Was the Cause',
-                            formData.incidentCause,
-                            true,
-                        )}
-                        {renderField(
-                            'How the Incident Happened',
-                            formData.incidentDescription,
-                            true,
-                        )}
-                        {renderField(
-                            'Immediate Actions Taken',
-                            formData.incidentActions,
-                            true,
-                        )}
-                        {renderField(
-                            'Injury or Disease Result',
-                            formData.incidentInjuries,
-                            true,
-                        )}
-                        {renderField(
-                            'Assistance Provided',
-                            formData.incidentAssistance,
-                            true,
-                        )}
-                        {renderField(
-                            'Who Was Involved',
-                            formData.incidentInvolved,
-                            true,
-                        )}
-                    </div>
-                </section>
-
-                {/* Confirmation Section */}
+            <div className="space-y-8 sm:space-y-10">
+                {/* Upload Section */}
                 <section className="space-y-6">
                     <div className="flex items-center gap-3">
                         <Separator className="flex-1" />
                         <h3 className="text-[10px] font-black tracking-[0.4em] whitespace-nowrap text-primary uppercase">
-                            Confirmation
+                            Upload Documents
                         </h3>
                         <Separator className="flex-1" />
                     </div>
 
-                    <div
-                        className={`rounded-2xl border p-6 transition-all ${
-                            errors.confirmationChecked
-                                ? 'border-destructive bg-destructive/5'
-                                : 'border-primary/20 bg-primary/5'
-                        }`}
-                    >
-                        <div className="flex items-start gap-4">
-                            <Checkbox
-                                id="confirmationChecked"
-                                checked={formData.confirmationChecked}
-                                onCheckedChange={(checked) =>
-                                    updateFormData({
-                                        confirmationChecked: checked as boolean,
-                                    })
-                                }
-                                className="mt-1 h-5 w-5 border-primary data-[state=checked]:bg-primary"
+                    <div className="grid gap-6">
+                        {/* Dropzone */}
+                        <div className="group relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-muted-foreground/25 bg-muted/30 px-6 py-12 transition-all hover:border-primary/50 hover:bg-primary/5">
+                            <div className="mb-4 rounded-full bg-background p-4 shadow-sm transition-transform group-hover:scale-110">
+                                <UploadCloud className="h-8 w-8 text-primary" />
+                            </div>
+                            <div className="text-center">
+                                <p className="text-sm font-semibold text-foreground">
+                                    Click to upload or drag and drop
+                                </p>
+                                <p className="mt-1 text-xs text-muted-foreground">
+                                    PDF, PNG or JPG (MAX. 10MB per file)
+                                </p>
+                            </div>
+                            <Input
+                                type="file"
+                                multiple
+                                accept=".pdf,.png,.jpg,.jpeg"
+                                className="absolute inset-0 h-full cursor-pointer opacity-0"
+                                onChange={handleFileChange}
                             />
-                            <div className="grid gap-1.5 leading-none">
-                                <Label
-                                    htmlFor="confirmationChecked"
-                                    className="cursor-pointer text-sm leading-relaxed font-normal text-foreground"
-                                >
-                                    I hereby confirm that all the information
-                                    provided in this report is true, accurate,
-                                    and complete to the best of my knowledge. I
-                                    understand that providing false or
-                                    misleading information may result in legal
-                                    consequences and undermines the integrity of
-                                    this reporting system.
-                                </Label>
+                        </div>
+                        {errors.evidenceFiles && (
+                            <InputError message={errors.evidenceFiles} />
+                        )}
+
+                        {/* File List */}
+                        <div className="space-y-3">
+                            <Label className="text-[10px] font-black tracking-widest text-muted-foreground uppercase">
+                                Selected Files ({formData.evidenceFiles.length})
+                            </Label>
+
+                            <div className="flex flex-col gap-2">
+                                {formData.evidenceFiles.length > 0 ? (
+                                    formData.evidenceFiles.map(
+                                        (file, index) => (
+                                            <div
+                                                key={index}
+                                                className="flex animate-in items-center justify-between rounded-xl border border-border bg-card p-3 shadow-sm transition-all duration-300 fade-in slide-in-from-bottom-2 hover:shadow-md"
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    <div className="rounded-lg bg-primary/10 p-2">
+                                                        {file.type.startsWith(
+                                                            'image/',
+                                                        ) ? (
+                                                            <ImageIcon className="h-5 w-5 text-primary" />
+                                                        ) : (
+                                                            <FileText className="h-5 w-5 text-primary" />
+                                                        )}
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <p className="max-w-[200px] truncate text-sm font-medium text-foreground sm:max-w-[400px]">
+                                                            {file.name}
+                                                        </p>
+                                                        <p className="text-[10px] text-muted-foreground">
+                                                            {formatFileSize(
+                                                                file.size,
+                                                            )}{' '}
+                                                            • Ready to upload
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() =>
+                                                        removeFile(index)
+                                                    }
+                                                    className="h-8 w-8 text-muted-foreground transition-colors hover:text-destructive"
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        ),
+                                    )
+                                ) : (
+                                    <p className="rounded-xl border border-dashed py-8 text-center text-xs text-muted-foreground italic">
+                                        No files selected yet.
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>
-
-                    {errors.confirmationChecked && (
-                        <InputError message={errors.confirmationChecked} />
-                    )}
                 </section>
+
+                {/* Additional Information */}
+                <section className="space-y-6">
+                    <div className="flex items-center gap-3">
+                        <Separator className="flex-1" />
+                        <h3 className="text-[10px] font-black tracking-[0.4em] whitespace-nowrap text-primary uppercase">
+                            Evidence Description
+                        </h3>
+                        <Separator className="flex-1" />
+                    </div>
+
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                            <Label htmlFor="evidenceDescription">
+                                Provide context for the uploaded evidence
+                            </Label>
+                            <Badge
+                                variant="secondary"
+                                className="h-5 text-[10px]"
+                            >
+                                Optional
+                            </Badge>
+                        </div>
+                        <Textarea
+                            id="evidenceDescription"
+                            placeholder="Explain what these files represent and how they support your statement..."
+                            // className="min-h-[120px] rounded-2xl bg-muted/30 transition-colors focus:bg-background"
+                            value={formData.evidenceDescription}
+                            onChange={(e) =>
+                                setFormData({
+                                    evidenceDescription: e.target.value,
+                                })
+                            }
+                            className={
+                                errors.evidenceDescription
+                                    ? 'border-destructive'
+                                    : ''
+                            }
+                            rows={3}
+                        />
+                        {errors.evidenceDescription && (
+                            <InputError message={errors.evidenceDescription} />
+                        )}
+                    </div>
+                </section>
+
+                {/* Privacy Warning */}
+                <div className="rounded-2xl border border-chart-2/20 bg-chart-2/5 p-4 sm:p-6">
+                    <div className="flex items-start gap-4">
+                        <div className="rounded-full bg-chart-2/10 p-2">
+                            <ShieldIcon className="h-5 w-5 text-chart-2" />
+                        </div>
+                        <div className="space-y-1">
+                            <h4 className="text-sm font-bold text-chart-2">
+                                Privacy & Security
+                            </h4>
+                            <p className="text-xs leading-relaxed text-muted-foreground">
+                                All uploaded evidence is encrypted and stored
+                                securely. Only authorized personnel involved in
+                                the case investigation will have access to these
+                                files.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -99,7 +99,7 @@ const INCIDENT_TYPES = [
     { value: 'Other / Not Listed', label: 'Other / Not Listed' },
 ];
 export const Step5 = () => {
-    const { formData, errors, updateFormData } = useStepperFormStore();
+    const { formData, errors, setFormData } = useStepperFormStore();
 
     return (
         <div className="animate-reveal w-full space-y-6 sm:space-y-8 md:w-[90%]">
@@ -120,7 +120,7 @@ export const Step5 = () => {
                             type="date"
                             value={formData.incidentDate ?? ''}
                             onChange={(e) =>
-                                updateFormData({ incidentDate: e.target.value })
+                                setFormData({ incidentDate: e.target.value })
                             }
                             className={
                                 errors.incidentDate ? 'border-destructive' : ''
@@ -137,7 +137,7 @@ export const Step5 = () => {
                             type="time"
                             value={formData.incidentTime ?? ''}
                             onChange={(e) =>
-                                updateFormData({ incidentTime: e.target.value })
+                                setFormData({ incidentTime: e.target.value })
                             }
                             className={
                                 errors.incidentTime ? 'border-destructive' : ''
@@ -159,7 +159,7 @@ export const Step5 = () => {
                         placeholder="Specify location"
                         value={formData.incidentLocation ?? ''}
                         onChange={(e) =>
-                            updateFormData({ incidentLocation: e.target.value })
+                            setFormData({ incidentLocation: e.target.value })
                         }
                         className={
                             errors.incidentLocation ? 'border-destructive' : ''
@@ -179,7 +179,7 @@ export const Step5 = () => {
                         placeholder="Specify exact location"
                         value={formData.incidentExactLocation ?? ''}
                         onChange={(e) =>
-                            updateFormData({
+                            setFormData({
                                 incidentExactLocation: e.target.value,
                             })
                         }
@@ -207,7 +207,7 @@ export const Step5 = () => {
                     <Select
                         value={formData.incidentType ?? ''}
                         onValueChange={(value) =>
-                            updateFormData({
+                            setFormData({
                                 incidentType: value,
                             })
                         }
@@ -246,7 +246,7 @@ export const Step5 = () => {
                         placeholder="Describe cause"
                         value={formData.incidentCause ?? ''}
                         onChange={(e) =>
-                            updateFormData({ incidentCause: e.target.value })
+                            setFormData({ incidentCause: e.target.value })
                         }
                         className={
                             errors.incidentCause ? 'border-destructive' : ''
@@ -267,7 +267,7 @@ export const Step5 = () => {
                         placeholder="Describe incident"
                         value={formData.incidentDescription ?? ''}
                         onChange={(e) =>
-                            updateFormData({
+                            setFormData({
                                 incidentDescription: e.target.value,
                             })
                         }
@@ -292,7 +292,7 @@ export const Step5 = () => {
                         placeholder="Describe immediate actions"
                         value={formData.incidentActions ?? ''}
                         onChange={(e) =>
-                            updateFormData({ incidentActions: e.target.value })
+                            setFormData({ incidentActions: e.target.value })
                         }
                         className={
                             errors.incidentActions ? 'border-destructive' : ''
@@ -314,7 +314,7 @@ export const Step5 = () => {
                         placeholder="Describe injury or disease"
                         value={formData.incidentInjuries ?? ''}
                         onChange={(e) =>
-                            updateFormData({ incidentInjuries: e.target.value })
+                            setFormData({ incidentInjuries: e.target.value })
                         }
                         className={
                             errors.incidentInjuries ? 'border-destructive' : ''
@@ -335,7 +335,7 @@ export const Step5 = () => {
                         placeholder="Describe assistance"
                         value={formData.incidentAssistance ?? ''}
                         onChange={(e) =>
-                            updateFormData({
+                            setFormData({
                                 incidentAssistance: e.target.value,
                             })
                         }
@@ -358,7 +358,7 @@ export const Step5 = () => {
                         placeholder="Specify involved parties"
                         value={formData.incidentInvolved ?? ''}
                         onChange={(e) =>
-                            updateFormData({ incidentInvolved: e.target.value })
+                            setFormData({ incidentInvolved: e.target.value })
                         }
                         className={
                             errors.incidentInvolved ? 'border-destructive' : ''

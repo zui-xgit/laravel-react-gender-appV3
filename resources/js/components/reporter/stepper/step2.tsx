@@ -16,7 +16,7 @@ import InputError from '@/components/input-error';
 import StepHeader from './step-header';
 
 export const Step2 = () => {
-    const { formData, errors, updateFormData } = useStepperFormStore();
+    const { formData, errors, setFormData } = useStepperFormStore();
 
     return (
         <div className="animate-reveal w-full space-y-6 sm:space-y-8 md:w-[90%]">
@@ -40,7 +40,7 @@ export const Step2 = () => {
                         placeholder="Enter name or alias"
                         value={formData.informantName}
                         onChange={(e) =>
-                            updateFormData({ informantName: e.target.value })
+                            setFormData({ informantName: e.target.value })
                         }
                         className={
                             errors.informantName ? 'border-destructive' : ''
@@ -59,7 +59,7 @@ export const Step2 = () => {
                         placeholder="Mr. / Ms. / Prof."
                         value={formData.informantTitle}
                         onChange={(e) =>
-                            updateFormData({ informantTitle: e.target.value })
+                            setFormData({ informantTitle: e.target.value })
                         }
                         className={
                             errors.informantTitle ? 'border-destructive' : ''
@@ -76,7 +76,7 @@ export const Step2 = () => {
                     <Select
                         value={formData.informantSex ?? ''}
                         onValueChange={(value) =>
-                            updateFormData({ informantSex: value })
+                            setFormData({ informantSex: value })
                         }
                     >
                         <SelectTrigger
@@ -108,7 +108,7 @@ export const Step2 = () => {
                         placeholder="Age"
                         value={formData.informantAge}
                         onChange={(e) =>
-                            updateFormData({
+                            setFormData({
                                 informantAge:
                                     e.target.value !== ''
                                         ? Number(e.target.value)
@@ -132,7 +132,7 @@ export const Step2 = () => {
                         placeholder="+255..."
                         value={formData.informantPhone}
                         onChange={(e) =>
-                            updateFormData({ informantPhone: e.target.value })
+                            setFormData({ informantPhone: e.target.value })
                         }
                         className={
                             errors.informantPhone ? 'border-destructive' : ''
@@ -154,7 +154,7 @@ export const Step2 = () => {
                         placeholder="Specify Program, School, or Workplace."
                         value={formData.informantWorkplace}
                         onChange={(e) =>
-                            updateFormData({
+                            setFormData({
                                 informantWorkplace: e.target.value,
                             })
                         }

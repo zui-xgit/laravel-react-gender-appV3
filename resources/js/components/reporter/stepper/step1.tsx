@@ -22,8 +22,7 @@ import {
 import StepHeader from './step-header';
 
 export const Step1 = () => {
-    const isAnonymous = useStepperFormStore((state) => state.isAnonymous);
-    const setAnonymous = useStepperFormStore((state) => state.setAnonymous);
+    const { formData, setFormData } = useStepperFormStore();
 
     return (
         <div className="animate-reveal w-full space-y-6 sm:space-y-8 md:w-[90%]">
@@ -50,17 +49,17 @@ export const Step1 = () => {
                 <Card
                     className={cn(
                         'relative cursor-pointer transition-all duration-200 hover:border-primary/50',
-                        isAnonymous === true
+                        formData.isAnonymous === true
                             ? 'border-primary bg-primary/5 ring-1 ring-primary'
                             : 'border-border bg-card',
                     )}
-                    onClick={() => setAnonymous(true)}
+                    onClick={() => setFormData({ isAnonymous: true })}
                 >
                     <CardHeader className="flex flex-row items-center gap-4 pb-3">
                         <div
                             className={cn(
                                 'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-colors',
-                                isAnonymous === true
+                                formData.isAnonymous === true
                                     ? 'border-primary bg-primary text-primary-foreground'
                                     : 'border-border bg-muted text-muted-foreground',
                             )}
@@ -72,7 +71,7 @@ export const Step1 = () => {
                                 Report Anonymously
                             </CardTitle>
                         </div>
-                        {isAnonymous === true && (
+                        {formData.isAnonymous === true && (
                             <CheckCircle2 className="h-5 w-5 animate-in text-primary duration-300 zoom-in-50" />
                         )}
                     </CardHeader>
@@ -89,17 +88,17 @@ export const Step1 = () => {
                 <Card
                     className={cn(
                         'relative cursor-pointer transition-all duration-200 hover:border-primary/50',
-                        isAnonymous === false
+                        formData.isAnonymous === false
                             ? 'border-primary bg-primary/5 ring-1 ring-primary'
                             : 'border-border bg-card',
                     )}
-                    onClick={() => setAnonymous(false)}
+                    onClick={() => setFormData({ isAnonymous: false })}
                 >
                     <CardHeader className="flex flex-row items-center gap-4 pb-3">
                         <div
                             className={cn(
                                 'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-colors',
-                                isAnonymous === false
+                                formData.isAnonymous === false
                                     ? 'border-primary bg-primary text-primary-foreground'
                                     : 'border-border bg-muted text-muted-foreground',
                             )}
@@ -111,7 +110,7 @@ export const Step1 = () => {
                                 Identify Myself
                             </CardTitle>
                         </div>
-                        {isAnonymous === false && (
+                        {formData.isAnonymous === false && (
                             <CheckCircle2 className="h-5 w-5 animate-in text-primary duration-300 zoom-in-50" />
                         )}
                     </CardHeader>
