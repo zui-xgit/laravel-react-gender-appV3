@@ -1,228 +1,79 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import {
-    Stepper,
-    StepperContent,
-    StepperIndicator,
-    StepperItem,
-    StepperNav,
-    StepperPanel,
-    StepperSeparator,
-    StepperTrigger,
-} from '@/components/reui/stepper';
-
-import { Button } from '@/components/ui/button';
-import {
-    useStepperFormStore,
-    FormData,
-    InitialFormData,
-} from '@/hooks/store/use-stepper-form-store';
-import { Step1 } from '@/components/reporter/stepper/step1';
-import { Step2 } from '@/components/reporter/stepper/step2';
-import { Step3 } from '@/components/reporter/stepper/step3';
-import { Step4 } from '@/components/reporter/stepper/step4';
-import { Step5 } from '@/components/reporter/stepper/step5';
-import { Step6 } from '@/components/reporter/stepper/step6';
-import { Step7 } from '@/components/reporter/stepper/step7';
-import { useForm } from '@inertiajs/react';
-import { reporterReport } from '@/routes';
-import { PortalLoader } from '@/components/portal-loader';
-import { CaseTrackingId } from '@/components/reporter/case-tracking-id';
-import AppGuestLayout from '@/layouts/app-guest-layout';
-import { Badge } from '@/components/ui/badge';
-import { CheckIcon, LoaderCircle } from 'lucide-react';
-
-// Assuming Activity is imported from your UI or utility components folder
-import { Activity } from 'react';
-
-const steps = [
-    {
-        id: 1,
-        title: 'Step 1',
-    },
-    {
-        id: 2,
-        title: 'Step 2',
-    },
-    {
-        id: 3,
-        title: 'Step 3',
-    },
-    {
-        id: 4,
-        title: 'Step 4',
-    },
-    {
-        id: 5,
-        title: 'Step 5',
-    },
-    {
-        id: 6,
-        title: 'Step 6',
-    },
-    {
-        id: 7,
-        title: 'Step 7',
-    },
-];
-
-const Report = () => {
-    const currentStep = useStepperFormStore((state) => state.currentStep);
-    const setCurrentStep = useStepperFormStore((state) => state.setCurrentStep);
-    const previousStep = useStepperFormStore((state) => state.previousStep);
-    const nextStep = useStepperFormStore((state) => state.nextStep);
-    const formData = useStepperFormStore((state) => state.formData);
-
-    const [caseTrackingId, setCaseTrackingId] = useState<string>('');
-
-    const { data, setData, post, processing } = useForm<FormData>({
-        ...InitialFormData,
-    });
-
-    const handlePreviousStep = () => {
-        previousStep();
-    };
-
-    const handleNextStep = () => {
-        if (currentStep === 7 && formData.confirmationChecked) {
-            handleSubmit();
-        } else {
-            nextStep();
-        }
-    };
-
-    const handleSubmit = () => {
-        console.log(data);
-        // post(reporter().url, {
-        //     onError: (errors) => {
-        //         toast.error(errors.error);
-        //     },
-        //     onSuccess: (page) => {
-        //         setCaseTrackingId(page.flash.case_report_id as string);
-        //     },
-        // });
-    };
-
-    return (
-        <>
-            {processing && <PortalLoader />}
-            <AppGuestLayout>
-                <div className="pt-7 pb-32 md:mx-auto md:w-[80%]">
-                    <Stepper
-                        value={currentStep}
-                        onValueChange={setCurrentStep as any}
-                        className="w-full space-y-8 px-4 py-2 md:px-0"
-                        indicators={{
-                            completed: <CheckIcon className="size-3.5" />,
-                            loading: (
-                                <LoaderCircle className="size-3.5 animate-spin" />
-                            ),
-                        }}
-                    >
-                        <StepperNav>
-                            {steps.map((step, index) => (
-                                <StepperItem
-                                    key={index}
-                                    step={index + 1}
-                                    className="relative flex-1 items-start"
-                                >
-                                    <StepperTrigger className="flex flex-col gap-2.5">
-                                        <StepperIndicator className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=completed]:bg-blue-600 data-[state=completed]:text-white data-[state=inactive]:text-gray-500">
-                                            {index + 1}
-                                        </StepperIndicator>
-
-                                        <div className="hidden md:flex">
-                                            <Badge
-                                                variant="secondary"
-                                                className="hidden group-data-[state=active]/step:inline-flex"
-                                            >
-                                                In Progress
-                                            </Badge>
-                                            <Badge
-                                                variant="secondary"
-                                                className="hidden group-data-[state=completed]/step:inline-flex"
-                                            >
-                                                Completed
-                                            </Badge>
-                                            <Badge
-                                                variant="secondary"
-                                                className="hidden text-muted-foreground group-data-[state=inactive]/step:inline-flex"
-                                            >
-                                                Pending
-                                            </Badge>
-                                        </div>
-                                    </StepperTrigger>
-                                    {steps.length > index + 1 && (
-                                        <StepperSeparator className="absolute inset-x-0 top-3 left-[calc(50%+0.875rem)] m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem+0.225rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none group-data-[state=completed]/step:bg-blue-700" />
-                                    )}
-                                </StepperItem>
-                            ))}
-                        </StepperNav>
-
-                        <StepperPanel className="text-sm">
-                            {steps.map((step) => {
-                                const isCurrentActive = currentStep === step.id;
-
-                                return (
-                                    <StepperContent
-                                        className="flex w-full items-center justify-center"
-                                        key={step.id}
-                                        value={step.id}
-                                    >
-                                        <Activity
-                                            mode={
-                                                isCurrentActive
-                                                    ? 'visible'
-                                                    : 'hidden'
-                                            }
-                                        >
-                                            {step.id === 1 && <Step1 />}
-                                            {step.id === 2 && <Step2 />}
-                                            {step.id === 3 && <Step3 />}
-                                            {step.id === 4 && <Step4 />}
-                                            {step.id === 5 && <Step5 />}
-                                            {step.id === 6 && <Step6 />}
-                                            {step.id === 7 && <Step7 />}
-                                        </Activity>
-                                    </StepperContent>
-                                );
-                            })}
-                        </StepperPanel>
-
-                        {/* Previous and Next Buttons */}
-                        <div className="flex items-center justify-between gap-2.5">
-                            <Button
-                                variant="outline"
-                                onClick={handlePreviousStep}
-                                className="cursor-pointer disabled:pointer-events-auto disabled:cursor-not-allowed"
-                                disabled={currentStep === 1}
-                            >
-                                Previous
-                            </Button>
-
-                            <Button
-                                variant="outline"
-                                onClick={handleNextStep}
-                                className="cursor-pointer disabled:pointer-events-auto disabled:cursor-not-allowed"
-                            >
-                                {currentStep === 7 ? <>Submit</> : <>Next</>}
-                            </Button>
+{
+    formData.evidenceFiles.length > 0 &&
+        formData.evidenceDescription.trim() !== '' && (
+            <>
+                <div className="tborder flex flex-col gap-3">
+                    <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                            <Separator className="flex-1" />
+                            <h3 className="text-[10px] font-black tracking-[0.4em] whitespace-nowrap text-primary uppercase">
+                                Confirmation
+                            </h3>
+                            <Separator className="flex-1" />
                         </div>
-                    </Stepper>
+
+                        <div
+                            className={`rounded-2xl border p-6 transition-all ${
+                                errors.confirmationChecked
+                                    ? 'border-destructive bg-destructive/5'
+                                    : 'border-primary/20 bg-primary/5'
+                            }`}
+                        >
+                            <div className="flex items-start gap-4">
+                                <Checkbox
+                                    id="confirmationChecked"
+                                    checked={formData.confirmationChecked}
+                                    onCheckedChange={(checked) =>
+                                        setFormData({
+                                            confirmationChecked:
+                                                checked as boolean,
+                                        })
+                                    }
+                                    className="mt-1 h-5 w-5 border-primary data-[state=checked]:bg-primary"
+                                />
+                                <div className="grid gap-1.5 leading-none">
+                                    <Label
+                                        htmlFor="confirmationChecked"
+                                        className="cursor-pointer text-sm leading-relaxed font-normal text-foreground"
+                                    >
+                                        I hereby confirm that all the
+                                        information provided in this report is
+                                        true, accurate, and complete to the best
+                                        of my knowledge. I understand that
+                                        providing false or misleading
+                                        information may result in legal
+                                        consequences and undermines the
+                                        integrity of this reporting system.
+                                    </Label>
+                                </div>
+                            </div>
+                        </div>
+
+                        {errors.confirmationChecked && (
+                            <InputError message={errors.confirmationChecked} />
+                        )}
+                    </div>
+
+                    {/* Privacy Warning */}
+                    <div className="rounded-2xl border border-chart-2/20 bg-chart-2/5 p-4 sm:p-6">
+                        <div className="flex items-start gap-4">
+                            <div className="rounded-full bg-chart-2/10 p-2">
+                                <ShieldIcon className="h-5 w-5 text-chart-2" />
+                            </div>
+                            <div className="space-y-1">
+                                <h4 className="text-sm font-bold text-chart-2">
+                                    Privacy & Security
+                                </h4>
+                                <p className="text-xs leading-relaxed text-muted-foreground">
+                                    All uploaded evidence is encrypted and
+                                    stored securely. Only authorized personnel
+                                    involved in the case investigation will have
+                                    access to these files.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </AppGuestLayout>
-        </>
-    );
-};
-
-export default Report;
-
-Report.layout = {
-    breadcrumbs: [
-        {
-            title: 'New Case',
-            href: reporterReport(),
-        },
-    ],
-};
+            </>
+        );
+}

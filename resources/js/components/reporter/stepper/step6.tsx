@@ -4,10 +4,14 @@ import {
     X,
     ShieldIcon,
     Image as ImageIcon,
+    Eye,
+    FileDown,
 } from 'lucide-react';
 import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
 import { ChangeEvent } from 'react';
 import { toast } from 'sonner';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import FormPreviewPDF from '../preview-form-pdf';
 
 // Shadcn UI Components
 import { Button } from '@/components/ui/button';
@@ -18,6 +22,15 @@ import StepHeader from './step-header';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import InputError from '@/components/input-error';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import { useEffect } from 'react';
 
 export const Step6 = () => {
     const { formData, errors, setFormData, setErrors } = useStepperFormStore();
@@ -79,8 +92,10 @@ export const Step6 = () => {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
 
+    useEffect(() => {}, [formData.evidenceFiles]);
+
     return (
-        <div className="animate-reveal space-y-8 sm:space-y-12">
+        <div className="animate-reveal w-full space-y-6 sm:space-y-8 md:w-[90%]">
             <StepHeader
                 icon={UploadCloud}
                 title="Incident Evidence"
@@ -227,6 +242,102 @@ export const Step6 = () => {
                         )}
                     </div>
                 </section>
+            </div>
+
+            <section className="animate-reveal mt-10 space-y-8">
+                <div className="flex flex-col gap-6 rounded-2xl border border-primary/20 bg-primary/5 p-6 sm:p-8">
+                    <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                        <div className="space-y-1">
+                            <h3 className="text-lg font-bold text-primary">
+                                Ready to Proceed?
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                                Your report is complete. You can now preview it
+                                or sign the confirmation below.
+                            </p>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2">
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        className="gap-2 border-primary/20 text-primary hover:bg-primary/5"
+                                    >
+                                        <Eye className="h-4 w-4" />
+                                        Preview Statement
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent
+                                    aria-describedby={undefined}
+                                    className="flex h-[98vh] !max-w-[95vw] flex-col overflow-hidden border-none p-0 sm:rounded-2xl"
+                                >
+                                    <DialogHeader className="border-b bg-background p-4">
+                                        <DialogTitle className="flex items-center gap-2">
+                                            <FileText className="h-5 w-5 text-primary" />
+                                            Incident Report Preview
+                                        </DialogTitle>
+                                    </DialogHeader>
+                                    <div className="w-full flex-1 bg-muted/30">
+                                        <PDFViewer
+                                            width="100%"
+                                            height="100%"
+                                            showToolbar={true}
+                                            className="border-none"
+                                        >
+                                            <FormPreviewPDF />
+                                        </PDFViewer>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+                    </div>
+
+                    <Separator className="bg-primary/10" />
+
+                    <div className="space-y-6">
+                        <div
+                            className={`rounded-xl border bg-background/50 p-6 transition-all ${
+                                errors.confirmationChecked
+                                    ? 'border-destructive'
+                                    : 'border-border'
+                            }`}
+                        >
+                            <div className="flex items-start gap-4">
+                                <Checkbox
+                                    id="confirmationChecked"
+                                    checked={formData.confirmationChecked}
+                                    onCheckedChange={(checked) =>
+                                        setFormData({
+                                            confirmationChecked:
+                                                checked as boolean,
+                                        })
+                                    }
+                                    className="mt-1 h-5 w-5 border-primary data-[state=checked]:bg-primary"
+                                />
+                                <div className="grid gap-1.5 leading-none">
+                                    <Label
+                                        htmlFor="confirmationChecked"
+                                        className="cursor-pointer text-sm leading-relaxed font-normal text-foreground"
+                                    >
+                                        I hereby confirm that all the
+                                        information provided in this report is
+                                        true, accurate, and complete to the best
+                                        of my knowledge. I understand that
+                                        providing false or misleading
+                                        information may result in legal
+                                        consequences and undermines the
+                                        integrity of this reporting system.
+                                    </Label>
+                                </div>
+                            </div>
+                        </div>
+
+                        {errors.confirmationChecked && (
+                            <InputError message={errors.confirmationChecked} />
+                        )}
+                    </div>
+                </div>
 
                 {/* Privacy Warning */}
                 <div className="rounded-2xl border border-chart-2/20 bg-chart-2/5 p-4 sm:p-6">
@@ -247,7 +358,7 @@ export const Step6 = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
     );
 };

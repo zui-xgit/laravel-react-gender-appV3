@@ -24,7 +24,6 @@ import { Step3 } from '@/components/reporter/stepper/step3';
 import { Step4 } from '@/components/reporter/stepper/step4';
 import { Step5 } from '@/components/reporter/stepper/step5';
 import { Step6 } from '@/components/reporter/stepper/step6';
-import { Step7 } from '@/components/reporter/stepper/step7';
 import { useForm } from '@inertiajs/react';
 import { reporterReport } from '@/routes';
 import { PortalLoader } from '@/components/portal-loader';
@@ -59,10 +58,6 @@ const steps = [
         id: 6,
         title: 'Step 6',
     },
-    {
-        id: 7,
-        title: 'Step 7',
-    },
 ];
 
 const Report = () => {
@@ -83,7 +78,7 @@ const Report = () => {
     };
 
     const handleNextStep = () => {
-        if (currentStep === 7 && formData.confirmationChecked) {
+        if (currentStep === 6 && formData.confirmationChecked) {
             handleSubmit();
         } else {
             nextStep();
@@ -108,6 +103,10 @@ const Report = () => {
         //     },
         // });
     };
+
+    useEffect(() => {
+        setData(formData);
+    }, [formData]);
 
     return (
         <>
@@ -178,7 +177,6 @@ const Report = () => {
                                     {step.id === 4 && <Step4 />}
                                     {step.id === 5 && <Step5 />}
                                     {step.id === 6 && <Step6 />}
-                                    {step.id === 7 && <Step7 />}
                                 </StepperContent>
                             ))}
                         </StepperPanel>
@@ -202,7 +200,7 @@ const Report = () => {
                                 //     currentStep === steps.length || isAnonymous === null
                                 // }
                             >
-                                {currentStep === 7 ? <>Submit</> : <>Next</>}
+                                {currentStep === 6 ? <>Submit</> : <>Next</>}
                             </Button>
                         </div>
                     </Stepper>

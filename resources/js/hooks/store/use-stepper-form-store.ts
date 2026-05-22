@@ -76,11 +76,8 @@ const Step6Schema = z.object({
         .array(z.unknown())
         .min(1, { message: 'At least one evidence file is required' }),
     evidenceDescription: requiredString,
-});
-
-const Step7Schema = z.object({
     confirmationChecked: z.literal(true, {
-        error: 'Confirmation is Required  sfdsf',
+        error: 'You must confirm that the information provided is accurate to submit the report',
     }),
 });
 
@@ -141,11 +138,11 @@ export interface FormData {
 }
 
 interface StepperFormState {
-    currentStep: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+    currentStep: 1 | 2 | 3 | 4 | 5 | 6;
     formData: FormData;
     errors: Partial<Record<keyof FormData, string>>;
 
-    setCurrentStep: (value: 1 | 2 | 3 | 4 | 5 | 6 | 7) => void;
+    setCurrentStep: (value: 1 | 2 | 3 | 4 | 5 | 6) => void;
     setFormData: (data: Partial<FormData>) => void;
     setErrors: (errors: Partial<Record<keyof FormData, string>>) => void;
     validateStep: () => boolean;
@@ -274,8 +271,6 @@ export const useStepperFormStore = create<StepperFormState>()(
                 if (currentStep === 5) stepSchema = Step5Schema;
                 if (currentStep === 6) stepSchema = Step6Schema;
 
-                if (currentStep === 7) stepSchema = Step7Schema;
-
                 // If anonymous skips step 2 or no specific schema maps out, it automatically passes
                 if (!stepSchema) {
                     set({ errors: {} });
@@ -309,22 +304,20 @@ export const useStepperFormStore = create<StepperFormState>()(
                                 | 3
                                 | 4
                                 | 5
-                                | 6
-                                | 7,
+                                | 6,
                         }));
                         toast.success(
                             'Step 1 and 2 completed successfully! Proceeding to Step 3.',
                         );
                     } else {
                         set((state) => ({
-                            currentStep: Math.min(state.currentStep + 1, 7) as
+                            currentStep: Math.min(state.currentStep + 1, 6) as
                                 | 1
                                 | 2
                                 | 3
                                 | 4
                                 | 5
-                                | 6
-                                | 7,
+                                | 6,
                         }));
                         toast.success(
                             'Step ' +
@@ -358,8 +351,7 @@ export const useStepperFormStore = create<StepperFormState>()(
                             | 3
                             | 4
                             | 5
-                            | 6
-                            | 7,
+                            | 6,
                     }));
                 } else {
                     set((state) => ({
@@ -369,8 +361,7 @@ export const useStepperFormStore = create<StepperFormState>()(
                             | 3
                             | 4
                             | 5
-                            | 6
-                            | 7,
+                            | 6,
                     }));
                 }
                 window.scrollTo({
