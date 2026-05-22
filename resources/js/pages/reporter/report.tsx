@@ -78,7 +78,12 @@ const Report = () => {
     };
 
     const handleNextStep = () => {
-        if (currentStep === 6 && formData.confirmationChecked) {
+        if (
+            currentStep === 6 &&
+            formData.confirmationChecked &&
+            formData.evidenceFiles.length > 0 &&
+            formData.evidenceDescription.trim() !== ''
+        ) {
             handleSubmit();
         } else {
             nextStep();
@@ -87,11 +92,6 @@ const Report = () => {
 
     const handleSubmit = () => {
         // make sure the file is uploaded before submission.
-
-        if (formData.evidenceFiles.length < 1) {
-            toast.error('Please upload at least one evidence file on Step 6.');
-            return;
-        }
 
         console.log(data);
         // post(reporter().url, {

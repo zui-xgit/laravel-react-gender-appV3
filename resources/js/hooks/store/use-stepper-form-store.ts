@@ -137,25 +137,6 @@ export interface FormData {
     confirmationChecked: boolean;
 }
 
-interface StepperFormState {
-    currentStep: 1 | 2 | 3 | 4 | 5 | 6;
-    formData: FormData;
-    errors: Partial<Record<keyof FormData, string>>;
-
-    setCurrentStep: (value: 1 | 2 | 3 | 4 | 5 | 6) => void;
-    setFormData: (data: Partial<FormData>) => void;
-    setErrors: (errors: Partial<Record<keyof FormData, string>>) => void;
-    validateStep: () => boolean;
-    nextStep: () => void;
-    previousStep: () => void;
-    resetForm: () => void;
-    resetErrors: () => void;
-}
-
-/* =========================================================
-   INITIAL DATA
-========================================================= */
-
 export const InitialFormData: FormData = {
     // Step 1
     isAnonymous: null,
@@ -207,9 +188,27 @@ export const InitialFormData: FormData = {
     // Step 6
     evidenceFiles: [],
     evidenceDescription: '',
-
     confirmationChecked: false,
 };
+
+interface StepperFormState {
+    currentStep: 1 | 2 | 3 | 4 | 5 | 6;
+    formData: FormData;
+    errors: Partial<Record<keyof FormData, string>>;
+
+    setCurrentStep: (value: 1 | 2 | 3 | 4 | 5 | 6) => void;
+    setFormData: (data: Partial<FormData>) => void;
+    setErrors: (errors: Partial<Record<keyof FormData, string>>) => void;
+    validateStep: () => boolean;
+    nextStep: () => void;
+    previousStep: () => void;
+    resetForm: () => void;
+    resetErrors: () => void;
+}
+
+/* =========================================================
+   INITIAL DATA
+========================================================= */
 
 /* =========================================================
    STORE
