@@ -6,7 +6,7 @@ import {
     Image as ImageIcon,
 } from 'lucide-react';
 import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
-import { useState, ChangeEvent, useEffect } from 'react';
+import { ChangeEvent } from 'react';
 import { toast } from 'sonner';
 
 // Shadcn UI Components

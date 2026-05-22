@@ -5,8 +5,6 @@ import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { useEffect } from 'react';
-import { Input } from '@headlessui/react';
 import InputError from '@/components/input-error';
 import StepHeader from './step-header';
 

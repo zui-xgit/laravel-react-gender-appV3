@@ -92,6 +92,7 @@ const Report = () => {
 
     const handleSubmit = () => {
         // make sure the file is uploaded before submission.
+
         if (formData.evidenceFiles.length < 1) {
             toast.error('Please upload at least one evidence file on Step 6.');
             return;
