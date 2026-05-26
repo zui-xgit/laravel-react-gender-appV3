@@ -3,6 +3,7 @@
 use App\Http\Controllers\CaseWorkflowController;
 use App\Http\Controllers\ReporterController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 // use Laravel\Fortify\Features;
 
 Route::inertia('/', 'welcome')->name('home');
@@ -12,7 +13,13 @@ Route::inertia('/test', 'test' )->name("test");
 
 // Route::middleware(['guest'])->group(function () {
     Route::post("reporter", [ReporterController::class, 'store'])->name('reporter');
-    Route::inertia('reporter/case-reported-successfully', 'reporter/case-reported-successfully')->name('case-reported-successfully'); 
+
+    Route::get('reporter/case-reported-successfully/{case_tracking_id}', function ($case_tracking_id){
+        return Inertia::render('reporter/case-reported-successfully', [
+            'case_tracking_id' => $case_tracking_id
+        ]); 
+    })->name('case-reported-successfully'); 
+
     Route::inertia('reporter/report', 'reporter/report')->name('reporter-report'); 
     Route::inertia('reporter/track', 'reporter/track')->name('reporter-track'); 
     Route::inertia('reporter/success', 'reporter/success')->name('reporter-success'); 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CaseDetail;
 use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -36,7 +37,8 @@ class ReporterController extends Controller
      public function store(Request $request)
     {
 
-        $validated = $request->validate([
+
+        $validated = $request->validate([   
             // step 1
             'isAnonymous' => 'required|boolean',
             
@@ -90,16 +92,16 @@ class ReporterController extends Controller
             'incidentInvolved' => 'required|string',
 
             // step 6. 
-            'evidenceFiles' => 'required|array|min:1',
+            // 'evidenceFiles' => 'required|array|min:1',
+            'evidenceFiles' => 'array',
             'evidenceFiles.*' => 'file|mimes:jpg,jpeg,png,pdf|max:10240', 
             'evidenceDescription' => 'required|string',  
             'confirmationChecked' => 'required|accepted', 
 
         ]); 
        
+       
 
-        
-        
         try{
 
              // Start database transaction
@@ -172,13 +174,13 @@ class ReporterController extends Controller
                 foreach($request->file('evidenceFiles') as $file){
                    $path = $file->store('evidence_files', 'public');
 
-
                    $case->caseEvidence()->create([
                       'file_path' => $path,
                       'file_name' => $file->getClientOriginalName(),
                       'file_type' => $file->getClientMimeType(),  
                    ]);
                 }
+
             }
             
 
@@ -186,17 +188,20 @@ class ReporterController extends Controller
             DB::commit(); 
 
             // create the log for creating the submition
-            Log::info("Case created successfully", [
-                 'reference_number' => $case->case_tracking_id
-            ]); 
+            // Log::info("Case created successfully", [
+            //      'reference_number' => $case->case_tracking_id
+            // ]); 
 
 
-            return redirect()->route('faq'); 
+            // dd($case->evidence_description);
+
+            return redirect()->route('case-reported-successfully', ["case_tracking_id" => $case->case_tracking_id]); 
 
 
         }catch(Exception $e){
 
             DB::rollBack();
+
 
             Log::error('Report submission failed', [
                 'transaction' => 'report submission failed',
@@ -212,7 +217,7 @@ class ReporterController extends Controller
             ]); 
 
         }
-    }
+    }   
 
     
 

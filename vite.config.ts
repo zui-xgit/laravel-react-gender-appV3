@@ -22,4 +22,10 @@ export default defineConfig({
             formVariants: true,
         }),
     ],
+
+    server: {
+        watch: {
+            ignored: ['**/public/storage/**', '**/storage/app/public/**'],
+        },
+    },
 });

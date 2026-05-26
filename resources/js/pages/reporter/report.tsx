@@ -13,11 +13,7 @@ import {
 } from '@/components/reui/stepper';
 
 import { Button } from '@/components/ui/button';
-import {
-    useStepperFormStore,
-    FormData,
-    InitialFormData,
-} from '@/hooks/store/use-stepper-form-store';
+import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
 import { Step1 } from '@/components/reporter/stepper/step1';
 import { Step2 } from '@/components/reporter/stepper/step2';
 import { Step3 } from '@/components/reporter/stepper/step3';
@@ -68,10 +64,6 @@ const Report = () => {
 
     const [processing, setProcessing] = useState<boolean>(false);
 
-    // const { post, processing } = useForm<FormData>({
-    //     ...InitialFormData,
-    // });
-
     const handlePreviousStep = () => {
         previousStep();
     };
@@ -90,31 +82,23 @@ const Report = () => {
     };
 
     const handleSubmit = () => {
-        // console.log(formData);
-        // post(reporter().url, {
-        //     forceFormData: true,
-        //     onError: (errors) => {
-        //         toast.error(errors.error);
-        //     },
-        //     // onSuccess: (page) => {
-        //     //     // toast.success(page.flash.case_report_id as string);`
-        //     // },
-        // });
-
-        router.post(reporter().url, formData as any, {
-            forceFormData: true,
-            onStart: () => setProcessing(true),
-            onFinish: () => setProcessing(false),
-            onError: (errors) => {
-                toast.error(errors.error || 'Submission failed.');
+        router.post(
+            reporter().url,
+            { ...formData },
+            {
+                forceFormData: true, // Ensures files are bundled as FormData natively
+                preserveState: false, // Reset component state upon a successful redirect
+                preserveScroll: false, // Reset scroll position to top on the new page
+                onStart: () => setProcessing(true), // Triggers your PortalLoader
+                onFinish: () => setProcessing(false), // Hides your PortalLoader
+                onError: (error) => {
+                    // console.log('ERROR: ', error);
+                    toast.error(error.error);
+                },
+                onSuccess: () => {},
             },
-            onSuccess: (page) => {},
-        });
+        );
     };
-
-    // useEffect(() => {
-    //     setData(formData);
-    // }, [formData]);
 
     return (
         <>
@@ -204,9 +188,7 @@ const Report = () => {
                                 variant="outline"
                                 onClick={handleNextStep}
                                 className="cursor-pointer disabled:pointer-events-auto disabled:cursor-not-allowed"
-                                // disabled={
-                                //     currentStep === steps.length || isAnonymous === null
-                                // }
+                                disabled={processing}
                             >
                                 {currentStep === 6 ? <>Submit</> : <>Next</>}
                             </Button>

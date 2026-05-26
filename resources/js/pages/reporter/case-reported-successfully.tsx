@@ -1,6 +1,12 @@
 import AppGuestLayout from '@/layouts/app-guest-layout';
 
-export default function CaseReportedSuccessfully() {
+interface CaseReportedSuccessfullyProps {
+    case_tracking_id: string;
+}
+
+export default function CaseReportedSuccessfully({
+    case_tracking_id,
+}: CaseReportedSuccessfullyProps) {
     return (
         <AppGuestLayout>
             <div className="flex h-screen items-center justify-center">

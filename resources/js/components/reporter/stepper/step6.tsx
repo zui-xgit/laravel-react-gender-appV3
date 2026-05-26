@@ -30,7 +30,6 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { useEffect } from 'react';
 
 export const Step6 = () => {
     const { formData, errors, setFormData, setErrors } = useStepperFormStore();
