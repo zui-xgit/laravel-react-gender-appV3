@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class ReporterController extends Controller
@@ -35,12 +36,11 @@ class ReporterController extends Controller
      public function store(Request $request)
     {
 
-         
-
-        //
-         $validated = $request->validate([
+        $validated = $request->validate([
+            // step 1
             'isAnonymous' => 'required|boolean',
             
+            // step 2. 
             // INFORMANT (required only if NOT anonymous)
             'informantName' => 'required_if:isAnonymous,false|nullable|string|max:255',
             'informantTitle' => 'required_if:isAnonymous,false|nullable|string|max:50',
@@ -49,6 +49,7 @@ class ReporterController extends Controller
             'informantPhone' => 'required_if:isAnonymous,false|nullable|string|max:20',
             'informantWorkplace' => 'required_if:isAnonymous,false|nullable|string',
             
+            // step 3. 
             // VICTIM (always required)
             'victimName' => 'required|string|max:255',
             'victimTitle' => 'required|string|max:50',
@@ -61,6 +62,7 @@ class ReporterController extends Controller
             'victimDisability' => 'nullable|string|max:255',
             'victimWorkplace' => 'required|string',
             
+            // step 4. 
             // ACCUSED (always required)
             'accusedName' => 'required|string|max:255',
             'accusedTitle' => 'required|string|max:50',
@@ -73,6 +75,7 @@ class ReporterController extends Controller
             'accusedResidence' => 'required|string|max:255',
             'accusedWorkplace' => 'required|string',
             
+            // step 5. 
             // INCIDENT (always required)
             'incidentDate' => 'required|date|before_or_equal:today',
             'incidentTime' => 'required|string',
@@ -80,34 +83,33 @@ class ReporterController extends Controller
             'incidentExactLocation' => 'required|string',
             'incidentType' => 'required|string', 
             'incidentCause' => 'required|string',
-            // 'incidentDescription' => 'required|string|min:20',
             'incidentDescription' => 'required|string',
             'incidentActions' => 'required|string',
             'incidentInjuries' => 'required|string',
             'incidentAssistance' => 'required|string',
             'incidentInvolved' => 'required|string',
-        ]);
 
+            // step 6. 
+            'evidenceFiles' => 'required|array|min:1',
+            'evidenceFiles.*' => 'file|mimes:jpg,jpeg,png,pdf|max:10240', 
+            'evidenceDescription' => 'required|string',  
+            'confirmationChecked' => 'required|accepted', 
+
+        ]); 
+       
 
         
         
         try{
 
-						 
-            $datePart = now()->format('Y-m-d'); // 2025-12-26
-            $randomPart = strtoupper(Str::random(5)); // e.g., EG34X
-            $case_tracking_id = "PS-{$datePart}-{$randomPart}";
-
-
              // Start database transaction
-
             DB::beginTransaction();
 
 
             // 1. Create the main report 
             $case = CaseDetail::create([
-                'case_tracking_id' => $case_tracking_id, 
                 'is_anonymous' => $validated['isAnonymous'],
+                'evidence_description' => $validated['evidenceDescription']
             ]);
 
 
@@ -165,6 +167,21 @@ class ReporterController extends Controller
                 'other_involved' => $validated['incidentInvolved'],
             ]);
 
+            // 6. Evidence Files and description
+            if($request->hasFile('evidenceFiles')){
+                foreach($request->file('evidenceFiles') as $file){
+                   $path = $file->store('evidence_files', 'public');
+
+
+                   $case->caseEvidence()->create([
+                      'file_path' => $path,
+                      'file_name' => $file->getClientOriginalName(),
+                      'file_type' => $file->getClientMimeType(),  
+                   ]);
+                }
+            }
+            
+
 
             DB::commit(); 
 
@@ -173,34 +190,27 @@ class ReporterController extends Controller
                  'reference_number' => $case->case_tracking_id
             ]); 
 
-            Inertia::flash("case_report_id", $case->case_tracking_id); 
+
+            return redirect()->route('faq'); 
 
 
         }catch(Exception $e){
 
             DB::rollBack();
 
-        //    dd($e);
-
             Log::error('Report submission failed', [
                 'transaction' => 'report submission failed',
                 'ip_address' => $request->ip(),
-                'route' => request()->route()?->getName(),
-                'url'=> request()->fullUrl(),
-                'method' => request()->method(),
+                'route' => $request->route()?->getName(),
+                'url'=> $request->fullUrl(),
+                'method' => $request->method(),
                 "session_id" => $request->session()->getId(),
                 'error' => $e->getMessage(),
-                // 'trace' => $e->getTraceAsString(), dont include this because : Short answer: because it’s redundant, risky, and inefficient in Laravel. Laravel (via Monolog) automatically records:
-            ]);
-
-						
-           
-            
+            ]);						
             return back()->withErrors([
                    'error' => "Failed to submit report. Please try again or contact support."
             ]); 
 
-            
         }
     }
 

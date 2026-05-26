@@ -24,10 +24,9 @@ import { Step3 } from '@/components/reporter/stepper/step3';
 import { Step4 } from '@/components/reporter/stepper/step4';
 import { Step5 } from '@/components/reporter/stepper/step5';
 import { Step6 } from '@/components/reporter/stepper/step6';
-import { useForm } from '@inertiajs/react';
-import { reporterReport } from '@/routes';
+import { router, useForm } from '@inertiajs/react';
+import { reporter, reporterReport } from '@/routes';
 import { PortalLoader } from '@/components/portal-loader';
-import { CaseTrackingId } from '@/components/reporter/case-tracking-id';
 import AppGuestLayout from '@/layouts/app-guest-layout';
 import { Badge } from '@/components/ui/badge';
 import { CheckIcon, LoaderCircle } from 'lucide-react';
@@ -67,11 +66,11 @@ const Report = () => {
     const nextStep = useStepperFormStore((state) => state.nextStep);
     const formData = useStepperFormStore((state) => state.formData);
 
-    const [caseTrackingId, setCaseTrackingId] = useState<string>('');
+    const [processing, setProcessing] = useState<boolean>(false);
 
-    const { data, setData, post, processing } = useForm<FormData>({
-        ...InitialFormData,
-    });
+    // const { post, processing } = useForm<FormData>({
+    //     ...InitialFormData,
+    // });
 
     const handlePreviousStep = () => {
         previousStep();
@@ -91,22 +90,31 @@ const Report = () => {
     };
 
     const handleSubmit = () => {
-        // make sure the file is uploaded before submission.
-
-        console.log(data);
+        // console.log(formData);
         // post(reporter().url, {
+        //     forceFormData: true,
         //     onError: (errors) => {
         //         toast.error(errors.error);
         //     },
-        //     onSuccess: (page) => {
-        //         setCaseTrackingId(page.flash.case_report_id as string);
-        //     },
+        //     // onSuccess: (page) => {
+        //     //     // toast.success(page.flash.case_report_id as string);`
+        //     // },
         // });
+
+        router.post(reporter().url, formData as any, {
+            forceFormData: true,
+            onStart: () => setProcessing(true),
+            onFinish: () => setProcessing(false),
+            onError: (errors) => {
+                toast.error(errors.error || 'Submission failed.');
+            },
+            onSuccess: (page) => {},
+        });
     };
 
-    useEffect(() => {
-        setData(formData);
-    }, [formData]);
+    // useEffect(() => {
+    //     setData(formData);
+    // }, [formData]);
 
     return (
         <>

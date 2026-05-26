@@ -14,15 +14,13 @@ return new class extends Migration
     {
         Schema::create('case_evidence', function (Blueprint $table) {
             $table->id();
-            // $table->foreignId('case_detail_id')->constrained()->onDelete('cascade');
             $table->foreignIdFor(CaseDetail::class)->constrained()->onDelete('cascade');
             $table->string('file_path');
             $table->string('file_name');
             $table->string('file_type');
-            $table->foreignId('uploaded_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
 
-            $table->index('case_detail_id');
+            // $table->index('case_detail_id');
         });
     }
 

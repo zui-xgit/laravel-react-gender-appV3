@@ -10,7 +10,9 @@ use App\Models\CaseWorkflow;
 use App\Models\IncidentDetail;
 use App\Models\InformantDetail;
 use App\Models\VictimDetail;
+use App\Observers\CaseDetailObserver;
 use Illuminate\Database\Eloquent\Attributes\Guarded;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 
 #[Guarded(["id", "uuid", "created_at", 'updated_at'])]
+#[ObservedBy([CaseDetailObserver::class])]
 class CaseDetail extends Model
 {
     /** @use HasFactory<\Database\Factories\CaseDetailFactory> */
@@ -82,7 +85,7 @@ class CaseDetail extends Model
         return $this->hasMany(CaseActivity::class);
     }
 
-    public function caseEvidences(): HasMany
+    public function caseEvidence(): HasMany
     {
         return $this->hasMany(CaseEvidence::class);
     }

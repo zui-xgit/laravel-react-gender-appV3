@@ -92,7 +92,7 @@ export const Step6 = () => {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
 
-    useEffect(() => {}, [formData.evidenceFiles]);
+    // useEffect(() => {}, [formData.evidenceFiles]);
 
     return (
         <div className="animate-reveal w-full space-y-6 sm:space-y-8 md:w-[90%]">

@@ -23,12 +23,13 @@ class CaseDetailFactory extends Factory
             ->format('Y-m-d');
 
         return [
-            'case_tracking_id' => sprintf(
-                'PS-%s-%s',
-                $date,
-                strtoupper(Str::random(5))
-            ),
+            // 'case_tracking_id' => sprintf(
+            //     'PS-%s-%s',
+            //     $date,
+            //     strtoupper(Str::random(5))
+            // ),
             'is_anonymous' => fake()->boolean(), // ✅ random true / false
+            'evidence_description' => fake()->paragraph(),  
             'status' => "pending",
             // 'status' => fake()->randomElement([
             //     'pending', 'in_progress', 'completed'

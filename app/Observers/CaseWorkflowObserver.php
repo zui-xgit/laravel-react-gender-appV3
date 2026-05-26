@@ -26,7 +26,7 @@ class CaseWorkflowObserver
          else{
              $case->update([
                  'status' => 'in_progress'
-              ]);
+             ]);
          }
     }
 

@@ -12,6 +12,7 @@ Route::inertia('/test', 'test' )->name("test");
 
 // Route::middleware(['guest'])->group(function () {
     Route::post("reporter", [ReporterController::class, 'store'])->name('reporter');
+    Route::inertia('reporter/case-reported-successfully', 'reporter/case-reported-successfully')->name('case-reported-successfully'); 
     Route::inertia('reporter/report', 'reporter/report')->name('reporter-report'); 
     Route::inertia('reporter/track', 'reporter/track')->name('reporter-track'); 
     Route::inertia('reporter/success', 'reporter/success')->name('reporter-success'); 

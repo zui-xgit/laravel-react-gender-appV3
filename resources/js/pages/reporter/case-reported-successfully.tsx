@@ -1,6 +1,6 @@
 import AppGuestLayout from '@/layouts/app-guest-layout';
 
-export default function Success() {
+export default function CaseReportedSuccessfully() {
     return (
         <AppGuestLayout>
             <div className="flex h-screen items-center justify-center">
