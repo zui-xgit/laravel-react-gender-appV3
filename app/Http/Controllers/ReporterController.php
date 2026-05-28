@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -195,13 +196,18 @@ class ReporterController extends Controller
 
             // dd($case->evidence_description);
 
-            return redirect()->route('case-reported-successfully', ["case_tracking_id" => $case->case_tracking_id]); 
+            Inertia::flash('case_tracking_id', $case->case_tracking_id); 
+            $request->session()->put('case_tracking_id', $case->case_tracking_id); 
+
+            return redirect()->route('case-reported-successfully'); 
 
 
         }catch(Exception $e){
 
             DB::rollBack();
 
+
+            dd($e->getMessage());
 
             Log::error('Report submission failed', [
                 'transaction' => 'report submission failed',
