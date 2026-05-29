@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\AccusedDetail;
-use App\Models\CaseActivity;
 use App\Models\CaseAssignment;
 use App\Models\CaseEvidence;
 use App\Models\CaseWorkflow;
@@ -80,11 +79,7 @@ class CaseDetail extends Model
     }
 
     // ========================RELATIONSHIP TO WORKFLOW TABLES ======================
-    public function caseActivities(): HasMany
-    {
-        return $this->hasMany(CaseActivity::class);
-    }
-
+   
     public function caseEvidence(): HasMany
     {
         return $this->hasMany(CaseEvidence::class);

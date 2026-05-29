@@ -11,7 +11,7 @@ import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
 import { ChangeEvent } from 'react';
 import { toast } from 'sonner';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
-import FormPreviewPDF from '../preview-form-pdf';
+import FormPreviewPDF from '@/components/pdf/preview-form-pdf';
 
 // Shadcn UI Components
 import { Button } from '@/components/ui/button';

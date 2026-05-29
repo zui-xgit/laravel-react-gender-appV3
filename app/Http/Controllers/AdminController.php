@@ -65,20 +65,23 @@ class AdminController extends Controller
 
        $personal_assignments = $query->paginate(15) 
         ->withQueryString()
-        ->through(function ($assignment) {
+        ->through(function ($case_assignment) {
             return [
-                'uuid' => $assignment->caseDetail?->uuid,
-                "case_tracking_id" => $assignment->caseDetail?->case_tracking_id ?? 'N/A', 
-                "is_anonymous"     => $assignment->caseDetail?->is_anonymous ?? false,
-                "status"           => $assignment->caseDetail?->status ?? 'unknown',
-                "caseWorkflowPercentage" => $assignment->caseDetail?->caseWorkflowPercentage, 
+                "caseDetail" => [
+                    'uuid' => $case_assignment->caseDetail->uuid,
+                    "case_tracking_id" => $case_assignment->caseDetail->case_tracking_id, 
+                    "is_anonymous"     => $case_assignment->caseDetail->is_anonymous,
+                    "status"           => $case_assignment->caseDetail->status,
+                    "caseWorkflowPercentage" => $case_assignment->caseDetail->caseWorkflowPercentage, 
+                ], 
+                'assignedBy' => [    
+                    "assigned_by" => $case_assignment->assignedBy->first_name . ' ' . $case_assignment->assignedBy->last_name,
+                    'assigned_by_role'=> $case_assignment->assignedBy->role,   
+                ], 
                 
-                "assigned_by" => $assignment->assignedBy?->first_name . ' ' . $assignment->assignedBy?->last_name,
-                'assigned_by_role'=> $assignment->assignedBy?->role,   
-                
-                "priority"      => $assignment->priority,
-                "date_assigned" => $assignment->created_at->toIso8601String(),
-                "last_updated" => $assignment->last_updated
+                "priority"      => $case_assignment->priority,
+                "date_assigned" => $case_assignment->created_at->toIso8601String(),
+                "last_updated" => $case_assignment->last_updated
             ];
         });
 
@@ -286,78 +289,129 @@ class AdminController extends Controller
     }
 
     // in_progress
-    public function in_progress(){
-        return Inertia::render('dashboard/admin/in-progress');
+    public function inProgress(Request $request)
+    {
+        $query = CaseDetail::with(['incidentDetail', 'caseAssignment'])
+            ->where('status', 'in_progress')
+            ->orderBy('created_at', 'desc');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('case_tracking_id', 'like', "%{$search}%")
+                    ->orWhereHas('incidentDetail', function ($iq) use ($search) {
+                        $iq->where('incident_type', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        if ($request->filled('filter')) {
+            if ($request->filter === 'anonymous') {
+                $query->where('is_anonymous', true);
+            } elseif ($request->filter === 'identified') {
+                $query->where('is_anonymous', false);   
+            }
+        }
+
+        $cases = $query->paginate(10)->withQueryString()->through(function ($case) {
+            return [
+                'uuid' => $case->uuid,
+                'case_tracking_id' => $case->case_tracking_id,
+                'is_anonymous' => (bool) $case->is_anonymous,
+                'status' => $case->status,
+                'created_at' => $case->created_at->toIso8601String(),
+                "caseWorkflowPercentage" => $case->caseWorkflowPercentage, 
+                'case_assignment' => [
+                    'priority' => $case->caseAssignment->priority, 
+                    'case_assigned_at' => $case->caseAssignment->created_at->toIso8601String(),
+                    'assigned_to' => $case->caseAssignment->assignedTo->first_name . ' ' . $case->caseAssignment->assignedTo->last_name, 
+                    'assigned_to_role' => $case->caseAssignment->assignedTo->role,
+                    'assigned_by' => $case->caseAssignment->assignedBy->first_name . ' ' . $case->caseAssignment->assignedBy->last_name,
+                    'assigned_by_role' => $case->caseAssignment->assignedBy->role
+                ]
+            ];
+        });
+
+        $stats = [
+            'total' => CaseDetail::where('status', 'in_progress')->count(),
+            'identified' => CaseDetail::where('status', 'in_progress')->where('is_anonymous', false)->count(),
+            'anonymous' => CaseDetail::where('status', 'in_progress')->where('is_anonymous', true)->count(),
+        ];
+
+        return Inertia::render('dashboard/admin/in-progress', [
+            'cases' => $cases,
+            'stats' => $stats,
+            'filters' => $request->only(['search', 'filter']),
+        ]);
     }
 
     // completed
-    public function completed(){
-        return Inertia::render('dashboard/admin/completed');
+    public function completed(Request $request)
+    {
+        $query = CaseDetail::with(['caseAssignment', "incidentDetail"])   
+            ->where('status', 'completed')
+            ->orderBy('created_at', 'desc');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('case_tracking_id', 'like', "%{$search}%")
+                    ->orWhereHas('incidentDetail', function ($iq) use ($search) {
+                        $iq->where('incident_type', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        if ($request->filled('filter')) {
+            if ($request->filter === 'anonymous') {
+                $query->where('is_anonymous', true);
+            } elseif ($request->filter === 'identified') {
+                $query->where('is_anonymous', false);
+            }
+        }
+
+        $cases = $query->paginate(10)->withQueryString()->through(function ($case) {
+            return [
+                'uuid' => $case->uuid,
+                'case_tracking_id' => $case->case_tracking_id,
+                'is_anonymous' => (bool) $case->is_anonymous,
+                'status' => $case->status,
+                'case_reported_at' => $case->created_at->toIso8601String(),
+                'incident_detail' => [
+                    'incident_type' => $case->incidentDetail->incident_type,
+                ],
+                'caseAssignment' => [
+                    'case_assigned_at' => $case->caseAssignment->created_at->toIso8601String(),
+                    'assigned_by' => $case->caseAssignment->assignedBy->first_name . ' ' . $case->caseAssignment->assignedBy->last_name, 
+                    'assigned_by_role' => $case->caseAssignment->assignedBy->role, 
+                    'assigned_to' => $case->caseAssignment->assignedTo->first_name . ' ' . $case->caseAssignment->assignedTo->last_name, 
+                    'assigned_to_role' => $case->caseAssignment->assignedTo->role
+                ]
+            ];
+        });
+
+        $stats = [
+            'total' => CaseDetail::where('status', 'completed')->count(),
+            'identified' => CaseDetail::where('status', 'completed')->where('is_anonymous', false)->count(),
+            'anonymous' => CaseDetail::where('status', 'completed')->where('is_anonymous', true)->count(),
+            'today' => CaseDetail::where('status', 'completed')->whereDate('created_at', now()->toDateString())->count(),
+        ];
+
+        return Inertia::render('dashboard/admin/completed', [
+            'cases' => $cases,
+            'stats' => $stats,
+            'filters' => $request->only(['search', 'filter']),
+        ]);
     }
 
     // staff management
     public function staffManagement(){}
 
-    // audit logs
+    // audit logset
     public function auditLogs(){}
 
     // settings
     public function settings(){}
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    
 }

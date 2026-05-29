@@ -48,6 +48,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import BackButton from '@/components/back-button';
 
 interface PaginationLinks {
     url: string | null;
@@ -116,10 +117,13 @@ export default function PersonalAssignments({
 
             <div className="flex flex-col gap-8 px-4 py-6 md:px-8">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <Heading
-                        title="My Assignments"
-                        description="View and manage cases assigned to you."
-                    />
+                    <div className="flex flex-row items-center gap-3">
+                        <BackButton />
+                        <Heading
+                            title="My Assignments"
+                            description="View and manage cases assigned to you."
+                        />
+                    </div>
                     <div className="flex items-center gap-2">
                         <Button variant="outline" size="sm">
                             <Download className="mr-2 h-4 w-4" />
@@ -178,7 +182,7 @@ export default function PersonalAssignments({
                                     <TableHead>Identity</TableHead>
                                     <TableHead>Progress</TableHead>
                                     <TableHead>Date Assigned</TableHead>
-                                    <TableHead className="text-right">
+                                    <TableHead className="text-center">
                                         Actions
                                     </TableHead>
                                 </TableRow>
@@ -188,7 +192,10 @@ export default function PersonalAssignments({
                                     assignments.data.map((item, index) => (
                                         <TableRow key={index}>
                                             <TableCell className="font-medium">
-                                                {item.case_tracking_id}
+                                                {
+                                                    item.caseDetail
+                                                        .case_tracking_id
+                                                }
                                             </TableCell>
                                             <TableCell>
                                                 <Badge
@@ -201,15 +208,22 @@ export default function PersonalAssignments({
                                             <TableCell>
                                                 <div className="flex flex-col">
                                                     <span className="font-medium">
-                                                        {item.assigned_by}
+                                                        {
+                                                            item.assignedBy
+                                                                .assigned_by
+                                                        }
                                                     </span>
                                                     <span className="text-xs text-muted-foreground uppercase">
-                                                        {item.assigned_by_role}
+                                                        {
+                                                            item.assignedBy
+                                                                .assigned_by_role
+                                                        }
                                                     </span>
                                                 </div>
                                             </TableCell>
                                             <TableCell>
-                                                {item.is_anonymous ? (
+                                                {item.caseDetail
+                                                    .is_anonymous ? (
                                                     <Badge
                                                         variant="secondary"
                                                         className="gap-1"
@@ -226,7 +240,8 @@ export default function PersonalAssignments({
                                             <TableCell>
                                                 <CaseProgressBar
                                                     progress={
-                                                        item.caseWorkflowPercentage
+                                                        item.caseDetail
+                                                            .caseWorkflowPercentage
                                                     }
                                                 />
                                             </TableCell>
@@ -244,7 +259,7 @@ export default function PersonalAssignments({
                                                     </span>
                                                 </div>
                                             </TableCell>
-                                            <TableCell className="text-right">
+                                            <TableCell className="flex items-center justify-center">
                                                 <div className="flex justify-end gap-2">
                                                     <Hint content="View details">
                                                         <Button
@@ -253,7 +268,9 @@ export default function PersonalAssignments({
                                                             className="h-8 w-8 cursor-pointer"
                                                             onClick={() =>
                                                                 viewCase(
-                                                                    item.uuid,
+                                                                    item
+                                                                        .caseDetail
+                                                                        .uuid,
                                                                 )
                                                             }
                                                         >
@@ -287,7 +304,9 @@ export default function PersonalAssignments({
                                                             <DropdownMenuItem
                                                                 onClick={() =>
                                                                     viewCase(
-                                                                        item.uuid,
+                                                                        item
+                                                                            .caseDetail
+                                                                            .uuid,
                                                                     )
                                                                 }
                                                             >
@@ -297,7 +316,9 @@ export default function PersonalAssignments({
                                                             <DropdownMenuItem
                                                                 onClick={() =>
                                                                     caseWorkFlow(
-                                                                        item.uuid,
+                                                                        item
+                                                                            .caseDetail
+                                                                            .uuid,
                                                                     )
                                                                 }
                                                             >

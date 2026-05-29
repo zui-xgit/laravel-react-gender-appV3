@@ -48,6 +48,7 @@ import { PendingCase } from '@/types/types';
 import { Hint } from '@/components/hint';
 import SearchInput from '@/components/search-input';
 import RefreshButton from '@/components/refresh-button';
+import BackButton from '@/components/back-button';
 
 interface PaginationLinks {
     url: string | null;
@@ -141,10 +142,13 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
 
             <div className="flex flex-col gap-8 px-4 py-6 md:px-8">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <Heading
-                        title="Pending Cases"
-                        description="Cases awaiting review and officer assignment."
-                    />
+                    <div className="flex flex-row items-center gap-3">
+                        <BackButton />
+                        <Heading
+                            title="Pending Cases"
+                            description="Cases awaiting review and officer assignment."
+                        />
+                    </div>
                     <div className="flex items-center gap-2">
                         <Button variant="outline" size="sm">
                             <Download className="mr-2 h-4 w-4" />
@@ -209,7 +213,7 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                     <TableHead>Incident Type</TableHead>
                                     <TableHead>Identity</TableHead>
                                     <TableHead>Submitted</TableHead>
-                                    <TableHead className="text-right">
+                                    <TableHead className="text-center">
                                         Actions
                                     </TableHead>
                                 </TableRow>
@@ -257,7 +261,7 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                                     </span>
                                                 </div>
                                             </TableCell>
-                                            <TableCell className="text-right">
+                                            <TableCell className="flex items-center justify-center border-l border-solid border-black">
                                                 <div className="flex justify-end gap-2">
                                                     <Hint content="Assign Personnel">
                                                         <Button
@@ -288,13 +292,13 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                                                             <Eye className="h-4 w-4" />
                                                         </Button>
                                                     </Hint>
-                                                    <Button
+                                                    {/* <Button
                                                         variant="ghost"
                                                         size="icon"
                                                         className="h-8 w-8"
                                                     >
                                                         <MoreHorizontal className="h-4 w-4" />
-                                                    </Button>
+                                                    </Button> */}
                                                 </div>
                                             </TableCell>
                                         </TableRow>

@@ -113,14 +113,53 @@ export interface PendingCase {
     };
 }
 
-export interface PersonalAssignment {
+export interface InProgressCase {
     uuid: string;
     case_tracking_id: string;
     is_anonymous: boolean;
     status: string;
+    created_at: string;
     caseWorkflowPercentage: IntRange<0, 100>;
-    assigned_by: string;
-    assigned_by_role: string;
+    case_assignment: {
+        priority: string;
+        case_assigned_at: string;
+        assigned_by: string;
+        assigned_by_role: string;
+        assigned_to: string;
+        assigned_to_role: string;
+    };
+}
+
+export interface CompletedCase {
+    uuid: string;
+    case_tracking_id: string;
+    is_anonymous: boolean;
+    status: string;
+    case_reported_at: string;
+    incident_detail: {
+        incident_type: string;
+    };
+    caseAssignment: {
+        case_assigned_at: string;
+        assigned_by: string;
+        assigned_by_role: string;
+        assigned_to: string;
+        assigned_to_role: string;
+    };
+}
+
+export interface PersonalAssignment {
+    caseDetail: {
+        uuid: string;
+        case_tracking_id: string;
+        is_anonymous: boolean;
+        status: string;
+        caseWorkflowPercentage: IntRange<0, 100>;
+    };
+    assignedBy: {
+        assigned_by: string;
+        assigned_by_role: string;
+    };
     priority: string;
     date_assigned: string;
     last_updated: string | null;
