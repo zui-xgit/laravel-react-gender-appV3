@@ -18,7 +18,7 @@ trait ProfileValidationRules
         return [
             // 'name' => $this->nameRules(),
             'email' => $this->emailRules($userId),
-            'username' => ['required', 'unique:users,username', 'string'], 
+            'username' => $this->usernameRules($userId)
         ];
     }
 
@@ -48,5 +48,18 @@ trait ProfileValidationRules
                 ? Rule::unique(User::class)
                 : Rule::unique(User::class)->ignore($userId),
         ];
+    }
+
+    protected function usernameRules (?int $userId = null): array 
+    {
+        return [
+            'required', 
+            'string', 
+            'max:255', 
+            'regex:/^[a-zA-Z0-9]+ \. [a-zA-Z0-9]+$/x', // Enforces the "prefix.suffix" forma
+            $userId === null 
+                ? Rule::unique(User::class)
+                : Rule::unique(User::class)->ignore($userId)
+        ]; 
     }
 }

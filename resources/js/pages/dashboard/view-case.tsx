@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatDate, formatTime } from '@/lib/utils';
 import { adminViewCase } from '@/routes';
-import { PendingCase, ViewCaseDetail } from '@/types/types';
+import { PendingCase, CaseDetail } from '@/types/types';
 import { Head } from '@inertiajs/react';
 import { usePDF } from '@react-pdf/renderer';
 import {
@@ -21,14 +21,14 @@ import {
 import { useState } from 'react';
 
 interface ViewCaseProps {
-    caseData: ViewCaseDetail;
+    case_detail: CaseDetail;
 }
 
-const ViewCase = ({ caseData }: ViewCaseProps) => {
+const ViewCase = ({ case_detail }: ViewCaseProps) => {
     const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
     const [selectedCase, setSelectedCase] = useState<PendingCase | null>(null);
     const [instance] = usePDF({
-        document: <CaseDetailPDF caseData={caseData} />,
+        document: <CaseDetailPDF caseData={case_detail} />,
     });
 
     const statusColors = {
@@ -46,16 +46,16 @@ const ViewCase = ({ caseData }: ViewCaseProps) => {
         in_progress: AlertCircle,
     };
 
-    const StatusIcon = statusIcons[caseData.status] || AlertCircle;
+    const StatusIcon = statusIcons[case_detail.status] || AlertCircle;
 
     const handleAssignToOfficer = () => {
-        setSelectedCase(caseData);
+        setSelectedCase(case_detail);
         setIsAssignModalOpen(true);
     };
 
     return (
         <>
-            <Head title={`Case ${caseData.case_tracking_id}`} />
+            <Head title={`Case ${case_detail.case_tracking_id}`} />
 
             <div className="flex flex-col gap-8 px-4 py-6 md:px-8">
                 {/* Header */}
@@ -65,25 +65,25 @@ const ViewCase = ({ caseData }: ViewCaseProps) => {
                             <h2 className="text-xl font-semibold tracking-tight text-primary">
                                 Case:{' '}
                                 <span className="text-blue-600">
-                                    {caseData.case_tracking_id}
+                                    {case_detail.case_tracking_id}
                                 </span>
                             </h2>
                             <Badge
                                 variant="outline"
-                                className={`gap-1.5 px-3 py-1 text-xs font-bold capitalize ${statusColors[caseData.status]}`}
+                                className={`gap-1.5 px-3 py-1 text-xs font-bold capitalize ${statusColors[case_detail.status]}`}
                             >
                                 <StatusIcon className="h-3.5 w-3.5" />
-                                {caseData.status.replace('_', ' ')}
+                                {case_detail.status.replace('_', ' ')}
                             </Badge>
                         </div>
                         <p className="text-sm font-medium text-muted-foreground">
                             Reported on{' '}
                             <span className="text-foreground">
-                                {formatDate(caseData.created_at)}
+                                {formatDate(case_detail.created_at)}
                             </span>{' '}
                             at{' '}
                             <span className="text-foreground">
-                                {formatTime(caseData.created_at)}
+                                {formatTime(case_detail.created_at)}
                             </span>
                         </p>
                     </div>
@@ -120,18 +120,18 @@ const ViewCase = ({ caseData }: ViewCaseProps) => {
                         <CardContent className="grid gap-5 pt-6">
                             <DetailItem
                                 label="Tracking Identifier"
-                                value={caseData.case_tracking_id}
+                                value={case_detail.case_tracking_id}
                                 className="rounded-lg border border-blue-100/50 bg-blue-50/30 p-3 dark:border-blue-800/30 dark:bg-blue-900/10"
                             />
                             <DetailItem
                                 label="Anonymity Status"
                                 value={
-                                    caseData.is_anonymous
+                                    case_detail.is_anonymous
                                         ? 'Anonymous Submission'
                                         : 'Identified Submission'
                                 }
                                 icon={
-                                    caseData.is_anonymous ? (
+                                    case_detail.is_anonymous ? (
                                         <ShieldCheck className="h-4 w-4 text-emerald-600" />
                                     ) : (
                                         <User className="h-4 w-4 text-blue-600" />
@@ -140,7 +140,7 @@ const ViewCase = ({ caseData }: ViewCaseProps) => {
                             />
                             <DetailItem
                                 label="System Status"
-                                value={caseData.status
+                                value={case_detail.status
                                     .toUpperCase()
                                     .replace('_', ' ')}
                             />
@@ -152,21 +152,21 @@ const ViewCase = ({ caseData }: ViewCaseProps) => {
                         <CardHeader className="bg-muted/30">
                             <CardTitle className="flex items-center gap-2 text-base font-bold">
                                 <UserPlus className="h-4 w-4 text-blue-600" />
-                                Officer Assignment
+                                Personnel Assignment
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="pt-6">
-                            {caseData.case_assignment ? (
+                            {case_detail.case_assignment ? (
                                 <div className="grid gap-5">
                                     <DetailItem
-                                        label="Assigned Officer"
-                                        value={`${caseData.case_assignment.assigned_to.first_name} ${caseData.case_assignment.assigned_to.last_name}`}
+                                        label="Assigned Personnel"
+                                        value={`${case_detail.case_assignment.assigned_to.first_name} ${case_detail.case_assignment.assigned_to.last_name}`}
                                     />
                                     <DetailItem
-                                        label="Officer Designation"
+                                        label="Personnel Designation"
                                         value={
-                                            caseData.case_assignment.assigned_to
-                                                .role
+                                            case_detail.case_assignment
+                                                .assigned_to.role
                                         }
                                     />
                                     <div className="flex items-center justify-between border-t border-border/50 pt-4">
@@ -177,7 +177,10 @@ const ViewCase = ({ caseData }: ViewCaseProps) => {
                                             variant="secondary"
                                             className="font-black"
                                         >
-                                            {caseData.case_assignment.priority}
+                                            {
+                                                case_detail.case_assignment
+                                                    .priority
+                                            }
                                         </Badge>
                                     </div>
                                 </div>
@@ -244,7 +247,7 @@ const DetailItem = ({
 export default ViewCase;
 
 interface ViewCaseLayout {
-    caseData: ViewCaseDetail;
+    caseData: CaseDetail;
     from_page: string;
     from_url: string;
 }

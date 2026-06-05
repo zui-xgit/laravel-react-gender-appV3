@@ -28,6 +28,7 @@ class CaseDetail extends Model
     use HasFactory, HasUuids;
 
 
+    // accessors
     protected function caseWorkflowPercentage(): Attribute
     {
       return Attribute::make(
@@ -48,6 +49,14 @@ class CaseDetail extends Model
     public function uniqueIds(): array
     {
         return ['uuid'];
+    }
+
+
+    public function casts(): array
+    {
+        return [
+            'evidence_description' => 'encrypted',
+        ];
     }
 
 

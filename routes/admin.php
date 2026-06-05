@@ -19,6 +19,9 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('admin/case-workflow/{case:uuid}', [AdminController::class, "caseWorkflow"])->name('admin-case-workflow'); 
 
 
+    Route::inertia('admin/staff-management', 'dashboard/admin/staff-management')->name("staff.management"); 
+    Route::inertia('admin/audit-logs', 'dashboard/admin/audit-logs')->name("audit.logs"); 
+
    
 });
 

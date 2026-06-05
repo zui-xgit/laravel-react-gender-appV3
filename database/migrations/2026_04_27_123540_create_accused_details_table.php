@@ -13,17 +13,23 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('accused_details', function (Blueprint $table) {
-            $table->id();
+           $table->id();
             $table->foreignIdFor(CaseDetail::class)->constrained()->onDelete('cascade');
-            $table->string('name');
-            $table->string('title', 50);
+            
+            // Kept unencrypted for demographic metrics and case tracking
             $table->enum('sex', ['male', 'female', 'prefer_not_to_say']);
             $table->unsignedTinyInteger('age');
-            $table->string('phone', 20);
-            $table->string('email');
-            $table->string('education');
-            $table->string('residence');
+            
+            // Converted to text to handle large encrypted strings safely
+            $table->text('name');
+            $table->text('title'); 
+            $table->text('phone');
+            $table->text('email');
+            $table->text('education');
+            $table->text('residence');
             $table->text('workplace');
+
+            
             $table->timestamps();
         });
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
-import { ViewCaseDetail } from '@/types/types';
+import { CaseDetail } from '@/types/types';
 import { formatDate, formatTime } from '@/lib/utils';
 
 const styles = StyleSheet.create({
@@ -161,7 +161,7 @@ const LongDataRow = ({
 );
 
 interface CaseDetailPDFProps {
-    caseData: ViewCaseDetail;
+    caseData: CaseDetail;
 }
 
 const CaseDetailPDF = ({ caseData }: CaseDetailPDFProps) => {
@@ -213,11 +213,11 @@ const CaseDetailPDF = ({ caseData }: CaseDetailPDFProps) => {
                             Case Assignment Information
                         </Text>
                         <DataRow
-                            label="Assigned To"
+                            label="Assignee"
                             value={`${caseData.case_assignment.assigned_to.first_name} ${caseData.case_assignment.assigned_to.last_name}`}
                         />
                         <DataRow
-                            label="Officer Role"
+                            label="Assignee Role"
                             value={caseData.case_assignment.assigned_to.role}
                         />
                         <DataRow
@@ -225,8 +225,12 @@ const CaseDetailPDF = ({ caseData }: CaseDetailPDFProps) => {
                             value={caseData.case_assignment.priority}
                         />
                         <DataRow
-                            label="Assigned By"
+                            label="Assigner"
                             value={`${caseData.case_assignment.assigned_by.first_name} ${caseData.case_assignment.assigned_by.last_name}`}
+                        />
+                        <DataRow
+                            label="Assigner Role"
+                            value={`${caseData.case_assignment.assigned_by.role}`}
                         />
                     </View>
                 ) : null}

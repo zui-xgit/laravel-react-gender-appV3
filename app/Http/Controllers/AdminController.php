@@ -199,7 +199,7 @@ class AdminController extends Controller
 
     public function viewCase(Request $request, CaseDetail $case)
     {
-        $case->load([
+         $case->load([
             'incidentDetail',
             'victimDetail',
             'accusedDetail',
@@ -208,60 +208,51 @@ class AdminController extends Controller
             'caseAssignment.assignedBy',
         ]);
 
-       
-
-        $case->setVisible([
-            'uuid',
-            'case_tracking_id',
-            'is_anonymous',
-            'status',
-            'created_at',
-            'caseAssignment',
-            'informantDetail', 
-            "victimDetail",
-            'accusedDetail', 
-            "incidentDetail"
-
-        ]);
-
-        if ($case->caseAssignment) {
-            $case->caseAssignment->makeHidden(['id', 'case_detail_id', 'assigned_by', 'assigned_to']);
-            $case->caseAssignment->assignedBy?->makeHidden(['id', 'user_name',  'email_verified_at', 'created_at', 'updated_at']);
-            $case->caseAssignment->assignedTo?->makeHidden(['id', 'user_name',  'email_verified_at', 'created_at', 'updated_at']);
-        }
-
-         $case->informantDetail->makeHidden([
-            "id",
-            'case_detail_id', 
-            'created_at',
-            'updated_at'
-        ]);
-
-        $case->victimDetail->makeHidden([
-             "id",
-            'case_detail_id', 
-            'created_at',
-            'updated_at'
-        ]); 
-        $case->accusedDetail->makeHidden([
-             "id",
-            'case_detail_id', 
-            'created_at',
-            'updated_at'
-        ]); 
-        $case->incidentDetail->makeHidden([
-             "id",
-            'case_detail_id', 
-            'created_at',
-            'updated_at'
-        ]); 
+        // 2. Map out the clean, structured data array
+        $caseDetailPayload = [
+            'uuid' => $case->uuid, 
+            'case_tracking_id' => $case->case_tracking_id, 
+            'is_anonymous' => (bool)$case->is_anonymous, 
+            'status' => $case->status,
+            'case_reported_at' => $case->created_at->toIso8601String(),
 
 
+            'case_assignment' => $case->caseAssignment ? [
+                 'assigned_by' => [
+                        'first_name' => $case->caseAssignment->assignedBy?->first_name,
+                        'last_name'  => $case->caseAssignment->assignedBy?->last_name,
+                        'role'       => $case->caseAssignment->assignedBy?->role,
+                    ],
+                    'assigned_to' => [ 
+                         'first_name' => $case->caseAssignment->assignedTo?->first_name,
+                        'last_name'  => $case->caseAssignment->assignedTo?->last_name,
+                        'role' =>$case->caseAssignment->assignedTo?->role,
+                ],
+                'priority' => $case->caseAssignment->priority,
+            ] : null, 
 
+            'informant_detail' => $case->informantDetail ? $case->informantDetail->makeHidden([
+                'id', 'case_detail_id', 'created_at', 'updated_at'
+            ])->toArray() : [], 
+
+            'victim_detail' => $case->victimDetail ? $case->victimDetail->makeHidden([
+                'id', 'case_detail_id', 'created_at', 'updated_at'
+            ])->toArray() : [],
+
+            'accused_detail' => $case->accusedDetail ? $case->accusedDetail->makeHidden([
+                'id', 'case_detail_id', 'created_at', 'updated_at'
+            ])->toArray() : [],
+
+            'incident_detail' => $case->incidentDetail ? $case->incidentDetail->makeHidden([
+                'id', 'case_detail_id', 'created_at', 'updated_at'
+            ])->toArray() : []
+        ];
+
+        // 3. Render page with Inertia passing the structured data
         return Inertia::render('dashboard/view-case', [
-            'caseData' => $case,
-            'from_page' => $request->query('from_page'), 
-            'from_url' => $request->query("from_url"), 
+            'case_detail' => $caseDetailPayload,
+            'from_page'   => $request->query('from_page'), 
+            'from_url'    => $request->query('from_url'), 
         ]);
     }
 
@@ -377,10 +368,11 @@ class AdminController extends Controller
                 'is_anonymous' => (bool) $case->is_anonymous,
                 'status' => $case->status,
                 'case_reported_at' => $case->created_at->toIso8601String(),
+                'updated_at' => $case->updated_at->toIso8601String(), 
                 'incident_detail' => [
                     'incident_type' => $case->incidentDetail->incident_type,
                 ],
-                'caseAssignment' => [
+                'case_assignment' => [
                     'case_assigned_at' => $case->caseAssignment->created_at->toIso8601String(),
                     'assigned_by' => $case->caseAssignment->assignedBy->first_name . ' ' . $case->caseAssignment->assignedBy->last_name, 
                     'assigned_by_role' => $case->caseAssignment->assignedBy->role, 

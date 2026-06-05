@@ -15,12 +15,19 @@ return new class extends Migration
          Schema::create('informant_details', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(CaseDetail::class)->constrained()->onDelete('cascade');
-            $table->string('name')->nullable();
-            $table->string('title', 50)->nullable();
+            
+            $table->text('name')->nullable();
+            $table->text('title')->nullable(); // Expanded from string(50) for encryption overhead
+
+            // Kept unencrypted for demographic reporting/metrics
             $table->enum('sex', ['male', 'female', 'prefer_not_to_say'])->nullable();
             $table->unsignedTinyInteger('age')->nullable();
-            $table->string('phone', 20)->nullable();
+            
+            // Converted to text to handle large encrypted strings safely
+            $table->text('phone')->nullable();
             $table->text('workplace')->nullable();
+
+
             $table->timestamps();
         });
     }

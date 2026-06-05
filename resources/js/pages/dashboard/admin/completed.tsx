@@ -39,7 +39,7 @@ import {
 } from 'lucide-react';
 import { formatDate, formatTime } from '@/lib/utils';
 
-import { PendingCase } from '@/types/types';
+import { CompletedCase } from '@/types/types';
 import { Hint } from '@/components/hint';
 import SearchInput from '@/components/search-input';
 import RefreshButton from '@/components/refresh-button';
@@ -61,7 +61,7 @@ interface PaginatedData<T> {
 }
 
 interface CompletedProps {
-    cases: PaginatedData<PendingCase>;
+    cases: PaginatedData<CompletedCase>;
     stats: {
         total: number;
         identified: number;
@@ -197,9 +197,11 @@ export default function Completed({ cases, stats, filters }: CompletedProps) {
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Case ID</TableHead>
-                                    <TableHead>Incident Type</TableHead>
+                                    <TableHead>Assigne at</TableHead>
                                     <TableHead>Identity</TableHead>
-                                    <TableHead>Closed Date</TableHead>
+                                    <TableHead>Assigner</TableHead>
+                                    <TableHead>Assignee</TableHead>
+                                    <TableHead>Completed At</TableHead>
                                     <TableHead className="text-center">
                                         Actions
                                     </TableHead>
@@ -213,11 +215,20 @@ export default function Completed({ cases, stats, filters }: CompletedProps) {
                                                 {item.case_tracking_id}
                                             </TableCell>
                                             <TableCell>
-                                                <span className="font-medium">
-                                                    {item.incident_detail
-                                                        ?.incident_type ||
-                                                        'N/A'}
-                                                </span>
+                                                <div className="flex flex-col text-xs">
+                                                    <span>
+                                                        {formatDate(
+                                                            item.case_assignment
+                                                                .case_assigned_at,
+                                                        )}
+                                                    </span>
+                                                    <span>
+                                                        {formatTime(
+                                                            item.case_assignment
+                                                                .case_assigned_at,
+                                                        )}
+                                                    </span>
+                                                </div>
                                             </TableCell>
                                             <TableCell>
                                                 {item.is_anonymous ? (
@@ -234,16 +245,48 @@ export default function Completed({ cases, stats, filters }: CompletedProps) {
                                                     </Badge>
                                                 )}
                                             </TableCell>
-                                            <TableCell className="text-muted-foreground">
+                                            <TableCell>
+                                                <div className="flex flex-col">
+                                                    <span className="text-sm">
+                                                        {
+                                                            item.case_assignment
+                                                                ?.assigned_by
+                                                        }
+                                                    </span>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {
+                                                            item.case_assignment
+                                                                ?.assigned_by_role
+                                                        }
+                                                    </span>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="flex flex-col">
+                                                    <span className="text-sm">
+                                                        {
+                                                            item.case_assignment
+                                                                ?.assigned_to
+                                                        }
+                                                    </span>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {
+                                                            item.case_assignment
+                                                                ?.assigned_to_role
+                                                        }
+                                                    </span>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
                                                 <div className="flex flex-col text-xs">
                                                     <span>
                                                         {formatDate(
-                                                            item.created_at,
+                                                            item.updated_at,
                                                         )}
                                                     </span>
                                                     <span>
                                                         {formatTime(
-                                                            item.created_at,
+                                                            item.updated_at,
                                                         )}
                                                     </span>
                                                 </div>
@@ -289,7 +332,8 @@ export default function Completed({ cases, stats, filters }: CompletedProps) {
                                 <strong>
                                     {cases.from || 0}-{cases.to || 0}
                                 </strong>{' '}
-                                of <strong>{cases.total}</strong> completed cases
+                                of <strong>{cases.total}</strong> completed
+                                cases
                             </p>
                             <div className="flex gap-2">
                                 {cases.links.map((link, i) => {

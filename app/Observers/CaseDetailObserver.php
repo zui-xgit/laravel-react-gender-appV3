@@ -10,7 +10,7 @@ class CaseDetailObserver
 
    public function creating(CaseDetail $caseDetail): void
    {
-      do {
+        do {
             $datePart = now()->format('Y-m-d');
             $randomPart = strtoupper(Str::random(5));
             $trackingId = "PS-{$datePart}-{$randomPart}";

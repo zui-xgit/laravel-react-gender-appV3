@@ -8,6 +8,7 @@ export interface UsePageProps extends PageProps {
     auth: {
         user: {
             uuid: string;
+            username: string;
             first_name: string;
             last_name: string;
             role?: string;
@@ -85,7 +86,7 @@ export interface IncidentDetail {
     other_involved: string;
 }
 
-export interface ViewCaseDetail {
+export interface CaseDetail {
     uuid: string;
     case_tracking_id: string;
     is_anonymous: boolean;
@@ -136,10 +137,11 @@ export interface CompletedCase {
     is_anonymous: boolean;
     status: string;
     case_reported_at: string;
+    updated_at: string;
     incident_detail: {
         incident_type: string;
     };
-    caseAssignment: {
+    case_assignment: {
         case_assigned_at: string;
         assigned_by: string;
         assigned_by_role: string;

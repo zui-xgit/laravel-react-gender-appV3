@@ -38,6 +38,8 @@ import {
 } from '@/routes';
 import type { NavItem } from '@/types';
 import { UsePageProps } from '@/types/types';
+import staff from '@/routes/staff';
+import audit from '@/routes/audit';
 
 const AdminNavItems: NavItem[] = [
     {
@@ -75,18 +77,13 @@ const AdminNavItems: NavItem[] = [
     },
     {
         title: 'Staff Management',
-        href: adminOverview(),
+        href: staff.management(),
         icon: User2,
     },
     {
         title: 'Audit Logs',
-        href: adminOverview(),
+        href: audit.logs(),
         icon: History,
-    },
-    {
-        title: 'Settings',
-        href: adminOverview(),
-        icon: Settings2,
     },
 ];
 

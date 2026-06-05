@@ -15,17 +15,23 @@ return new class extends Migration
         Schema::create('incident_details', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(CaseDetail::class)->constrained()->onDelete('cascade');
+            
+            // Kept unencrypted for filtering, sorting, and aggregate analytics
             $table->date('incident_date');
             $table->time('incident_time');
-            $table->string('location');
+            $table->string('incident_type'); 
+
+            // Converted to text/longText to handle large encrypted strings safely
+            $table->text('location');
             $table->text('exact_location');
-            $table->string('incident_type');
             $table->text('cause');
             $table->longText('description');
             $table->text('actions_taken');
             $table->text('injuries');
             $table->text('assistance_needed');
             $table->text('other_involved');
+
+            
             $table->timestamps();
         });
     }
