@@ -15,15 +15,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CaseWorkflow extends Model
 {
 
- /**
-     * DATA TRANSFORMATION (The Translator)
-     * 
-     * This tells Laravel how to convert database columns into PHP types.
-     * For example: 'is_active' (0 or 1 in DB) becomes (true or false in PHP).
-     */
-    protected $casts = [
-        'form_data' => 'array',
-    ];
+   
+
+    public function casts(): array 
+    {
+        return [
+            'form_data' => 'array',
+        ];
+    }
 
     public function caseDetail(): BelongsTo
     {
