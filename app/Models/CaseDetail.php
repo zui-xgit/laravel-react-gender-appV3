@@ -60,6 +60,24 @@ class CaseDetail extends Model
     }
 
 
+    /**
+     * The "booted" method of the model. I USED OBERSVERS INSTEAD
+     * to generate the unique tracking ID, so this is commented out.
+     */
+    // protected static function booted(): void
+    // {
+    //     static::creating(function (CaseDetail $caseDetail) {
+    //         do {
+    //             $datePart = now()->format('Y-m-d');
+    //             $randomPart = strtoupper(Str::random(5));
+    //             $trackingId = "PS-{$datePart}-{$randomPart}";
+    //         } while (static::where('case_tracking_id', $trackingId)->exists());
+
+    //         // Assign the unique tracking ID seamlessly
+    //         $caseDetail->case_tracking_id = $trackingId;
+    //     });
+    // }
+
     // ===================RELATIONSHIP TO THE informant_details, victim_details, accudes_details, incident_details tables =============================
     public function informantDetail(): HasOne
     {

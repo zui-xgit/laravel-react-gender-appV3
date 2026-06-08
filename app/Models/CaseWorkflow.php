@@ -15,8 +15,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CaseWorkflow extends Model
 {
 
-   
-
     protected function casts(): array
     {
         return [
