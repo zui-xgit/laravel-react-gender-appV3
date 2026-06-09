@@ -5,6 +5,7 @@ import { initializeTheme } from '@/hooks/use-appearance';
 import AppLayout from '@/layouts/app-layout';
 import AuthLayout from '@/layouts/auth-layout';
 import SettingsLayout from '@/layouts/settings/layout';
+import AppGuestLayout from './layouts/app-guest-layout';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -13,13 +14,15 @@ createInertiaApp({
     layout: (name) => {
         switch (true) {
             case name === 'welcome':
-                return null;
-
+                return AppGuestLayout;
             case name.startsWith('reporter/'):
-                return null;
+                return AppGuestLayout;
             case name === 'test':
                 return null;
-
+            case name === 'suspended':
+                return null;
+            case name === 'inactive':
+                return null;
             case name.startsWith('auth/'):
                 return AuthLayout;
             case name.startsWith('settings/'):

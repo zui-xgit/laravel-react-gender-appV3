@@ -3,6 +3,34 @@ import { PageProps } from '@inertiajs/core';
 
 export type Sex = 'Male' | 'Female' | 'Other' | null;
 
+// export interface StaffUser {
+//     uuid: string;
+//     username: string;
+//     first_name: string;
+//     last_name: string;
+//     email: string | null;
+//     phone: string;
+//     role: 'admin' | 'officer'; // Made optional as requested, using string literal types for strictness
+//     status: 'active' | 'inactive' | 'suspended';
+//     last_login_at: string | null;
+//     last_logout_at: string | null;
+//     gender: 'male' | 'female';
+// }
+
+export interface StaffMember {
+    uuid: string;
+    username: string;
+    first_name: string;
+    last_name: string;
+    gender: 'male' | 'female';
+    email: string;
+    phone: string | null;
+    role: 'admin' | 'officer';
+    status: 'active' | 'inactive' | 'suspended';
+    last_login_at: string | null;
+    last_logout_at: string | null;
+}
+
 export interface UsePageProps extends PageProps {
     name: string;
     auth: {
@@ -13,12 +41,6 @@ export interface UsePageProps extends PageProps {
             last_name: string;
             role?: string;
         };
-        all_users: {
-            uuid: string;
-            first_name: string;
-            last_name: string;
-            role?: string;
-        }[];
     };
     sidebarOpen: boolean;
     [key: string]: any; // Allows for additional page-specific props

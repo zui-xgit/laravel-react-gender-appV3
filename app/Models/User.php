@@ -13,8 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-#[Fillable(['name', 'email', 'password', 'username'])]
-#[Guarded(['id', 'created_at', "updated_at"])]
+#[Guarded(['id', 'uuid', 'created_at', "updated_at"])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -32,17 +31,8 @@ class User extends Authenticatable
 
    
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    /**
+  
+     /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -52,6 +42,11 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            /* @chisel-2fa */
+            'two_factor_confirmed_at' => 'datetime',
+            'last_login_at' => 'datetime',
+            'last_logout_at' => 'datetime',
+            /* @end-chisel-2fa */
         ];
     }
 

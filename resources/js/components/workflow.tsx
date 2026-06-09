@@ -166,16 +166,6 @@ export const IntakeView = ({ case_uuid, intake_data }: IntakeViewProps) => {
             observations: intake_data?.observations ?? '',
         });
 
-    // useEffect(() => {
-    //     if (intake_data) {
-    //         setData((prevData) => ({
-    //             ...prevData,
-    //             checklist: intake_data.checklist,
-    //             observations: intake_data.observations,
-    //         }));
-    //     }
-    // }, [intake_data]);
-
     const handleCheckChange = (id: string, checked: boolean) => {
         setData('checklist', {
             ...data.checklist,
@@ -203,11 +193,6 @@ export const IntakeView = ({ case_uuid, intake_data }: IntakeViewProps) => {
         // console.log('Intake Review Verified Successfully:', data);
 
         post(caseIntake({ case: case_uuid }).url, {
-            onSuccess: (page) => {
-                if (page.flash) {
-                    toast.success(page.flash.message as string);
-                }
-            },
             onError: (errors) => {
                 if (errors) {
                     toast.error(errors.error);
@@ -423,11 +408,6 @@ export const InvestigationView = ({
 
         // console.log('Investigation Log Updated Successfully:', data);
         post(caseInvestigation({ case: case_uuid }).url, {
-            onSuccess: (page) => {
-                if (page.flash) {
-                    toast.success(page.flash.message as string);
-                }
-            },
             onError: (errors) => {
                 if (errors) {
                     toast.error(errors.error);
@@ -637,11 +617,6 @@ export const EscalationView = ({
         if (hasErrors) return;
 
         post(caseEscalation({ case: case_uuid }).url, {
-            onSuccess: (page) => {
-                if (page.flash) {
-                    toast.success(page.flash.message as string);
-                }
-            },
             onError: (errors) => {
                 if (errors) {
                     toast.error(errors.error);
@@ -863,11 +838,6 @@ export const ResolutionView = ({
         if (hasErrors) return;
 
         post(caseResolution({ case: case_uuid }).url, {
-            onSuccess: (page) => {
-                if (page.flash) {
-                    toast.success(page.flash.message as string);
-                }
-            },
             onError: (errors) => {
                 if (errors) {
                     toast.error(errors.error);

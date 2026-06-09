@@ -17,23 +17,39 @@ import {
     SheetTitle,
 } from '@/components/ui/sheet';
 import QuickExitButton from '@/components/quick-exit-button';
-import { reporterReport, reporterSuccess } from '@/routes';
+import {
+    reporterReport,
+    reporterSuccess,
+    adminOverview,
+    officerOverview,
+} from '@/routes';
 import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
 
 interface AppLayoutProps {
     children: React.ReactNode;
 }
 
-const navLinks = [
-    { href: '/', label: 'Home', icon: Home },
-    { href: '/faq', label: 'FAQ', icon: HelpCircle },
-    { href: '/education', label: 'Education', icon: GraduationCap },
-    { href: '/login', label: 'Login', icon: GraduationCap },
-];
-
 export default function AppGuestLayout({ children }: AppLayoutProps) {
-    const { url } = usePage();
+    const { url, props } = usePage();
     const resetForm = useStepperFormStore((state) => state.resetForm);
+
+    let dashboardHref = '';
+    if (props.auth.user) {
+        dashboardHref =
+            props.auth.user.role === 'admin'
+                ? adminOverview.url()
+                : officerOverview.url();
+    }
+
+    const navLinks = [
+        { href: '/', label: 'Home', icon: Home },
+        { href: '/faq', label: 'FAQ', icon: HelpCircle },
+        { href: '/education', label: 'Education', icon: GraduationCap },
+        props.auth.user
+            ? { href: dashboardHref, label: 'Dashboard', icon: Home }
+            : { href: '/login', label: 'Login', icon: GraduationCap },
+    ];
+
     return (
         <div className="flex min-h-screen flex-col bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground">
             {/* Navigation Bar */}

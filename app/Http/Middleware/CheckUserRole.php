@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckRole
+class CheckUserRole
 {
     /**
      * Handle an incoming request.
@@ -15,10 +15,11 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        if(!$request->user() || $request->user()->role !== $role ){
-           return abort(403, 'Unauthorized access (TEST)');
-        }
 
-        return $next($request);
+            if(!$request->user() || $request->user()->role !== $role ){
+              return abort(403, 'Unauthorized access (TEST)');
+            }
+
+            return $next($request);
     }
 }

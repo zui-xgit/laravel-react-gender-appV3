@@ -26,7 +26,7 @@ return new class extends Migration
 
             // Contact and personal information
             $table->string('email')->nullable();
-            $table->string('phone', 20);
+            $table->string('phone', 20);    
 
             // Authentication
             $table->timestamp('email_verified_at')->nullable();
@@ -34,10 +34,9 @@ return new class extends Migration
 
 
             // Management fields
-            $table->enum('status', ['active', 'inactive', 'suspended'])->default("active");
-            // $table->string('department')->nullable(); 
-            // $table->string('staff_id')->nullable()->unique(); // For MUHAS staff/students
+            $table->enum('status', ['active', 'inactive', 'suspended'])->default("inactive");
             $table->timestamp('last_login_at')->nullable();
+            $table->timestamp('last_logout_at')->nullable();    
 
 
             $table->rememberToken();  // this is managed by laravel 

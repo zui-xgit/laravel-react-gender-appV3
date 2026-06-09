@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Middleware\CheckRole;
+use App\Http\Middleware\CheckUserRole;
+use App\Http\Middleware\CheckUserStatus;
 use App\Http\Middleware\EnsureReporterHasTrackingId;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -25,7 +26,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'role' => CheckRole::class, 
+            'check.role' => CheckUserRole::class, 
+            'check.status' => CheckUserStatus::class,
             'has.tracking' => EnsureReporterHasTrackingId::class
         ]); 
     })

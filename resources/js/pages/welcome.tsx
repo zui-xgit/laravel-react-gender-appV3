@@ -88,179 +88,177 @@ export default function Home() {
     ];
 
     return (
-        <AppGuestLayout>
-            <div className="flex flex-col gap-20 py-12 md:py-20">
-                {/* --- HERO SECTION --- */}
-                <section className="mx-auto flex max-w-4xl flex-col items-center gap-6 px-4 text-center">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-primary">
-                        <Lock className="h-3 w-3 text-chart-2" />
-                        <span>End-to-End Cryptographic Protection Active</span>
-                    </div>
+        <div className="flex flex-col gap-20 py-12 md:py-20">
+            {/* --- HERO SECTION --- */}
+            <section className="mx-auto flex max-w-4xl flex-col items-center gap-6 px-4 text-center">
+                <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-primary">
+                    <Lock className="h-3 w-3 text-chart-2" />
+                    <span>End-to-End Cryptographic Protection Active</span>
+                </div>
 
-                    <h1 className="max-w-3xl text-4xl leading-tight font-extrabold tracking-tight text-primary md:text-5xl lg:text-6xl">
-                        A Safe, Accountable Space for{' '}
-                        <span className="text-chart-1">Gender Justice</span>
-                    </h1>
+                <h1 className="max-w-3xl text-4xl leading-tight font-extrabold tracking-tight text-primary md:text-5xl lg:text-6xl">
+                    A Safe, Accountable Space for{' '}
+                    <span className="text-chart-1">Gender Justice</span>
+                </h1>
 
-                    <p className="max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
-                        File confidential reports, track case progression, and
-                        access critical education resources under total privacy
-                        protections.
+                <p className="max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
+                    File confidential reports, track case progression, and
+                    access critical education resources under total privacy
+                    protections.
+                </p>
+
+                {/* Action Buttons with 3-tier hierarchy */}
+                <div className="flex w-full flex-col items-center justify-center gap-4 pt-4 sm:w-auto sm:flex-row">
+                    {/* Primary Action */}
+                    <Button
+                        asChild
+                        size="lg"
+                        className="w-full bg-primary font-medium text-primary-foreground shadow-md hover:bg-primary/90 sm:w-auto"
+                    >
+                        <Link
+                            href={reporterReport()}
+                            className="flex items-center gap-2"
+                        >
+                            <FileText className="h-5 w-5" />
+                            File a Secure Report
+                            <ArrowRight className="ml-1 h-4 w-4" />
+                        </Link>
+                    </Button>
+
+                    {/* Secondary Action: Follow Up */}
+                    <Button
+                        asChild
+                        size="lg"
+                        variant="secondary"
+                        className="w-full font-medium text-secondary-foreground hover:bg-secondary/80 sm:w-auto"
+                    >
+                        <Link
+                            href="/track-report"
+                            className="flex items-center gap-2"
+                        >
+                            <Search className="h-5 w-5 text-muted-foreground" />
+                            Track Existing Report
+                        </Link>
+                    </Button>
+
+                    {/* Tertiary Action: Info */}
+                    <Button
+                        asChild
+                        size="lg"
+                        variant="outline"
+                        className="w-full border-border font-medium text-foreground hover:bg-accent sm:w-auto"
+                    >
+                        <Link href="/education">Explore Resources</Link>
+                    </Button>
+                </div>
+            </section>
+
+            {/* --- SYSTEM ASSURANCES / FEATURES --- */}
+            <section className="grid grid-cols-1 gap-6 px-4 md:grid-cols-3">
+                {coreFeatures.map((feature, idx) => {
+                    const Icon = feature.icon;
+                    return (
+                        <Card
+                            key={idx}
+                            className="border-border bg-card shadow-sm transition-all hover:border-ring/40 hover:shadow-md"
+                        >
+                            <CardHeader className="space-y-4">
+                                <div
+                                    className={`w-fit rounded-lg p-3 ${feature.color}`}
+                                >
+                                    <Icon className="h-6 w-6" />
+                                </div>
+                                <CardTitle className="text-xl font-bold text-primary">
+                                    {feature.title}
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <CardDescription className="text-sm leading-relaxed text-muted-foreground">
+                                    {feature.description}
+                                </CardDescription>
+                            </CardContent>
+                        </Card>
+                    );
+                })}
+            </section>
+
+            {/* --- ALTERNATIVE REPORTING WAYS --- */}
+            <section className="space-y-8 px-4">
+                <div className="max-w-2xl text-center md:text-left">
+                    <h2 className="text-2xl font-bold tracking-tight text-primary md:text-3xl">
+                        Alternative Channels for Reporting
+                    </h2>
+                    <p className="mt-2 text-sm text-muted-foreground md:text-base">
+                        If you prefer not to use our digital platform, we
+                        support multiple alternative mechanisms to ensure your
+                        voice is still safely heard.
                     </p>
+                </div>
 
-                    {/* Action Buttons with 3-tier hierarchy */}
-                    <div className="flex w-full flex-col items-center justify-center gap-4 pt-4 sm:w-auto sm:flex-row">
-                        {/* Primary Action */}
-                        <Button
-                            asChild
-                            size="lg"
-                            className="w-full bg-primary font-medium text-primary-foreground shadow-md hover:bg-primary/90 sm:w-auto"
-                        >
-                            <Link
-                                href={reporterReport()}
-                                className="flex items-center gap-2"
-                            >
-                                <FileText className="h-5 w-5" />
-                                File a Secure Report
-                                <ArrowRight className="ml-1 h-4 w-4" />
-                            </Link>
-                        </Button>
-
-                        {/* Secondary Action: Follow Up */}
-                        <Button
-                            asChild
-                            size="lg"
-                            variant="secondary"
-                            className="w-full font-medium text-secondary-foreground hover:bg-secondary/80 sm:w-auto"
-                        >
-                            <Link
-                                href="/track-report"
-                                className="flex items-center gap-2"
-                            >
-                                <Search className="h-5 w-5 text-muted-foreground" />
-                                Track Existing Report
-                            </Link>
-                        </Button>
-
-                        {/* Tertiary Action: Info */}
-                        <Button
-                            asChild
-                            size="lg"
-                            variant="outline"
-                            className="w-full border-border font-medium text-foreground hover:bg-accent sm:w-auto"
-                        >
-                            <Link href="/education">Explore Resources</Link>
-                        </Button>
-                    </div>
-                </section>
-
-                {/* --- SYSTEM ASSURANCES / FEATURES --- */}
-                <section className="grid grid-cols-1 gap-6 px-4 md:grid-cols-3">
-                    {coreFeatures.map((feature, idx) => {
-                        const Icon = feature.icon;
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                    {reportingChannels.map((channel, idx) => {
+                        const Icon = channel.icon;
                         return (
                             <Card
                                 key={idx}
-                                className="border-border bg-card shadow-sm transition-all hover:border-ring/40 hover:shadow-md"
+                                className="flex flex-col justify-between border-border bg-card shadow-sm transition-colors hover:border-border"
                             >
-                                <CardHeader className="space-y-4">
-                                    <div
-                                        className={`w-fit rounded-lg p-3 ${feature.color}`}
-                                    >
-                                        <Icon className="h-6 w-6" />
+                                <CardHeader className="space-y-3 pb-3">
+                                    <div className="flex items-center justify-between gap-2">
+                                        <div className="rounded-md border border-border bg-secondary p-2.5 text-primary">
+                                            <Icon className="h-5 w-5" />
+                                        </div>
+                                        <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
+                                            {channel.badge}
+                                        </span>
                                     </div>
-                                    <CardTitle className="text-xl font-bold text-primary">
-                                        {feature.title}
-                                    </CardTitle>
+                                    <div>
+                                        <CardTitle className="text-base font-bold text-primary">
+                                            {channel.title}
+                                        </CardTitle>
+                                        <span className="mt-0.5 block text-xs font-semibold text-chart-4">
+                                            {channel.detail}
+                                        </span>
+                                    </div>
                                 </CardHeader>
-                                <CardContent>
-                                    <CardDescription className="text-sm leading-relaxed text-muted-foreground">
-                                        {feature.description}
-                                    </CardDescription>
+                                <CardContent className="pt-0">
+                                    <p className="text-xs leading-relaxed text-muted-foreground">
+                                        {channel.description}
+                                    </p>
                                 </CardContent>
                             </Card>
                         );
                     })}
-                </section>
+                </div>
+            </section>
 
-                {/* --- ALTERNATIVE REPORTING WAYS --- */}
-                <section className="space-y-8 px-4">
-                    <div className="max-w-2xl text-center md:text-left">
-                        <h2 className="text-2xl font-bold tracking-tight text-primary md:text-3xl">
-                            Alternative Channels for Reporting
-                        </h2>
-                        <p className="mt-2 text-sm text-muted-foreground md:text-base">
-                            If you prefer not to use our digital platform, we
-                            support multiple alternative mechanisms to ensure
-                            your voice is still safely heard.
+            {/* --- TRUST BANNER --- */}
+            <section className="mx-4 rounded-xl border border-border bg-secondary/60 p-8 md:p-10">
+                <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
+                    <div className="space-y-3 lg:col-span-7">
+                        <h3 className="text-2xl font-bold text-primary">
+                            Are you hesitant to make a report?
+                        </h3>
+                        <p className="text-sm leading-relaxed text-muted-foreground">
+                            Our platform architecture guarantees automated data
+                            obfuscation options. You retain absolute control
+                            over how your identity is communicated to resolution
+                            teams.
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                        {reportingChannels.map((channel, idx) => {
-                            const Icon = channel.icon;
-                            return (
-                                <Card
-                                    key={idx}
-                                    className="flex flex-col justify-between border-border bg-card shadow-sm transition-colors hover:border-border"
-                                >
-                                    <CardHeader className="space-y-3 pb-3">
-                                        <div className="flex items-center justify-between gap-2">
-                                            <div className="rounded-md border border-border bg-secondary p-2.5 text-primary">
-                                                <Icon className="h-5 w-5" />
-                                            </div>
-                                            <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
-                                                {channel.badge}
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <CardTitle className="text-base font-bold text-primary">
-                                                {channel.title}
-                                            </CardTitle>
-                                            <span className="mt-0.5 block text-xs font-semibold text-chart-4">
-                                                {channel.detail}
-                                            </span>
-                                        </div>
-                                    </CardHeader>
-                                    <CardContent className="pt-0">
-                                        <p className="text-xs leading-relaxed text-muted-foreground">
-                                            {channel.description}
-                                        </p>
-                                    </CardContent>
-                                </Card>
-                            );
-                        })}
-                    </div>
-                </section>
-
-                {/* --- TRUST BANNER --- */}
-                <section className="mx-4 rounded-xl border border-border bg-secondary/60 p-8 md:p-10">
-                    <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
-                        <div className="space-y-3 lg:col-span-7">
-                            <h3 className="text-2xl font-bold text-primary">
-                                Are you hesitant to make a report?
-                            </h3>
-                            <p className="text-sm leading-relaxed text-muted-foreground">
-                                Our platform architecture guarantees automated
-                                data obfuscation options. You retain absolute
-                                control over how your identity is communicated
-                                to resolution teams.
-                            </p>
+                    <div className="flex flex-col gap-3 sm:flex-row lg:col-span-5 lg:justify-end">
+                        <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-3 text-xs font-semibold text-muted-foreground shadow-sm">
+                            <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-emerald-600" />
+                            <span>Encrypted Submissions</span>
                         </div>
-
-                        <div className="flex flex-col gap-3 sm:flex-row lg:col-span-5 lg:justify-end">
-                            <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-3 text-xs font-semibold text-muted-foreground shadow-sm">
-                                <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-emerald-600" />
-                                <span>Encrypted Submissions</span>
-                            </div>
-                            <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-3 text-xs font-semibold text-muted-foreground shadow-sm">
-                                <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-emerald-600" />
-                                <span>Anonymous Support Available</span>
-                            </div>
+                        <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-3 text-xs font-semibold text-muted-foreground shadow-sm">
+                            <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-emerald-600" />
+                            <span>Anonymous Support Available</span>
                         </div>
                     </div>
-                </section>
-            </div>
-        </AppGuestLayout>
+                </div>
+            </section>
+        </div>
     );
 }

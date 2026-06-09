@@ -9,6 +9,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class AdminController extends Controller
@@ -100,7 +102,14 @@ class AdminController extends Controller
             ->where('status', 'pending')
             ->orderBy('created_at', 'desc');
 
-
+        $all_users = User::query()->latest()->get()->map(function ($user ){
+            return [
+                 'uuid' => $user->uuid,
+                 'first_name' => $user->first_name,
+                 'last_name' => $user->last_name,
+                 'role' => $user->role,
+            ];
+        }); 
 
 
 
@@ -145,6 +154,7 @@ class AdminController extends Controller
         ];
 
         return Inertia::render('dashboard/admin/pending', [
+            'all_users' => $all_users,
             'cases' => $cases,
             'stats' => $stats,
             'filters' => $request->only(['search', 'filter']),
@@ -183,7 +193,9 @@ class AdminController extends Controller
 
 
             DB::commit(); 
-            Inertia::flash("message", 'Case Assigned successfully');
+
+            Inertia::flash('toast', ['type' => 'success', 'message' => __('Case Assigned successfully')]);
+
             
 
 
@@ -256,29 +268,7 @@ class AdminController extends Controller
         ]);
     }
 
-    public function caseWorkFlow(Request $request, CaseDetail $case)
-    {
-        $intake_data = $case->caseWorkflow()->where("phase", 'intake')->value('form_data');
-        $investigation_data = $case->caseWorkflow()->where("phase", 'investigation')->value('form_data');
-        $escalation_data = $case->caseWorkflow()->where("phase", 'escalation')->value('form_data');
-        $resolution_data = $case->caseWorkflow()->where("phase", 'resolution')->value('form_data');
-
-       return Inertia::render('dashboard/case-workflow', [
-            'case_uuid' => $case->uuid,
-            'case_tracking_id' => $case->case_tracking_id,
-            'from_page' => $request->query('from_page'), 
-            'from_url' => $request->query("from_url"), 
-
-            // Tabs data (if or if not available is handled in the frontend); 
-            'intake_data' => $intake_data,
-            'investigation_data' => $investigation_data,    
-            "escalation_data" => $escalation_data, 
-            "resolution_data" => $resolution_data,
-            "caseWorkflowPercentage" => $case->caseWorkflowPercentage
-            
-       ]); 
-    }
-
+    
     // in_progress
     public function inProgress(Request $request)
     {
@@ -397,7 +387,136 @@ class AdminController extends Controller
     }
 
     // staff management
-    public function staffManagement(){}
+    public function staffManagement(Request $request)
+    {
+        $query = User::query();
+
+        // Filter by search (name, email, username)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('username', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by role
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Fetch staff members with relevant fields
+        $staff_members = $query->latest()
+            ->get()
+            ->map(fn($user) => [
+                'uuid' => $user->uuid,
+                'username' => $user->username,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'gender' => $user->gender, 
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'role' => $user->role,
+                'status' => $user->status,
+                'last_login_at' => $user->last_login_at ? $user->last_login_at->toIso8601String() : null,
+                'last_logout_at' => $user->last_logout_at ? $user->last_logout_at->toIso8601String() : null,
+            ]);
+
+        // Calculate statistics for the dashboard
+        $stats = [
+            'total' => User::count(),
+            'admins' => User::where('role', 'admin')->count(),
+            'officers' => User::where('role', 'officer')->count(),
+            'suspended' => User::where('status', 'suspended')->count(),
+        ];
+
+        return Inertia::render('dashboard/admin/staff-management', [
+            'staff_members' => $staff_members,
+            'stats' => $stats,
+            'filters' => $request->only(['search', 'role', 'status']),
+        ]);
+    }
+
+    public function addStaff(Request $request)
+    {
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'gender' => 'required|in:male,female',
+            'username' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9]+ \.[a-zA-Z0-9]+$/x', Rule::unique(User::class)],
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|max:20',
+            'role' => 'required|in:admin,officer',
+            'password' => 'required|string|min:8|confirmed',
+
+            
+        ], [
+            'username.regex' => 'The username must be in the format "prefix.suffix" (e.g., "john.doe").',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            User::create([
+                ...$validated,
+                'password' => Hash::make($validated['password']),
+            ]);
+
+
+            DB::commit(); 
+            Inertia::flash('toast', ['type' => 'success', 'message' => __('Staff member added successfully')]);
+            return back(); 
+
+        }catch(Exception $e){
+            DB::rollBack(); 
+            return back()->withErrors([
+                'error' => 'Failed to add staff member. Please contact support'
+            ]);
+        }
+    }
+
+    public function updateStaff(User $user, Request $request){
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'gender' => 'required|in:male,female',
+            'username' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9]+ \.[a-zA-Z0-9]+$/x', Rule::unique(User::class)->ignore($user->id)],
+            'email' => ['required' , 'email', Rule::unique(User::class)->ignore($user->id)],
+            'phone' => 'required|string|max:20',
+            'role' => 'required|in:admin,officer',
+            'password' => 'required|string|min:8|confirmed',    
+
+            
+        ], [
+            'username.regex' => 'The username must be in the format "prefix.suffix" (e.g., "john.doe").',
+        ]);
+
+
+        try{
+           DB::beginTransaction();
+
+            $user->update([
+                ...$validated,
+                'password' => Hash::make($validated['password']),
+            ]);
+           
+           DB::commit(); 
+           Inertia::flash('toast', ['type' => 'success', 'message' => __('Staff member updated successfully')]);
+           return back(); 
+        }catch(Exception $e){
+            DB::rollBack(); 
+            return back()->withErrors([
+                'error' => 'Failed to update staff member. Please contact support'
+            ]);
+        }
+    }
 
     // audit logset
     public function auditLogs(){}

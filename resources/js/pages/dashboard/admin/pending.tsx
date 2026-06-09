@@ -77,6 +77,12 @@ interface PendingProps {
         search?: string;
         filter?: string;
     };
+    all_users: {
+        uuid: string;
+        first_name: string;
+        last_name: string;
+        role: string;
+    }[];
 }
 
 type Stats = {
@@ -86,7 +92,12 @@ type Stats = {
     color: string;
 };
 
-export default function Pending({ cases, stats, filters }: PendingProps) {
+export default function Pending({
+    cases,
+    stats,
+    filters,
+    all_users,
+}: PendingProps) {
     const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
     const [selectedCase, setSelectedCase] = useState<PendingCase | null>(null);
 
@@ -361,6 +372,7 @@ export default function Pending({ cases, stats, filters }: PendingProps) {
                 isOpen={isAssignModalOpen}
                 onClose={() => setIsAssignModalOpen(false)}
                 selectedCase={selectedCase}
+                all_users={all_users}
             />
         </>
     );

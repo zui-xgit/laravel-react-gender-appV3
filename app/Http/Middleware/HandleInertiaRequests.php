@@ -43,13 +43,12 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user() ? [
                     'uuid' => $request->user()->uuid,
                     'username' => $request->user()->username, 
-                    'first_name' => $request->user()->name,
+                    'first_name' => $request->user()->first_name,
                     'last_name' => $request->user()->last_name,
                     'email' => $request->user()->email,
                     'phone' => $request->user()->phone,
                     'role' => $request->user()->role,
                 ] : null,
-                "all_users" => $request->user() ? User::select('uuid', 'first_name', 'last_name', "role")->get() : null ,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
 

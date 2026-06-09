@@ -33,6 +33,12 @@ interface AssignModalProps {
     isOpen: boolean;
     onClose: () => void;
     selectedCase: PendingCase | null;
+    all_users: {
+        uuid: string;
+        first_name: string;
+        last_name: string;
+        role: string;
+    }[];
 }
 
 interface UseFormProps {
@@ -40,9 +46,12 @@ interface UseFormProps {
     priority: string;
 }
 
-const AssignModal = ({ isOpen, onClose, selectedCase }: AssignModalProps) => {
-    const { auth } = usePage<UsePageProps>().props;
-
+const AssignModal = ({
+    isOpen,
+    onClose,
+    selectedCase,
+    all_users,
+}: AssignModalProps) => {
     const { data, setData, processing, errors, post, reset } =
         useForm<UseFormProps>({
             assigned_to: '', // This matches your backend uuid check
@@ -52,12 +61,9 @@ const AssignModal = ({ isOpen, onClose, selectedCase }: AssignModalProps) => {
     const handleAssign = () => {
         post(adminAssignCase({ case: selectedCase?.uuid! }).url, {
             preserveScroll: true,
-            onSuccess: (page) => {
+            onSuccess: () => {
                 onClose();
                 reset();
-                if (page.flash.message) {
-                    toast.success(page.flash.message as string);
-                }
             },
         });
     };
@@ -148,8 +154,8 @@ const AssignModal = ({ isOpen, onClose, selectedCase }: AssignModalProps) => {
                             </SelectTrigger>
 
                             <SelectContent className="max-h-[300px]">
-                                {auth.all_users?.length > 0 ? (
-                                    auth.all_users.map((officer) => (
+                                {all_users?.length > 0 ? (
+                                    all_users.map((officer) => (
                                         <SelectItem
                                             key={officer.uuid}
                                             value={officer.uuid}

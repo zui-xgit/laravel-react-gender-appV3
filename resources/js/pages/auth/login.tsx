@@ -50,11 +50,7 @@ export default function Login({
             onSuccess: () => {
                 toast.success('Logged in successfully!');
             },
-            onError: () => {
-                toast.error(
-                    'Failed to log in. Please check your credentials and try again.',
-                );
-            },
+
             onFinish: () => reset('password'),
         });
     };

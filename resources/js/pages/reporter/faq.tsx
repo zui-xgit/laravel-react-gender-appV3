@@ -1,4 +1,3 @@
-import AppGuestLayout from '@/layouts/app-guest-layout';
 import {
     Accordion,
     AccordionContent,
@@ -14,9 +13,7 @@ import {
 } from '@/components/ui/card';
 import {
     HelpCircle,
-    ShieldCheck,
     Lock,
-    Search,
     MessageCircle,
     FileText,
     AlertCircle,
@@ -93,86 +90,84 @@ const faqCategories = [
 
 const Faq = () => {
     return (
-        <AppGuestLayout>
-            <div className="flex flex-col gap-12 py-12 md:py-20">
-                {/* --- HERO SECTION --- */}
-                <section className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-4 text-center">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-primary">
-                        <HelpCircle className="h-3 w-3 text-chart-1" />
-                        <span>Support Center</span>
-                    </div>
+        <div className="flex flex-col gap-12 py-12 md:py-20">
+            {/* --- HERO SECTION --- */}
+            <section className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-4 text-center">
+                <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-primary">
+                    <HelpCircle className="h-3 w-3 text-chart-1" />
+                    <span>Support Center</span>
+                </div>
 
-                    <h1 className="text-2xl font-extrabold tracking-tight text-primary md:text-3xl">
-                        Frequently Asked Questions
-                    </h1>
+                <h1 className="text-2xl font-extrabold tracking-tight text-primary md:text-3xl">
+                    Frequently Asked Questions
+                </h1>
 
-                    <p className="text-lg text-muted-foreground">
-                        Find answers to common questions about reporting,
-                        privacy, and the resolution process.
-                    </p>
-                </section>
+                <p className="text-lg text-muted-foreground">
+                    Find answers to common questions about reporting, privacy,
+                    and the resolution process.
+                </p>
+            </section>
 
-                {/* --- FAQ CONTENT --- */}
-                <section className="mx-auto w-full max-w-4xl px-4">
-                    <div className="grid grid-cols-1 gap-10">
-                        {faqCategories.map((category, idx) => (
-                            <div key={idx} className="space-y-4">
-                                <div className="flex items-center gap-3 border-b border-border pb-2">
-                                    <category.icon className="h-5 w-5 text-chart-1" />
-                                    <h2 className="text-xl font-bold text-primary">
-                                        {category.title}
-                                    </h2>
-                                </div>
-
-                                <Accordion
-                                    type="single"
-                                    collapsible
-                                    className="w-full"
-                                >
-                                    {category.questions.map((item, qIdx) => (
-                                        <AccordionItem
-                                            key={qIdx}
-                                            value={`item-${idx}-${qIdx}`}
-                                            className="border-border/60"
-                                        >
-                                            <AccordionTrigger className="text-base font-semibold text-primary hover:text-chart-1 hover:no-underline">
-                                                {item.q}
-                                            </AccordionTrigger>
-                                            <AccordionContent className="text-muted-foreground">
-                                                {item.a}
-                                            </AccordionContent>
-                                        </AccordionItem>
-                                    ))}
-                                </Accordion>
+            {/* --- FAQ CONTENT --- */}
+            <section className="mx-auto w-full max-w-4xl px-4">
+                <div className="grid grid-cols-1 gap-10">
+                    {faqCategories.map((category, idx) => (
+                        <div key={idx} className="space-y-4">
+                            <div className="flex items-center gap-3 border-b border-border pb-2">
+                                <category.icon className="h-5 w-5 text-chart-1" />
+                                <h2 className="text-xl font-bold text-primary">
+                                    {category.title}
+                                </h2>
                             </div>
-                        ))}
-                    </div>
-                </section>
 
-                {/* --- CONTACT CTA --- */}
-                <section className="mx-auto w-full max-w-4xl px-4">
-                    <Card className="border-border bg-secondary/40 shadow-sm">
-                        <CardHeader className="text-center">
-                            <CardTitle>Still have questions?</CardTitle>
-                            <CardDescription>
-                                If you cannot find the answer you are looking
-                                for, please reach out to our team.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-                            <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-3 text-sm font-semibold text-muted-foreground shadow-sm">
-                                <MessageCircle className="h-4 w-4 text-chart-2" />
-                                <span>Live Chat (Mon-Fri)</span>
-                            </div>
-                            <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-3 text-sm font-semibold text-muted-foreground shadow-sm">
-                                <AlertCircle className="h-4 w-4 text-chart-4" />
-                                <span>Email Support</span>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </section>
-            </div>
-        </AppGuestLayout>
+                            <Accordion
+                                type="single"
+                                collapsible
+                                className="w-full"
+                            >
+                                {category.questions.map((item, qIdx) => (
+                                    <AccordionItem
+                                        key={qIdx}
+                                        value={`item-${idx}-${qIdx}`}
+                                        className="border-border/60"
+                                    >
+                                        <AccordionTrigger className="text-base font-semibold text-primary hover:text-chart-1 hover:no-underline">
+                                            {item.q}
+                                        </AccordionTrigger>
+                                        <AccordionContent className="text-muted-foreground">
+                                            {item.a}
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                ))}
+                            </Accordion>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* --- CONTACT CTA --- */}
+            <section className="mx-auto w-full max-w-4xl px-4">
+                <Card className="border-border bg-secondary/40 shadow-sm">
+                    <CardHeader className="text-center">
+                        <CardTitle>Still have questions?</CardTitle>
+                        <CardDescription>
+                            If you cannot find the answer you are looking for,
+                            please reach out to our team.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+                        <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-3 text-sm font-semibold text-muted-foreground shadow-sm">
+                            <MessageCircle className="h-4 w-4 text-chart-2" />
+                            <span>Live Chat (Mon-Fri)</span>
+                        </div>
+                        <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-3 text-sm font-semibold text-muted-foreground shadow-sm">
+                            <AlertCircle className="h-4 w-4 text-chart-4" />
+                            <span>Email Support</span>
+                        </div>
+                    </CardContent>
+                </Card>
+            </section>
+        </div>
     );
 };
 
