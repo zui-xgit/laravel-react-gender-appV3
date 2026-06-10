@@ -24,6 +24,8 @@ Route::middleware(['auth', 'verified', 'check.role:admin', 'check.status'])->gro
     Route::patch('update-staff/{user:uuid}', [AdminController::class, 'updateStaff'])->name('admin.update-staff');
     Route::inertia('adminaudit-logs', 'dashboard/admin/audit-logs')->name("audit.logs"); 
 
-   
+    Route::post('activate-staff/{user:uuid}', [AdminController::class, 'activateStaff'])->name('admin.activate-staff'); 
+    Route::post('suspend-staff/{user:uuid}', [AdminController::class, 'suspendStaff'])->name('admin.suspend-staff'); 
+    Route::post('deactivate-staff/{user:uuid}', [AdminController::class, 'deactivateStaff'])->name('admin.deactivate-staff'); 
 });
 

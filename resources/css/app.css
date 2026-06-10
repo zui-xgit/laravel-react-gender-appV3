@@ -228,8 +228,8 @@
     --accent-foreground: #f8fafc;
 
     /* Destructive - Professional Red */
-    --destructive: #7f1d1d;
-    --destructive-foreground: #fca5a5;
+    --destructive: #dc2626;
+    --destructive-foreground: #fef2f2;
 
     /* Borders & Inputs - Subtle separation */
     --border: #1e293b;

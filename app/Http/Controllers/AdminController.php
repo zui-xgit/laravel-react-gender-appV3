@@ -6,6 +6,7 @@ use App\Models\CaseAssignment;
 use App\Models\CaseDetail;
 use App\Models\User;
 use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -517,6 +518,46 @@ class AdminController extends Controller
             ]);
         }
     }
+
+    public function activateStaff(User $user) : RedirectResponse
+    {
+        //  dd('activated staff' . $user->uuid);
+
+         $user->update([
+            'status' => 'active'
+         ]); 
+
+
+          Inertia::flash('toast', ['type' => 'success', 'message' => __('Staff Activated successfully')]);
+          return back(); 
+         
+    }
+
+    public function suspendStaff(User $user)
+    {
+        // dd('suspended staff' . $user->uuid);
+
+
+        $user->update([
+            'status' => 'suspended'
+        ]); 
+
+         Inertia::flash('toast', ['type' => 'success', 'message' => __('Staff Suspended successfully')]);
+          return back(); 
+    }
+
+    public function deactivateStaff(User $user)
+    {  
+         $user->update([
+            'status' => 'inactive'
+         ]); 
+
+          Inertia::flash('toast', ['type' => 'success', 'message' => __('Staff Deactivated successfully')]);
+          return back(); 
+
+
+    }
+
 
     // audit logset
     public function auditLogs(){}

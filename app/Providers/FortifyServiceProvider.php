@@ -19,7 +19,7 @@ class FortifyServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     */
+     */ 
     public function register(): void
     {
         $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {

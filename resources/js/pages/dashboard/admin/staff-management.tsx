@@ -33,8 +33,9 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Head, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
+    BadgeAlert,
     Clock,
     Download,
     Edit2,
@@ -45,7 +46,9 @@ import {
     ShieldAlert,
     ShieldCheck,
     Trash2,
+    UserMinus,
     UserPlus,
+    UserRoundSearch,
     Users,
     UserX,
 } from 'lucide-react';
@@ -55,8 +58,14 @@ import SearchInput from '@/components/search-input';
 import RefreshButton from '@/components/refresh-button';
 import BackButton from '@/components/back-button';
 import staff from '@/routes/staff';
-import { StaffMember } from '@/types/types';
+import { StaffMember, UsePageProps } from '@/types/types';
 import StaffDialog from '@/components/dialogs/staff-dialog';
+import admin from '@/routes/admin';
+import ConfirmationDialog from '@/components/dialogs/confirmation-dialog';
+import { edit } from '@/routes/profile';
+import { fa } from 'zod/v4/locales';
+import { PortalLoader } from '@/components/portal-loader';
+import { toast } from 'sonner';
 
 interface StaffManagementProps {
     staff_members: StaffMember[];
@@ -73,6 +82,12 @@ interface StaffManagementProps {
     };
 }
 
+// Define a safe type for our modal configuration
+interface DialogState {
+    uuid: string;
+    type: 'activate' | 'suspend';
+}
+
 export default function StaffManagement({
     staff_members,
     stats,
@@ -82,6 +97,8 @@ export default function StaffManagement({
     const [selectedStaff, setSelectedStaff] = useState<StaffMember | null>(
         null,
     );
+
+    const { auth } = usePage<UsePageProps>().props;
 
     const handleFilterChange = (key: string, value: string) => {
         router.get(
@@ -157,8 +174,106 @@ export default function StaffManagement({
         setIsStaffModalOpen(true);
     };
 
+    const [onConfirmSuspendStaff, setOnConfirmSuspendStaff] = useState<
+        (() => void) | null
+    >(null);
+    const [onConfirmActivateStaff, setOnConfirmActivateStaff] = useState<
+        (() => void) | null
+    >(null);
+
+    const [onConfirmDeactivateStaff, setOnConfirmDeactivateStaff] = useState<
+        (() => void) | null
+    >(null);
+
+    const [processing, setProcessing] = useState(false);
+
+    const handleSuspendStaff = (uuid: string) => {
+        setOnConfirmSuspendStaff(() => () => {
+            router.post(
+                admin.suspendStaff({ user: uuid }).url,
+                {},
+                {
+                    preserveScroll: true,
+                    onStart: () => setProcessing(true),
+                    onFinish: () => {
+                        setProcessing(false);
+                    },
+                },
+            );
+            setOnConfirmSuspendStaff(null);
+        });
+    };
+
+    const handleActivateStaff = (uuid: string) => {
+        setOnConfirmActivateStaff(() => () => {
+            router.post(
+                admin.activateStaff({ user: uuid }).url,
+                {},
+                {
+                    preserveScroll: true,
+                    onStart: () => setProcessing(true),
+                    onFinish: () => {
+                        setProcessing(false);
+                    },
+                },
+            );
+            setOnConfirmActivateStaff(null);
+        });
+    };
+
+    const handleHandleDeactivateStaff = (uuid: string) => {
+        setOnConfirmDeactivateStaff(() => () => {
+            router.post(
+                admin.deactivateStaff({ user: uuid }).url,
+                {},
+                {
+                    preserveScroll: true,
+                    onStart: () => setProcessing(true),
+                    onFinish: () => {
+                        setProcessing(false);
+                    },
+                },
+            );
+            setOnConfirmDeactivateStaff(null);
+        });
+    };
+
+    const handleRemoveStaff = (uuid: string) => {
+        toast.info(
+            'Feature is in progress. It will be available in future versions. If you still need to remove this staff member, contact IT management',
+        );
+    };
+
     return (
         <>
+            {processing && <PortalLoader />}
+            <ConfirmationDialog
+                isOpen={onConfirmSuspendStaff !== null}
+                onClose={() => setOnConfirmSuspendStaff(null)}
+                onConfirm={onConfirmSuspendStaff || (() => {})}
+                title="Confirm Action"
+                description="Are you sure you want to proceed with suspending this staff member ?"
+                confirmText="Yes, Proceed"
+                variant="destructive"
+            />
+            <ConfirmationDialog
+                isOpen={onConfirmDeactivateStaff !== null}
+                onClose={() => setOnConfirmDeactivateStaff(null)}
+                onConfirm={onConfirmDeactivateStaff || (() => {})}
+                title="Confirm Action"
+                description="Are you sure you want to proceed with Deactivating this staff member ?"
+                confirmText="Yes, Proceed"
+                variant="destructive"
+            />
+
+            <ConfirmationDialog
+                isOpen={onConfirmActivateStaff !== null}
+                onClose={() => setOnConfirmActivateStaff(null)}
+                onConfirm={onConfirmActivateStaff || (() => {})}
+                title="Confirm Action"
+                description="Are you sure you want to proceed with this staff modification?"
+                confirmText="Yes, Proceed"
+            />
             <Head title="Staff Management" />
 
             <div className="flex flex-col gap-8 px-4 py-6 md:px-8">
@@ -296,7 +411,18 @@ export default function StaffManagement({
                                                     <div className="flex flex-col">
                                                         <span className="mb-1 text-sm leading-none font-semibold text-foreground">
                                                             {member.first_name}{' '}
-                                                            {member.last_name}
+                                                            {member.last_name}{' '}
+                                                            {auth.user.uuid ===
+                                                                member.uuid && (
+                                                                <>
+                                                                    <Badge
+                                                                        variant="default"
+                                                                        className="ml-1.5 border-none bg-emerald-600 text-[13px] font-bold text-white shadow-sm hover:bg-emerald-600"
+                                                                    >
+                                                                        You
+                                                                    </Badge>
+                                                                </>
+                                                            )}
                                                         </span>
                                                         <span className="flex items-center gap-1 text-xs text-muted-foreground">
                                                             <Mail className="h-3 w-3" />
@@ -352,7 +478,7 @@ export default function StaffManagement({
                                                         <Button
                                                             variant="ghost"
                                                             size="icon"
-                                                            className="h-8 w-8 rounded-full"
+                                                            className="h-8 w-8 cursor-pointer rounded-full"
                                                         >
                                                             <MoreHorizontal className="h-4 w-4" />
                                                         </Button>
@@ -361,53 +487,123 @@ export default function StaffManagement({
                                                         align="end"
                                                         className="w-[180px]"
                                                     >
-                                                        <DropdownMenuLabel>
-                                                            Staff Actions
-                                                        </DropdownMenuLabel>
-                                                        <DropdownMenuItem
-                                                            onClick={() =>
-                                                                handleUpdateStaff(
-                                                                    member,
-                                                                )
-                                                            }
-                                                            className="cursor-pointer"
-                                                        >
-                                                            <Edit2 className="mr-2 h-4 w-4" />
-                                                            Edit Profile
-                                                        </DropdownMenuItem>
+                                                        {auth.user.uuid ===
+                                                        member.uuid ? (
+                                                            <>
+                                                                <DropdownMenuLabel>
+                                                                    Your Account
+                                                                </DropdownMenuLabel>
+                                                                <DropdownMenuSeparator />
+                                                                <DropdownMenuItem className="cursor-pointer">
+                                                                    <Link
+                                                                        href={edit()}
+                                                                        prefetch
+                                                                        className="flex items-center gap-2"
+                                                                    >
+                                                                        <UserRoundSearch className="mr-2 h-4 w-4" />
+                                                                        View
+                                                                        Profile
+                                                                    </Link>
+                                                                </DropdownMenuItem>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <DropdownMenuLabel>
+                                                                    Staff
+                                                                    Actions
+                                                                </DropdownMenuLabel>
+                                                                <DropdownMenuItem
+                                                                    onClick={() =>
+                                                                        handleUpdateStaff(
+                                                                            member,
+                                                                        )
+                                                                    }
+                                                                    className="cursor-pointer"
+                                                                >
+                                                                    <Edit2 className="mr-2 h-4 w-4" />
+                                                                    Edit Profile
+                                                                </DropdownMenuItem>
 
-                                                        <DropdownMenuSeparator />
+                                                                <DropdownMenuSeparator />
 
-                                                        {/* 1. If user is ACTIVE, show Suspend option */}
-                                                        {member.status ===
-                                                            'active' && (
-                                                            <DropdownMenuItem className="cursor-pointer text-amber-600 focus:text-amber-600">
-                                                                <UserX className="mr-2 h-4 w-4" />
-                                                                Suspend Account
-                                                            </DropdownMenuItem>
+                                                                {/* 1. If user is ACTIVE, show Suspend option */}
+                                                                {member.status ===
+                                                                    'active' && (
+                                                                    <>
+                                                                        <DropdownMenuItem
+                                                                            onClick={() =>
+                                                                                handleSuspendStaff(
+                                                                                    member.uuid,
+                                                                                )
+                                                                            }
+                                                                            className="cursor-pointer text-amber-600 focus:text-amber-600"
+                                                                        >
+                                                                            <UserX className="mr-2 h-4 w-4" />
+                                                                            Suspend
+                                                                            Account
+                                                                        </DropdownMenuItem>
+                                                                        <DropdownMenuItem
+                                                                            onClick={() =>
+                                                                                handleHandleDeactivateStaff(
+                                                                                    member.uuid,
+                                                                                )
+                                                                            }
+                                                                            className="cursor-pointer text-amber-600 focus:text-amber-600"
+                                                                        >
+                                                                            {/* <UserX className="mr-2 h-4 w-4" /> */}
+                                                                            <UserMinus className="mr-2 h-4 w-4" />
+                                                                            Deactivate
+                                                                            member
+                                                                        </DropdownMenuItem>
+                                                                    </>
+                                                                )}
+
+                                                                {/* 2. If user is INACTIVE, show Activate option */}
+                                                                {member.status ===
+                                                                    'inactive' && (
+                                                                    <DropdownMenuItem
+                                                                        onClick={() =>
+                                                                            handleActivateStaff(
+                                                                                member.uuid,
+                                                                            )
+                                                                        }
+                                                                        className="cursor-pointer text-green-600 focus:text-green-600"
+                                                                    >
+                                                                        <ShieldCheck className="mr-2 h-4 w-4" />
+                                                                        Activate
+                                                                        Account
+                                                                    </DropdownMenuItem>
+                                                                )}
+
+                                                                {/* 3. If user is SUSPENDED, show Active Access option */}
+                                                                {member.status ===
+                                                                    'suspended' && (
+                                                                    <DropdownMenuItem
+                                                                        onClick={() =>
+                                                                            handleActivateStaff(
+                                                                                member.uuid,
+                                                                            )
+                                                                        }
+                                                                        className="cursor-pointer text-green-600 focus:text-green-600"
+                                                                    >
+                                                                        <ShieldCheck className="mr-2 h-4 w-4" />
+                                                                        Active
+                                                                        Access
+                                                                    </DropdownMenuItem>
+                                                                )}
+                                                                <DropdownMenuItem
+                                                                    onClick={() =>
+                                                                        handleRemoveStaff(
+                                                                            member.uuid,
+                                                                        )
+                                                                    }
+                                                                    className="cursor-pointer text-destructive focus:bg-destructive/5 focus:text-destructive"
+                                                                >
+                                                                    <Trash2 className="mr-2 h-4 w-4" />
+                                                                    Remove Staff
+                                                                </DropdownMenuItem>
+                                                            </>
                                                         )}
-
-                                                        {/* 2. If user is INACTIVE, show Activate option */}
-                                                        {member.status ===
-                                                            'inactive' && (
-                                                            <DropdownMenuItem className="cursor-pointer text-green-600 focus:text-green-600">
-                                                                <ShieldCheck className="mr-2 h-4 w-4" />
-                                                                Activate Account
-                                                            </DropdownMenuItem>
-                                                        )}
-
-                                                        {/* 3. If user is SUSPENDED, show Active Access option */}
-                                                        {member.status ===
-                                                            'suspended' && (
-                                                            <DropdownMenuItem className="cursor-pointer text-green-600 focus:text-green-600">
-                                                                <ShieldCheck className="mr-2 h-4 w-4" />
-                                                                Active Access
-                                                            </DropdownMenuItem>
-                                                        )}
-                                                        <DropdownMenuItem className="cursor-pointer text-destructive focus:bg-destructive/5 focus:text-destructive">
-                                                            <Trash2 className="mr-2 h-4 w-4" />
-                                                            Remove Staff
-                                                        </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
                                             </TableCell>
