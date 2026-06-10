@@ -542,8 +542,10 @@ class AdminController extends Controller
             'status' => 'suspended'
         ]); 
 
-         Inertia::flash('toast', ['type' => 'success', 'message' => __('Staff Suspended successfully')]);
-          return back(); 
+        
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Staff Suspended successfully')]);
+        return back(); 
     }
 
     public function deactivateStaff(User $user)
