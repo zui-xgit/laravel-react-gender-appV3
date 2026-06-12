@@ -13,7 +13,7 @@ const RefreshButton = ({ href, className }: RefreshButtonProps) => {
     const [isRefreshing, setIsRefreshing] = useState(false);
 
     const handleRefresh = () => {
-        setIsRefreshing(true);
+        // setIsRefreshing(true);
 
         // We visit the base route without any 'filters' or 'search' data
         router.get(
@@ -23,6 +23,7 @@ const RefreshButton = ({ href, className }: RefreshButtonProps) => {
                 replace: true,
                 preserveState: false, // This is key: it wipes the React state
                 preserveScroll: false,
+                onStart: () => setIsRefreshing(true),
                 onFinish: () => setIsRefreshing(false),
             },
         );

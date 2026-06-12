@@ -3,16 +3,17 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Guarded;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Concerns\HasUuids; 
-use Illuminate\Database\Eloquent\Concerns\HasUniqueIds; 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
+use Spatie\Activitylog\Contracts\Activity;
+
 
 #[Guarded(['id', 'uuid', 'created_at', "updated_at"])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
@@ -21,7 +22,7 @@ class User extends Authenticatable
 
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasUuids, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable, HasUuids, TwoFactorAuthenticatable, LogsActivity;
 
     const ROLE_ADMIN = 'admin';
     const ROLE_OFFICER = 'officer';
@@ -29,6 +30,34 @@ class User extends Authenticatable
     const STATUS_ACTIVE = 'active';
     const STATUS_INACTIVE = 'inactive';
     const STATUS_SUSPENDED = 'suspended';
+
+
+
+    public function beforeActivityLogged(Activity $activity, string $eventName)
+    {
+        $activity->properties = $activity->properties->merge([
+            'ip' => request()->ip(),
+            'userAgent' => request()->userAgent()
+        ]); 
+    }   
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['role', 'username', 'first_name', 'last_name', 'gender', 'email', 'phone', 'status'])
+        ->logOnlyDirty()
+        ->dontLogEmptyChanges()
+        ->useLogName("users-table") 
+        ->setDescriptionForEvent(function (string $eventName) {
+            return match($eventName){
+                'created' => "user created",
+                'updated' => "user updated",
+                'deleted' => "user deleted",
+                default   => "Account profile event: {$eventName}"
+            };
+        })
+        ;
+    }
 
    
 

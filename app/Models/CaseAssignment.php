@@ -3,17 +3,19 @@
 namespace App\Models;
 
 use App\Models\CaseDetail;
+use Illuminate\Database\Eloquent\Attributes\Guarded;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+
+#[Guarded(['id', 'uuid' ,'created_at', 'updated_at'])]
 class CaseAssignment extends Model
 {
     /** @use HasFactory<\Database\Factories\CaseAssignmentFactory> */
     use HasFactory, HasUuids;
 
-    protected $guarded = ['id', 'uuid' ,'created_at', 'updated_at'];
 
     /**
      * Get the columns that should receive a unique identifier.
@@ -25,6 +27,7 @@ class CaseAssignment extends Model
         return ['uuid'];
     }
 
+    
     //==================== RELATIONSHIP TO THE USER MODEL ==================== 
 
     public function assignedBy(): BelongsTo

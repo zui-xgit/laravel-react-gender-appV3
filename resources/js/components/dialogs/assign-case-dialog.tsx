@@ -65,6 +65,11 @@ const AssignModal = ({
                 onClose();
                 reset();
             },
+            onError: (error) => {
+                if (error.error) {
+                    toast.error(error.error);
+                }
+            },
         });
     };
 

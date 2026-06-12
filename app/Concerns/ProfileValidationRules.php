@@ -16,9 +16,12 @@ trait ProfileValidationRules
     protected function profileRules(?int $userId = null): array
     {
         return [
-            // 'name' => $this->nameRules(),
             'email' => $this->emailRules($userId),
-            'username' => $this->usernameRules($userId)
+            'username' => $this->usernameRules($userId), 
+            'first_name' => $this->nameRules(),  
+            'last_name' => $this->nameRules(),  
+            'phone' => ['required', 'string', 'regex:/^\+?[0-9\s\-]{7,20}$/', 'min:10'], 
+            'gender' => ['required', 'in:male,female']
         ];
     }
 

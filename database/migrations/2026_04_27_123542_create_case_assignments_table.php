@@ -24,12 +24,6 @@ return new class extends Migration
             $table->foreignId('assigned_by')->constrained('users')->cascadeOnDelete(); 
             
             $table->enum('priority', ['low', 'medium', 'high'])->default('medium');
-            $table->timestamp('last_updated')->nullable();
-
-            
-            
-            // Prevent duplicate assignment of the same officer to the same case
-            $table->unique(['case_detail_id', 'assigned_to']);
 
             $table->timestamps();
         });

@@ -17,6 +17,20 @@ export type Sex = 'Male' | 'Female' | 'Other' | null;
 //     gender: 'male' | 'female';
 // }
 
+interface PaginationLinks {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
+export interface PaginatedData<T> {
+    data: T[];
+    links: PaginationLinks[];
+    current_page: number;
+    from: number;
+    to: number;
+    total: number;
+}
+
 export interface StaffMember {
     uuid: string;
     username: string;
@@ -39,6 +53,9 @@ export interface UsePageProps extends PageProps {
             username: string;
             first_name: string;
             last_name: string;
+            email: string;
+            phone: string;
+            gender: 'male' | 'female';
             role?: string;
         };
     };
@@ -186,5 +203,22 @@ export interface PersonalAssignment {
     };
     priority: string;
     date_assigned: string;
-    last_updated: string | null;
+}
+
+export interface Log {
+    log_name: string;
+    description: string;
+    event: string;
+    causer_name: string;
+    causer_role: string | undefined;
+    // The Ultimate Lazy & Safe Types:
+    subject: Record<string, any> | null; // <-- This handles 100+ models instantly
+    subject_type: string | null;
+
+    attribute_changes: {
+        attributes: Record<string, any>;
+        old: Record<string, any>;
+    };
+    properties: Record<string, any>;
+    created_at: string;
 }

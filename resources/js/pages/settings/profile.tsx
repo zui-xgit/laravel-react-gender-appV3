@@ -8,6 +8,13 @@ import { Label } from '@/components/ui/label';
 import profile, { edit } from '@/routes/profile';
 import { UsePageProps } from '@/types/types';
 import { Spinner } from '@/components/ui/spinner';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 
 export default function Profile({
     mustVerifyEmail,
@@ -18,14 +25,20 @@ export default function Profile({
 }) {
     const { auth } = usePage<UsePageProps>().props;
 
-    const { data, setData, patch, processing, errors, reset } = useForm({
+    const { data, setData, patch, processing, errors } = useForm({
         username: auth.user.username,
         email: auth.user.email,
+        first_name: auth.user.first_name,
+        last_name: auth.user.last_name,
+        gender: auth.user.gender,
+        phone: auth.user.phone,
     });
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        patch(profile.update().url);
+        patch(profile.update().url, {
+            preserveScroll: true,
+        });
     };
 
     return (
@@ -41,7 +54,42 @@ export default function Profile({
                 />
 
                 <form onSubmit={submit} className="space-y-6">
-                    {/* Username Field */}
+                    <div className="grid gap-2">
+                        <Label htmlFor="first_name">First Name</Label>
+                        <Input
+                            id="first_name"
+                            type="text"
+                            className="mt-1 block w-full"
+                            name="first_name"
+                            value={data.first_name}
+                            onChange={(e) =>
+                                setData('first_name', e.target.value)
+                            }
+                            required
+                        />
+                        <InputError
+                            className="mt-2"
+                            message={errors.first_name}
+                        />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="last_name">Last Name</Label>
+                        <Input
+                            id="last_name"
+                            type="text"
+                            className="mt-1 block w-full"
+                            name="last_name"
+                            value={data.last_name}
+                            onChange={(e) =>
+                                setData('last_name', e.target.value)
+                            }
+                            required
+                        />
+                        <InputError
+                            className="mt-2"
+                            message={errors.last_name}
+                        />
+                    </div>
                     <div className="grid gap-2">
                         <Label htmlFor="username">Username</Label>
 
@@ -62,6 +110,31 @@ export default function Profile({
                             message={errors.username}
                         />
                     </div>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="gender">Gender</Label>
+
+                        <Select
+                            value={data.gender}
+                            onValueChange={(value: 'male' | 'female') =>
+                                setData('gender', value)
+                            }
+                        >
+                            <SelectTrigger
+                                id="gender"
+                                className="mt-1 block w-full"
+                            >
+                                <SelectValue placeholder="Select gender" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="male">Male</SelectItem>
+                                <SelectItem value="female">Female</SelectItem>
+                            </SelectContent>
+                        </Select>
+
+                        <InputError className="mt-2" message={errors.gender} />
+                    </div>
+
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email</Label>
 
@@ -76,6 +149,22 @@ export default function Profile({
                         />
 
                         <InputError className="mt-2" message={errors.email} />
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="phone">Phone Number</Label>
+
+                        <Input
+                            id="phone"
+                            type="tel"
+                            className="mt-1 block w-full"
+                            name="phone"
+                            value={data.phone}
+                            onChange={(e) => setData('phone', e.target.value)}
+                            required
+                        />
+
+                        <InputError className="mt-2" message={errors.phone} />
                     </div>
 
                     {/* Submit Actions */}

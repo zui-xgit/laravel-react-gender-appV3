@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Spatie\Activitylog\Models\Activity;
 
 class AdminController extends Controller
 {
@@ -36,9 +37,32 @@ class AdminController extends Controller
             'completed'   => $statusCounts->get('completed', 0),
         ];
 
+
+        $logs = Activity::with(['causer', 'subject'])
+        ->latest()
+        ->take(5)
+        ->get()
+        ->map(function ($log) {
+            return [
+                'log_name'          => $log->log_name,
+                'description'       => $log->description, 
+                'event'             => $log->event, 
+                'causer_name'       => $log->causer 
+                    ? ($log->causer->first_name . ' ' . $log->causer->last_name) 
+                    : 'System',
+                'causer_role'       => $log->causer?->role,
+                'subject'           => $log->subject, 
+                'subject_type'      => $log->subject_type,
+                'attribute_changes' => $log->attribute_changes, 
+                'properties'        => $log->properties, 
+                'created_at'        => $log->created_at->toIso8601String()
+            ];  
+        });
+
         // 3. Render the view via Inertia
         return Inertia::render("dashboard/admin/overview", [
-            "stats" => $stats
+            "stats" => $stats, 
+            "logs" => $logs
         ]); 
     }
 
@@ -84,7 +108,7 @@ class AdminController extends Controller
                 
                 "priority"      => $case_assignment->priority,
                 "date_assigned" => $case_assignment->created_at->toIso8601String(),
-                "last_updated" => $case_assignment->last_updated
+                // "last_updated" => $case_assignment->last_updated
             ];
         });
 
@@ -161,24 +185,33 @@ class AdminController extends Controller
             'filters' => $request->only(['search', 'filter']),
         ]);
     }
+
+
     public function assignCase(Request $request, CaseDetail $case)
     {
+
+        // 1. Guard Clause: Check if the case is eligible for assignment
+        if ($case->status !== 'pending') {
+            return back()->withErrors([
+                'error' => 'Only pending cases can be assigned.'
+            ]);
+        }
      
        
         $validated = $request->validate([
             'assigned_to' => 'required|exists:users,uuid',
-            'priority'    => 'required|in:low,medium,high,critical',
+            'priority'    => 'required|in:low,medium,high',
         ]);
 
 
         try{ 
 
-
-
             DB::beginTransaction(); 
 
 
-            $assigned_to_id = User::where('uuid', $validated['assigned_to'])->value('id'); 
+
+            $targetUser = User::where('uuid', $validated['assigned_to'])->firstOrFail(['id', 'first_name', 'last_name', 'role']); 
+            $assigned_to_id = $targetUser->id; 
             $assigned_by_id = Auth::id(); 
 
             $case->caseAssignment()->create([
@@ -193,7 +226,23 @@ class AdminController extends Controller
             ]);
 
 
-            DB::commit(); 
+            activity('case-assigned')
+              ->causedBy(Auth::user())
+              ->withProperties([
+                 'ip' => $request->ip(), 
+                 'userAgent' => $request->userAgent(), 
+                 'tracking_id' => $case->case_tracking_id, 
+                 'assigned_to_name' => $targetUser->first_name . ' ' .  $targetUser->last_name, 
+                 'assigned_to_role' => $targetUser->role
+              ])
+              ->log("Case with trackingID: :properties.tracking_id  was assigned.");
+
+
+
+            DB::commit();   
+            
+            
+
 
             Inertia::flash('toast', ['type' => 'success', 'message' => __('Case Assigned successfully')]);
 
@@ -201,14 +250,13 @@ class AdminController extends Controller
 
 
         }catch(Exception $e){
-            dd($e); 
             DB::rollBack(); 
             return back()->withErrors([
                 'error' => 'Failed to assign case. Please contact support'
             ]); 
         }
 
-    }
+    }   
 
     public function viewCase(Request $request, CaseDetail $case)
     {
@@ -535,14 +583,21 @@ class AdminController extends Controller
 
     public function suspendStaff(User $user)
     {
-        // dd('suspended staff' . $user->uuid);
-
+        $oldStatus = $user->status;
 
         $user->update([
             'status' => 'suspended'
         ]); 
 
-        
+        // Log with Spatie
+        // activity('Staff-management')  
+        //       ->performedOn($user)  
+        //       ->causedBy(Auth::user())
+        //       ->withProperties([
+        //          'old' => $oldStatus, 
+        //          'new' => $user->status
+        //       ])
+        //       ->log('(Admin) :causer.first_name :causer.last_name Suspended staff member :subject.first_name :subject.last_name'); 
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Staff Suspended successfully')]);
         return back(); 
@@ -562,10 +617,47 @@ class AdminController extends Controller
 
 
     // audit logset
-    public function auditLogs(){}
+    public function auditLogs(Request $request)
+    {
+        $query = Activity::with(['causer', 'subject'])->latest(); 
 
-    // settings
-    public function settings(){}
+
+
+        if ($request->filled('filter')) {
+            $filter = $request->filter;
+            
+            if ($filter === 'action') {
+                $query->whereNull('event');
+            } else {
+                $query->where('event', $filter);
+            }
+        }
+
+        $logs = $query->paginate(20)->withQueryString()->through(function ($log) {
+            return  [
+                'log_name' => $log->log_name,
+                'description' => $log->description, 
+                'event' => $log->event, 
+                'causer_name' => $log->causer 
+                    ? ($log->causer->first_name . ' ' . $log->causer->last_name) 
+                    : 'System',
+                'causer_role' => $log->causer?->role,
+                'subject' => $log->subject, 
+                'subject_type' => $log->subject_type,
+                'attribute_changes' => $log->attribute_changes, 
+                'properties' => $log->properties, 
+                'created_at' => $log->created_at->toIso8601String()
+            ];  
+        });  
+        
+    
+        return Inertia::render('dashboard/admin/audit-logs', [
+            'logs' => $logs, 
+            'filters' => $request->only(['filter']),
+        ]); 
+
+    }
+
 
     
 }

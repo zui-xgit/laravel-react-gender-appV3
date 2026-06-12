@@ -8,6 +8,7 @@ use Illuminate\Auth\Events\Logout;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Carbon;
 
+
 class UserEventSubscriber
 {
     /**
@@ -25,6 +26,16 @@ class UserEventSubscriber
                 'last_login_at' => Carbon::now(),
             ]);
         }
+
+        // activity log (log in)
+        activity("auth")
+        ->causedBy($user)
+        ->event('login')
+        ->withProperties([
+            'ip' => request()->ip(), 
+            'userAgent' => request()->userAgent()
+        ])
+        ->log('User logged in');
     }
 
     public function handleUserLogout(Logout $event): void {
@@ -38,6 +49,16 @@ class UserEventSubscriber
                 'last_logout_at' => Carbon::now(),
             ]);
         }
+
+        // activity log (log out) 
+        activity('auth')
+         ->causedBy($user)
+         ->event('logout')
+         ->withProperties([
+            'ip' => request()->ip(), 
+            'userAgent' => request()->userAgent()
+         ])
+         ->log('User logged out');
     }
 
 

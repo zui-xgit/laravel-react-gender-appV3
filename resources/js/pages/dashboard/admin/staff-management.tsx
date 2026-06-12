@@ -53,11 +53,10 @@ import {
     UserX,
 } from 'lucide-react';
 import { useState } from 'react';
-import { formatDate, formatTime } from '@/lib/utils';
+import { formatDate, formatTime } from '@/lib/helpers';
 import SearchInput from '@/components/search-input';
 import RefreshButton from '@/components/refresh-button';
 import BackButton from '@/components/back-button';
-import staff from '@/routes/staff';
 import { StaffMember, UsePageProps } from '@/types/types';
 import StaffDialog from '@/components/dialogs/staff-dialog';
 import admin from '@/routes/admin';
@@ -102,7 +101,7 @@ export default function StaffManagement({
 
     const handleFilterChange = (key: string, value: string) => {
         router.get(
-            staff.management(),
+            admin.staffManagement(),
             { ...filters, [key]: value === 'all' ? '' : value },
             { preserveState: true, preserveScroll: true, replace: true },
         );
@@ -320,7 +319,7 @@ export default function StaffManagement({
                             </div>
                             <div className="flex flex-wrap items-center gap-2">
                                 <SearchInput
-                                    href={staff.management()}
+                                    href={admin.staffManagement()}
                                     filters={filters}
                                 />
                                 <Select
@@ -368,7 +367,7 @@ export default function StaffManagement({
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
-                                <RefreshButton href={staff.management()} />
+                                <RefreshButton href={admin.staffManagement()} />
                             </div>
                         </div>
                     </CardHeader>
@@ -647,7 +646,7 @@ StaffManagement.layout = {
     breadcrumbs: [
         {
             title: 'Staff Management',
-            href: staff.management(),
+            href: admin.staffManagement(),
         },
     ],
 };

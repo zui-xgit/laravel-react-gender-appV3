@@ -10,8 +10,9 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { adminOverview } from '@/routes';
-import { Head } from '@inertiajs/react';
+import { adminOverview, auditLogs } from '@/routes';
+import { Log } from '@/types/types';
+import { Head, router } from '@inertiajs/react';
 import {
     Activity,
     AlertCircle,
@@ -25,6 +26,8 @@ import {
     UserPlus,
     Users,
 } from 'lucide-react';
+import { formatRelativeTime, getInitials } from '@/lib/helpers';
+import admin from '@/routes/admin';
 
 interface OverviewProps {
     stats: {
@@ -33,44 +36,41 @@ interface OverviewProps {
         in_progress: string;
         completed: string;
     };
+    logs: Log[];
 }
 
-const recentActivities = [
-    {
-        id: 1,
-        user: 'Officer Sarah Chen',
-        action: 'updated case status',
-        target: '#GBV-2024-089',
-        time: '12 minutes ago',
-        avatar: 'SC',
-    },
-    {
-        id: 2,
-        user: 'Admin Michael Ross',
-        action: 'assigned a new officer to',
-        target: '#GBV-2024-092',
-        time: '45 minutes ago',
-        avatar: 'MR',
-    },
-    {
-        id: 3,
-        user: 'System',
-        action: 'generated weekly report',
-        target: 'April Week 4',
-        time: '2 hours ago',
-        avatar: 'SYS',
-    },
-    {
-        id: 4,
-        user: 'Officer David Kim',
-        action: 'closed case',
-        target: '#GBV-2024-045',
-        time: '5 hours ago',
-        avatar: 'DK',
-    },
-];
+const LogDescription = ({ log }: { log: Log }) => {
+    return (
+        <div className="flex items-start gap-4">
+            <Avatar className="h-9 w-9 border ring-offset-2">
+                <AvatarFallback className="bg-primary/5 text-xs font-semibold text-primary">
+                    {getInitials(log.causer_name)}
+                </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 space-y-1">
+                <p className="text-sm leading-none font-medium">
+                    {log.causer_role} {log.causer_name}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                    {log.description}
+                </p>
+                <p className="flex items-center gap-1 pt-1 text-xs text-muted-foreground">
+                    <Clock className="h-3 w-3" />
+                    {/* 5 hours ago */}
+                    {formatRelativeTime(log.created_at)}
+                </p>
+            </div>
+            <Badge
+                variant="outline"
+                className="text-[10px] tracking-wider uppercase"
+            >
+                Log
+            </Badge>
+        </div>
+    );
+};
 
-export default function Overview({ stats }: OverviewProps) {
+export default function Overview({ stats, logs }: OverviewProps) {
     const statsConfig = [
         {
             title: 'Total Cases',
@@ -102,17 +102,11 @@ export default function Overview({ stats }: OverviewProps) {
             <Head title="Admin Overview" />
 
             <div className="flex flex-col gap-8 px-4 py-6 md:px-8">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center">
                     <Heading
                         title="Dashboard Overview"
                         description="Key metrics and recent system activity."
                     />
-                    <div className="flex items-center gap-2">
-                        <Button>
-                            <Plus className="mr-2 h-4 w-4" />
-                            New Case
-                        </Button>
-                    </div>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -139,6 +133,9 @@ export default function Overview({ stats }: OverviewProps) {
                                 </CardDescription>
                             </div>
                             <Button
+                                onClick={() => {
+                                    router.get(auditLogs().url);
+                                }}
                                 variant="ghost"
                                 size="sm"
                                 className="text-xs"
@@ -149,38 +146,8 @@ export default function Overview({ stats }: OverviewProps) {
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-6">
-                                {recentActivities.map((activity) => (
-                                    <div
-                                        key={activity.id}
-                                        className="flex items-start gap-4"
-                                    >
-                                        <Avatar className="h-9 w-9 border ring-offset-2">
-                                            <AvatarFallback className="bg-primary/5 text-xs font-semibold text-primary">
-                                                {activity.avatar}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        <div className="flex-1 space-y-1">
-                                            <p className="text-sm leading-none font-medium">
-                                                {activity.user}
-                                            </p>
-                                            <p className="text-sm text-muted-foreground">
-                                                {activity.action}{' '}
-                                                <span className="font-semibold text-foreground">
-                                                    {activity.target}
-                                                </span>
-                                            </p>
-                                            <p className="flex items-center gap-1 pt-1 text-xs text-muted-foreground">
-                                                <Clock className="h-3 w-3" />
-                                                {activity.time}
-                                            </p>
-                                        </div>
-                                        <Badge
-                                            variant="outline"
-                                            className="text-[10px] tracking-wider uppercase"
-                                        >
-                                            Log
-                                        </Badge>
-                                    </div>
+                                {logs.map((log, index) => (
+                                    <LogDescription key={index} log={log} />
                                 ))}
                             </div>
                         </CardContent>
@@ -196,13 +163,16 @@ export default function Overview({ stats }: OverviewProps) {
                         </CardHeader>
                         <CardContent className="grid gap-3">
                             <Button
+                                onClick={() => {
+                                    router.get(admin.staffManagement().url);
+                                }}
                                 variant="outline"
-                                className="w-full justify-start transition-colors hover:bg-primary/5 hover:text-primary"
+                                className="w-full cursor-pointer justify-start transition-colors hover:bg-primary/5 hover:text-primary"
                             >
                                 <UserPlus className="mr-3 h-4 w-4" />
                                 Add Staff Member
                             </Button>
-                            <Button
+                            {/* <Button
                                 variant="outline"
                                 className="w-full justify-start transition-colors hover:bg-primary/5 hover:text-primary"
                             >
@@ -215,7 +185,7 @@ export default function Overview({ stats }: OverviewProps) {
                             >
                                 <Activity className="mr-3 h-4 w-4" />
                                 System Health
-                            </Button>
+                            </Button> */}
                             <div className="mt-4 rounded-xl bg-destructive/5 p-4 ring-1 ring-destructive/10">
                                 <div className="mb-2 flex items-center gap-2">
                                     <AlertCircle className="h-4 w-4 text-destructive" />

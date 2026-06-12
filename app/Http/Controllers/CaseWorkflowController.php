@@ -59,6 +59,15 @@ class CaseWorkflowController extends Controller
 
           );
 
+          activity('intake-workflow')
+          ->causedBy(Auth::user())
+          ->event('workflow')
+          ->withProperties([
+             'ip' => $request->ip(), 
+             'userAgent' => $request->userAgent(), 
+          ])
+          ->log('Intake workflow submitted'); 
+
           DB::commit(); 
           Inertia::flash('toast', ['type' => 'success', 'message' => __('Intake verified and locked successfully.')]);
 
@@ -98,6 +107,15 @@ class CaseWorkflowController extends Controller
 
           );
 
+          activity('investigate-workflow')
+          ->causedBy(Auth::user())
+          ->event('workflow')
+          ->withProperties([
+             'ip' => $request->ip(), 
+             'userAgent' => $request->userAgent(), 
+          ])
+          ->log('Investigate workflow submitted'); 
+
           DB::commit(); 
           Inertia::flash('toast', ['type' => 'success', 'message' => __('Investigation verified and locked successfully.')]);
 
@@ -131,6 +149,15 @@ class CaseWorkflowController extends Controller
               ]
 
           );
+
+          activity('escalate-workflow')
+          ->causedBy(Auth::user())
+          ->event('workflow')
+          ->withProperties([
+             'ip' => $request->ip(), 
+             'userAgent' => $request->userAgent(), 
+          ])
+          ->log('Escalate workflow submitted'); 
 
           DB::commit(); 
           Inertia::flash('toast', ['type' => 'success', 'message' => __('Escalation verified and locked successfully.')]);
@@ -169,6 +196,15 @@ class CaseWorkflowController extends Controller
               ]
 
           );
+
+          activity('resolve-workflow')
+          ->causedBy(Auth::user())
+          ->event('workflow')
+          ->withProperties([
+             'ip' => $request->ip(), 
+             'userAgent' => $request->userAgent(), 
+          ])
+          ->log('Resolve workflow submitted'); 
 
           DB::commit(); 
           Inertia::flash('toast', ['type' => 'success', 'message' => __('Resolution verified and locked successfully.')]);

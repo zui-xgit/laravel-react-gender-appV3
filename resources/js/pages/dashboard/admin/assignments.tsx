@@ -33,7 +33,7 @@ import {
     ShieldCheck,
     SquarePen,
 } from 'lucide-react';
-import { formatDate, formatTime } from '@/lib/utils';
+import { formatDate, formatTime } from '@/lib/helpers';
 
 import { PersonalAssignment } from '@/types/types';
 import { Hint } from '@/components/hint';
@@ -49,21 +49,22 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import BackButton from '@/components/back-button';
+import { PaginatedData } from '@/types/types';
 
-interface PaginationLinks {
-    url: string | null;
-    label: string;
-    active: boolean;
-}
+// interface PaginationLinks {
+//     url: string | null;
+//     label: string;
+//     active: boolean;
+// }
 
-interface PaginatedData<T> {
-    data: T[];
-    links: PaginationLinks[];
-    current_page: number;
-    from: number;
-    to: number;
-    total: number;
-}
+// interface PaginatedData<T> {
+//     data: T[];
+//     links: PaginationLinks[];
+//     current_page: number;
+//     from: number;
+//     to: number;
+//     total: number;
+// }
 
 interface AssignmentsProps {
     assignments: PaginatedData<PersonalAssignment>;

@@ -10,6 +10,7 @@ use App\Models\IncidentDetail;
 use App\Models\InformantDetail;
 use App\Models\VictimDetail;
 use App\Observers\CaseDetailObserver;
+use Illuminate\Console\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Attributes\Guarded;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;

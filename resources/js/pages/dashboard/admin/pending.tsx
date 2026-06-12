@@ -40,7 +40,7 @@ import {
     UserPlus,
 } from 'lucide-react';
 import { useState } from 'react';
-import { formatDate, formatTime } from '@/lib/utils';
+import { formatDate, formatTime } from '@/lib/helpers';
 
 import AssignModal from '@/components/dialogs/assign-case-dialog';
 
@@ -49,21 +49,22 @@ import { Hint } from '@/components/hint';
 import SearchInput from '@/components/search-input';
 import RefreshButton from '@/components/refresh-button';
 import BackButton from '@/components/back-button';
+import { PaginatedData } from '@/types/types';
 
-interface PaginationLinks {
-    url: string | null;
-    label: string;
-    active: boolean;
-}
+// interface PaginationLinks {
+//     url: string | null;
+//     label: string;
+//     active: boolean;
+// }
 
-interface PaginatedData<T> {
-    data: T[];
-    links: PaginationLinks[];
-    current_page: number;
-    from: number;
-    to: number;
-    total: number;
-}
+// interface PaginatedData<T> {
+//     data: T[];
+//     links: PaginationLinks[];
+//     current_page: number;
+//     from: number;
+//     to: number;
+//     total: number;
+// }
 
 interface PendingProps {
     cases: PaginatedData<PendingCase>;

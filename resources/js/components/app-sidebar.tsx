@@ -11,6 +11,7 @@ import {
     LayoutGrid,
     RefreshCw,
     Settings2,
+    TrendingUp,
     User2,
     UserCheck,
 } from 'lucide-react';
@@ -33,13 +34,13 @@ import {
     adminInProgress,
     adminOverview,
     adminPending,
+    auditLogs,
     reporterReport,
     reporterTrack,
 } from '@/routes';
 import type { NavItem } from '@/types';
 import { UsePageProps } from '@/types/types';
-import staff from '@/routes/staff';
-import audit from '@/routes/audit';
+import admin from '@/routes/admin';
 
 const AdminNavItems: NavItem[] = [
     {
@@ -76,13 +77,18 @@ const AdminNavItems: NavItem[] = [
         ],
     },
     {
+        title: 'Report',
+        href: admin.report(),
+        icon: TrendingUp,
+    },
+    {
         title: 'Staff Management',
-        href: staff.management(),
+        href: admin.staffManagement(),
         icon: User2,
     },
     {
         title: 'Audit Logs',
-        href: audit.logs(),
+        href: auditLogs(),
         icon: History,
     },
 ];

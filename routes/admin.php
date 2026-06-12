@@ -19,13 +19,14 @@ Route::middleware(['auth', 'verified', 'check.role:admin', 'check.status'])->gro
     Route::get('case-workflow/{case:uuid}', [CaseWorkflowController::class, "caseWorkflow"])->name('admin-case-workflow'); 
 
 
-    Route::get('staff-management', [AdminController::class, 'staffManagement'])->name("staff.management");
+    Route::get('staff-management', [AdminController::class, 'staffManagement'])->name("admin.staff-management");
     Route::post('add-staff', [AdminController::class, 'addStaff'])->name('admin.add-staff'); 
     Route::patch('update-staff/{user:uuid}', [AdminController::class, 'updateStaff'])->name('admin.update-staff');
-    Route::inertia('adminaudit-logs', 'dashboard/admin/audit-logs')->name("audit.logs"); 
+    Route::get('audit-logs', [AdminController::class, 'auditLogs'])->name("audit-logs"); 
 
     Route::post('activate-staff/{user:uuid}', [AdminController::class, 'activateStaff'])->name('admin.activate-staff'); 
     Route::post('suspend-staff/{user:uuid}', [AdminController::class, 'suspendStaff'])->name('admin.suspend-staff'); 
     Route::post('deactivate-staff/{user:uuid}', [AdminController::class, 'deactivateStaff'])->name('admin.deactivate-staff'); 
+    Route::inertia('report', 'dashboard/admin/report')->name('admin.report'); 
 });
 
