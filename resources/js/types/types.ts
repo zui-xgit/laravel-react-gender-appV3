@@ -3,20 +3,6 @@ import { PageProps } from '@inertiajs/core';
 
 export type Sex = 'Male' | 'Female' | 'Other' | null;
 
-// export interface StaffUser {
-//     uuid: string;
-//     username: string;
-//     first_name: string;
-//     last_name: string;
-//     email: string | null;
-//     phone: string;
-//     role: 'admin' | 'officer'; // Made optional as requested, using string literal types for strictness
-//     status: 'active' | 'inactive' | 'suspended';
-//     last_login_at: string | null;
-//     last_logout_at: string | null;
-//     gender: 'male' | 'female';
-// }
-
 interface PaginationLinks {
     url: string | null;
     label: string;

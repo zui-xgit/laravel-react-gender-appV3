@@ -1,7 +1,7 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import { CaseDetail } from '@/types/types';
-import { formatDate, formatTime } from '@/lib/utils';
+import { formatDate, formatTime } from '@/lib/helpers';
 
 const styles = StyleSheet.create({
     page: {

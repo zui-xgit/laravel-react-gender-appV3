@@ -3,11 +3,13 @@ import CaseDetailPDF from '@/components/pdf/case-detail-pdf';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatDate, formatTime } from '@/lib/utils';
+import { Spinner } from '@/components/ui/spinner';
+import { formatDate, formatTime } from '@/lib/helpers';
 import { adminViewCase } from '@/routes';
 import { PendingCase, CaseDetail } from '@/types/types';
 import { Head } from '@inertiajs/react';
 import { usePDF } from '@react-pdf/renderer';
+
 import {
     AlertCircle,
     CheckCircle2,
@@ -20,11 +22,19 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
-interface ViewCaseProps {
-    case_detail: CaseDetail;
+interface User {
+    uuid: string;
+    first_name: string;
+    last_name: string;
+    role: string;
 }
 
-const ViewCase = ({ case_detail }: ViewCaseProps) => {
+interface ViewCaseProps {
+    case_detail: CaseDetail;
+    all_users: User[];
+}
+
+const ViewCase = ({ case_detail, all_users }: ViewCaseProps) => {
     const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
     const [selectedCase, setSelectedCase] = useState<PendingCase | null>(null);
     const [instance] = usePDF({
@@ -100,6 +110,7 @@ const ViewCase = ({ case_detail }: ViewCaseProps) => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
+                                {instance.loading && <Spinner />}
                                 <Download className="mr-2 h-4 w-4" />
                                 View Document PDF
                             </a>
@@ -215,6 +226,7 @@ const ViewCase = ({ case_detail }: ViewCaseProps) => {
                 isOpen={isAssignModalOpen}
                 onClose={() => setIsAssignModalOpen(false)}
                 selectedCase={selectedCase}
+                all_users={all_users}
             />
         </>
     );

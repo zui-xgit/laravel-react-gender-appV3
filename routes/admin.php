@@ -27,6 +27,6 @@ Route::middleware(['auth', 'verified', 'check.role:admin', 'check.status'])->gro
     Route::post('activate-staff/{user:uuid}', [AdminController::class, 'activateStaff'])->name('admin.activate-staff'); 
     Route::post('suspend-staff/{user:uuid}', [AdminController::class, 'suspendStaff'])->name('admin.suspend-staff'); 
     Route::post('deactivate-staff/{user:uuid}', [AdminController::class, 'deactivateStaff'])->name('admin.deactivate-staff'); 
-    Route::inertia('report', 'dashboard/admin/report')->name('admin.report'); 
+    Route::inertia('report', 'dashboard/admin/data-report')->name('admin.report'); 
 });
 

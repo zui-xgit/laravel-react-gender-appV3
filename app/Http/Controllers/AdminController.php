@@ -127,14 +127,7 @@ class AdminController extends Controller
             ->where('status', 'pending')
             ->orderBy('created_at', 'desc');
 
-        $all_users = User::query()->latest()->get()->map(function ($user ){
-            return [
-                 'uuid' => $user->uuid,
-                 'first_name' => $user->first_name,
-                 'last_name' => $user->last_name,
-                 'role' => $user->role,
-            ];
-        }); 
+         
 
 
 
@@ -170,6 +163,14 @@ class AdminController extends Controller
               ];
         });
 
+        $all_users = User::query()->latest()->get()->map(function ($user ){
+            return [
+                 'uuid' => $user->uuid,
+                 'first_name' => $user->first_name,
+                 'last_name' => $user->last_name,
+                 'role' => $user->role,
+            ];
+        });
 
         $stats = [
             'total' => CaseDetail::where('status', 'pending')->count(),
@@ -309,11 +310,22 @@ class AdminController extends Controller
             ])->toArray() : []
         ];
 
+        
+        $all_users = User::query()->latest()->get()->map(function ($user ){
+            return [
+                 'uuid' => $user->uuid,
+                 'first_name' => $user->first_name,
+                 'last_name' => $user->last_name,
+                 'role' => $user->role,
+            ];
+        });
+
         // 3. Render page with Inertia passing the structured data
         return Inertia::render('dashboard/view-case', [
             'case_detail' => $caseDetailPayload,
             'from_page'   => $request->query('from_page'), 
             'from_url'    => $request->query('from_url'), 
+            'all_users'   => $all_users
         ]);
     }
 

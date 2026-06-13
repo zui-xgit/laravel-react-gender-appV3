@@ -77,7 +77,7 @@ const AdminNavItems: NavItem[] = [
         ],
     },
     {
-        title: 'Report',
+        title: 'Data Report',
         href: admin.report(),
         icon: TrendingUp,
     },
