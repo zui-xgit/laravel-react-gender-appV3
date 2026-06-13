@@ -8,12 +8,15 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Spatie\Activitylog\Models\Activity;
+use Spatie\LaravelPdf\Facades\Pdf;
+
 
 class AdminController extends Controller
 {
@@ -671,5 +674,47 @@ class AdminController extends Controller
     }
 
 
-    
+    public function report(Request $request) 
+    {
+
+
+      $from_date = $request->input('from_date');
+      $to_date = $request->input('to_date'); 
+      $summary = null;
+
+      if($from_date && $to_date){
+          
+        $start = Carbon::parse($from_date)->startOfDay();
+        $end = Carbon::parse($to_date)->endOfDay();
+
+        $summary = [
+            'total'      => CaseDetail::whereBetween('created_at', [$start, $end])->count(),
+            'pending'    => CaseDetail::whereBetween('created_at', [$start, $end])->where('status', 'pending')->count(),
+            'in_progress' => CaseDetail::whereBetween('created_at', [$start, $end])->where('status', 'in_progress')->count(),
+            'completed'  => CaseDetail::whereBetween('created_at', [$start, $end])->where('status', 'completed')->count(),
+        ];
+      }
+
+       return Inertia::render('dashboard/admin/data-report', [
+          'summary' => $summary, 
+          'from_date' => $from_date, 
+          'to_date' => $to_date 
+       ]); 
+    }
+
+    public function dataReport(Request $request)
+    {  
+
+        $from_date = $request->query('from_date');
+        $to_date = $request->query('to_date');
+
+
+        if($from_date && $to_date){
+           
+        }
+        
+            return Pdf::view('pdfs.test')
+                        ->name('test2')
+                        ->download();   
+    }
 }

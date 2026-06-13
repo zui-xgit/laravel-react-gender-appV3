@@ -2,7 +2,6 @@ import { Breadcrumbs } from '@/components/breadcrumbs';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
 import { ChangeTheme } from './change-theme';
-import QuickExitButton from './quick-exit-button';
 
 export function AppSidebarHeader({
     breadcrumbs = [],
@@ -18,7 +17,6 @@ export function AppSidebarHeader({
                 </div>
                 <div className="flex items-center justify-between gap-3">
                     <ChangeTheme />
-                    <QuickExitButton />
                 </div>
             </div>
         </header>

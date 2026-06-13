@@ -1,22 +1,16 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
-    Activity,
-    BookOpen,
     CheckCircle2,
-    FilePlus2,
-    FolderGit2,
     History,
     Inbox,
     LayoutDashboard,
     LayoutGrid,
     RefreshCw,
-    Settings2,
     TrendingUp,
     User2,
     UserCheck,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
-// import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import {
@@ -35,8 +29,6 @@ import {
     adminOverview,
     adminPending,
     auditLogs,
-    reporterReport,
-    reporterTrack,
 } from '@/routes';
 import type { NavItem } from '@/types';
 import { UsePageProps } from '@/types/types';
@@ -101,19 +93,6 @@ const OfficerNavItems: NavItem[] = [
     },
 ];
 
-// const footerNavItems: NavItem[] = [
-//     {
-//         title: 'Repository',
-//         href: 'https://github.com/laravel/react-starter-kit',
-//         icon: FolderGit2,
-//     },
-//     {
-//         title: 'Documentation',
-//         href: 'https://laravel.com/docs/starter-kits#react',
-//         icon: BookOpen,
-//     },
-// ];
-
 export function AppSidebar() {
     const { auth } = usePage<UsePageProps>().props;
 
@@ -138,9 +117,7 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
-                {/* <NavFooter items={footerNavItems} className="mt-auto" /> */}
-
-                {auth.user && <NavUser />}
+                <NavUser />
             </SidebarFooter>
         </Sidebar>
     );
