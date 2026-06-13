@@ -46,21 +46,6 @@ import RefreshButton from '@/components/refresh-button';
 import BackButton from '@/components/back-button';
 import { PaginatedData } from '@/types/types';
 
-// interface PaginationLinks {
-//     url: string | null;
-//     label: string;
-//     active: boolean;
-// }
-
-// interface PaginatedData<T> {
-//     data: T[];
-//     links: PaginationLinks[];
-//     current_page: number;
-//     from: number;
-//     to: number;
-//     total: number;
-// }
-
 interface CompletedProps {
     cases: PaginatedData<CompletedCase>;
     stats: {
@@ -141,7 +126,7 @@ export default function Completed({ cases, stats, filters }: CompletedProps) {
                     <div className="flex items-center gap-2">
                         <Button variant="outline" size="sm">
                             <Download className="mr-2 h-4 w-4" />
-                            Export Archive
+                            Export List
                         </Button>
                     </div>
                 </div>

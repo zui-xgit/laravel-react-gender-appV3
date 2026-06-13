@@ -352,7 +352,13 @@ export default function Pending({
                                                 disabled={!link.url}
                                                 onClick={() =>
                                                     link.url &&
-                                                    router.get(link.url)
+                                                    router.get(
+                                                        link.url,
+                                                        {},
+                                                        {
+                                                            preserveScroll: true,
+                                                        },
+                                                    )
                                                 }
                                             >
                                                 {link.label.includes('Previous')

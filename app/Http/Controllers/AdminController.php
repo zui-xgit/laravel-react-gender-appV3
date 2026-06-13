@@ -15,8 +15,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Spatie\Activitylog\Models\Activity;
-use Spatie\LaravelPdf\Facades\Pdf;
 
+use Spatie\LaravelPdf\Facades\Pdf;
+use function Spatie\LaravelPdf\Support\pdf;
+use Spatie\LaravelPdf\Enums\Format;
 
 class AdminController extends Controller
 {
@@ -279,7 +281,7 @@ class AdminController extends Controller
             'case_tracking_id' => $case->case_tracking_id, 
             'is_anonymous' => (bool)$case->is_anonymous, 
             'status' => $case->status,
-            'case_reported_at' => $case->created_at->toIso8601String(),
+            'created_at' => $case->created_at->toIso8601String(),
 
 
             'case_assignment' => $case->caseAssignment ? [
@@ -680,41 +682,171 @@ class AdminController extends Controller
 
       $from_date = $request->input('from_date');
       $to_date = $request->input('to_date'); 
+      $scope = $request->input('scope'); 
+      $selected_personnel_uuid = $request->input('selected_personnel_uuid');
       $summary = null;
 
       if($from_date && $to_date){
-          
-        $start = Carbon::parse($from_date)->startOfDay();
-        $end = Carbon::parse($to_date)->endOfDay();
 
-        $summary = [
-            'total'      => CaseDetail::whereBetween('created_at', [$start, $end])->count(),
-            'pending'    => CaseDetail::whereBetween('created_at', [$start, $end])->where('status', 'pending')->count(),
-            'in_progress' => CaseDetail::whereBetween('created_at', [$start, $end])->where('status', 'in_progress')->count(),
-            'completed'  => CaseDetail::whereBetween('created_at', [$start, $end])->where('status', 'completed')->count(),
-        ];
+            $start = Carbon::parse($from_date)->startOfDay();
+            $end = Carbon::parse($to_date)->endOfDay();
+
+        if($scope === 'general'){
+
+             
+    
+            $summary = [
+                'total'      => CaseDetail::whereBetween('created_at', [$start, $end])->count(),
+                'pending'    => CaseDetail::whereBetween('created_at', [$start, $end])->where('status', 'pending')->count(),
+                'in_progress' => CaseDetail::whereBetween('created_at', [$start, $end])->where('status', 'in_progress')->count(),
+                'completed'  => CaseDetail::whereBetween('created_at', [$start, $end])->where('status', 'completed')->count(),
+            ];
+        }else if($scope === 'personnel' && $selected_personnel_uuid){
+
+            $user_id = User::where('uuid', $selected_personnel_uuid)->value('id'); 
+
+            $query = CaseDetail::whereBetween('created_at', [$start, $end])
+                ->whereHas('caseAssignment', function ($q) use ($user_id) {
+                    $q->where('assigned_to', $user_id);
+            });
+
+            $summary = [
+                'total'       => (clone $query)->count(),
+                'pending'     => (clone $query)->where('status', 'pending')->count(),
+                'in_progress' => (clone $query)->where('status', 'in_progress')->count(),
+                'completed'   => (clone $query)->where('status', 'completed')->count(),
+            ];
+
+        }
+          
       }
+
+        $users = User::select('uuid', 'first_name', 'last_name', 'role')
+            ->get()
+            ->map(fn($user) => [
+                'uuid'      => $user->uuid,
+                'full_name' => "{$user->first_name} {$user->last_name}",
+                'role'      => $user->role
+        ]);
 
        return Inertia::render('dashboard/admin/data-report', [
           'summary' => $summary, 
           'from_date' => $from_date, 
-          'to_date' => $to_date 
+          'to_date' => $to_date,
+          'scope' => $scope, 
+          'selected_personnel_uuid' => $selected_personnel_uuid, 
+          'users' => $users
        ]); 
     }
 
     public function dataReport(Request $request)
-    {  
+    {
+       // 1. CRITICAL FOR DOMPDF: Dompdf is a memory hog for long loops. Lift limits high!
+    ini_set('max_execution_time', 300); // Allow up to 5 minutes
+    ini_set('memory_limit', '1G');      // Dompdf needs significant RAM for 1,000 records
 
         $from_date = $request->query('from_date');
         $to_date = $request->query('to_date');
-
-
-        if($from_date && $to_date){
-           
-        }
+        $action = $request->query('action');
+        $scope = $request->query('scope'); 
+        $selected_personnel_uuid = $request->query('selected_personnel_uuid');
         
-            return Pdf::view('pdfs.test')
-                        ->name('test2')
-                        ->download();   
-    }
+        
+        $filename = "GVR-Report-{$from_date}-to-{$to_date}.pdf"; 
+
+        if (!$from_date || !$to_date) {
+            return back()->withErrors(['error' => 'Date range is required for report generation.']);
+        }
+
+        $start = Carbon::parse($from_date)->startOfDay();
+        $end = Carbon::parse($to_date)->endOfDay(); 
+
+
+        $cases = []; 
+        $stats = []; 
+        if($scope === 'general'){
+
+            // Fetch cases within range with relevant relationships
+            $cases = CaseDetail::with(['incidentDetail', 'caseAssignment.assignedTo'])
+                ->whereBetween('created_at', [$start, $end])
+                ->latest()
+                ->get();
+
+            $stats = [
+                'total' => $cases->count(),
+                'pending' => $cases->where('status', 'pending')->count(),
+                'in_progress' => $cases->where('status', 'in_progress')->count(),
+                'completed' => $cases->where('status', 'completed')->count(),
+                'anonymous' => $cases->where('is_anonymous', true)->count(),
+            ];
+
+        }else if($scope === 'personnel' && $selected_personnel_uuid){
+            $user_id = User::where('uuid', $selected_personnel_uuid)->value('id'); 
+
+            $cases = CaseDetail::whereBetween('created_at', [$start, $end])
+                ->whereHas('caseAssignment', function ($q) use ($user_id) {
+                    $q->where('assigned_to', $user_id);
+            })
+            ->latest()
+            ->get();
+
+             $stats = [
+                'total' => $cases->count(),
+                'pending' => $cases->where('status', 'pending')->count(),
+                'in_progress' => $cases->where('status', 'in_progress')->count(),
+                'completed' => $cases->where('status', 'completed')->count(),
+                'anonymous' => $cases->where('is_anonymous', true)->count(),
+            ];
+        }
+       
+
+
+        $pdf = Pdf::view('pdfs.test', [
+            'cases' => $cases,
+            'stats' => $stats,
+            'fromDate' => $from_date,
+            'toDate' => $to_date,
+            'generatedAt' => now()->format('F j, Y, g:i a'),
+            'adminName' => Auth::user()->first_name . ' ' . Auth::user()->last_name,
+        ])->format(Format::A4); 
+
+
+
+        activity('report-downloaded')
+         ->causedBy(Auth::user())
+         ->withProperties([
+             'ip' => $request->ip(), 
+             'userAgent' => $request->userAgent(), 
+             'total_cases' => $stats['total']   
+         ])
+         ->log("Downloaded pdf report [ :properties.total_cases case(s) ]"); 
+
+        if($action === 'inline'){
+            return $pdf->inline($filename);
+        }
+
+        if($action === 'download'){
+            return $pdf->name($filename)->download();
+        }
+
+
+        return abort(400, 'Invalid or missing action parameter.'); 
+
+
+        // return pdf()
+        //     ->view('pdfs.test', [
+        //         'cases' => $cases,
+        //         'stats' => $stats,
+        //         'fromDate' => $from_date,
+        //         'toDate' => $to_date,
+        //         'generatedAt' => now()->format('F j, Y, g:i a'),
+        //         'adminName' => Auth::user()->first_name . ' ' . Auth::user()->last_name,
+        //     ])
+        //     ->name("GVR-Report-{$from_date}-to-{$to_date}.pdf")
+        //     ->format(Format::A4)
+        //     ->download();     
+
+
+    }   
+
 }

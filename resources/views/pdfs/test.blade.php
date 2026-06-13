@@ -2,28 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hello World PDF</title>
+    <title>GVR Platform - Official Data Report</title>
     <style>
-        /* Essential CSS 2.1 overrides for Dompdf compatibility */
+        /* Dompdf Compatibility: Stick to CSS 2.1 and Table-based layouts */
         @page {
-            margin: 80px 50px;
+            margin: 40px 40px 60px 40px;
         }
         
         body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            color: #1e293b;
-            line-height: 1.6;
-            font-size: 14px;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #334155;
+            line-height: 1.5;
+            font-size: 12px;
             margin: 0;
             padding: 0;
-            background-color: #ffffff;
         }
 
-        /* Top header layout using standard tables instead of flexbox */
         .header {
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 12px;
-            margin-bottom: 30px;
+            border-bottom: 2px solid #4f46e5;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         .header-table {
@@ -31,53 +29,134 @@
             border-collapse: collapse;
         }
 
-        .header-left {
-            font-size: 11px;
+        .header-logo {
+            font-size: 20px;
             font-weight: bold;
+            color: #4f46e5;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #4f46e5;
         }
 
-        .header-right {
-            font-size: 11px;
-            color: #94a3b8;
+        .header-info {
             text-align: right;
+            font-size: 10px;
+            color: #64748b;
         }
 
-        /* Body Area */
-        .content-body {
-            padding: 20px 0;
+        .report-title {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        .main-heading {
-            font-size: 26px;
-            font-weight: bold;
+        .report-title h1 {
+            margin: 0;
+            font-size: 24px;
             color: #0f172a;
+            text-transform: uppercase;
+        }
+
+        .report-title p {
+            margin: 5px 0 0 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #1e293b;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 5px;
             margin-bottom: 15px;
+            text-transform: uppercase;
         }
 
-        .description-text {
+        /* Summary Grid */
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            text-align: center;
+            width: 20%;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4f46e5;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 9px;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .data-table th {
+            background-color: #f1f5f9;
             color: #475569;
-            font-size: 16px;
+            text-align: left;
+            padding: 10px;
+            font-size: 10px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #e2e8f0;
         }
 
-        /* Footer pinned to the absolute page bottom bounds */
+        .data-table td {
+            padding: 10px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 11px;
+            vertical-align: top;
+        }
+
+        .badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .badge-pending { background-color: #fef3c7; color: #92400e; }
+        .badge-in_progress { background-color: #dbeafe; color: #1e40af; }
+        .badge-completed { background-color: #dcfce7; color: #166534; }
+
         .footer {
             position: fixed;
-            bottom: -50px;
+            bottom: -40px;
             left: 0;
             right: 0;
             height: 30px;
             border-top: 1px solid #f1f5f9;
-            text-align: center;
             padding-top: 10px;
         }
 
+        .footer-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
         .footer-text {
-            font-size: 10px;
+            font-size: 9px;
             color: #94a3b8;
         }
+
+        .page-number:after { content: counter(page); }
     </style>
 </head>
 <body>
@@ -85,23 +164,100 @@
     <div class="header">
         <table class="header-table">
             <tr>
-                <td class="header-left">System Output Log</td>
-                <td class="header-right">Status: Ready</td>
+                <td class="header-logo">GVR Platform</td>
+                <td class="header-info">
+                    Generated By: {{ $adminName }}<br>
+                    Date: {{ $generatedAt }}
+                </td>
             </tr>
         </table>
     </div>
 
-    <div class="content-body">
-        <h1 class="main-heading">Hello World</h1>
-        <p class="description-text">
-            This document is compiled using the Spatie Laravel-PDF layout engine powered by a pure PHP Dompdf configuration driver. No variables, no database overhead—just clean execution.
-        </p>
+    <div class="report-title">
+        <h1>Official Case Data Report</h1>
+        <p>Reporting Period: {{ $fromDate }} to {{ $toDate }}</p>
     </div>
 
+    <div class="section-title">Statistical Summary</div>
+    <table class="stats-table">
+        <tr>
+            <td class="stat-card" style="border-left: 4px solid #4f46e5;">
+                <span class="stat-value">{{ $stats['total'] }}</span>
+                <span class="stat-label">Total Cases</span>
+            </td>
+            <td class="stat-card" style="border-left: 4px solid #f59e0b;">
+                <span class="stat-value">{{ $stats['pending'] }}</span>
+                <span class="stat-label">Pending</span>
+            </td>
+            <td class="stat-card" style="border-left: 4px solid #3b82f6;">
+                <span class="stat-value">{{ $stats['in_progress'] }}</span>
+                <span class="stat-label">In Progress</span>
+            </td>
+            <td class="stat-card" style="border-left: 4px solid #10b981;">
+                <span class="stat-value">{{ $stats['completed'] }}</span>
+                <span class="stat-label">Completed</span>
+            </td>
+            <td class="stat-card" style="border-left: 4px solid #64748b;">
+                <span class="stat-value">{{ $stats['anonymous'] }}</span>
+                <span class="stat-label">Anonymous</span>
+            </td>
+        </tr>
+    </table>
+
+    <div class="section-title">Detailed Case Records</div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th width="15%">Tracking ID</th>
+                <th width="15%">Date Reported</th>
+                <th width="25%">Incident Type</th>
+                <th width="10%">Anon.</th>
+                <th width="20%">Assigned To</th>
+                <th width="15%">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($cases as $case)
+                <tr>
+                    <td style="font-weight: bold;">{{ $case->case_tracking_id }}</td>
+                    <td>{{ $case->created_at->format('M d, Y') }}</td>
+                    <td>{{ $case->incidentDetail->incident_type ?? 'N/A' }}</td>
+                    <td>{{ $case->is_anonymous ? 'Yes' : 'No' }}</td>
+                    <td>
+                        @if($case->caseAssignment && $case->caseAssignment->assignedTo)
+                            {{ $case->caseAssignment->assignedTo->first_name }} {{ $case->caseAssignment->assignedTo->last_name }}
+                        @else
+                            <span style="color: #94a3b8;">Unassigned</span>
+                        @endif
+                    </td>
+                    <td>
+                        <span class="badge badge-{{ $case->status }}">
+                            {{ str_replace('_', ' ', $case->status) }}
+                        </span>
+                    </td>
+                </tr>
+            @endforeach
+            @if($cases->isEmpty())
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 40px; color: #94a3b8;">
+                        No cases recorded during this period.
+                    </td>
+                </tr>
+            @endif
+        </tbody>
+    </table>
+
     <div class="footer">
-        <span class="footer-text">
-            Automated PDF Preview. Securely processed by the platform printing pipeline.
-        </span>
+        <table class="footer-table">
+            <tr>
+                <td class="footer-text">
+                    GVR Platform | Confidential Official Document | Tracking ID: {{ uniqid('RPT-') }}
+                </td>
+                <td class="footer-text" style="text-align: right;">
+                    Page <span class="page-number"></span>
+                </td>
+            </tr>
+        </table>
     </div>
 
 </body>

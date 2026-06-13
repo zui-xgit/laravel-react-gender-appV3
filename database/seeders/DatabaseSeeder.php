@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
             'last_name'=> 'Juma'
         ]);
 
-        $cases = CaseDetail::factory(5)->create(); 
+        $cases = CaseDetail::factory(1000)->create(); 
 
         $cases->each(function ($case) {
             if($case->is_anonymous){

@@ -171,12 +171,14 @@ const LogProperties = ({ log, causer }: { log: Log; causer: string }) => {
                 <>Logout by: {causer}</>
             )}
             {log.event === 'workflow' && <> By: {causer}</>}
+
             {log.log_name === 'users-table' && log.event === 'updated' && (
                 <>updated user: {subjectName} </>
             )}
             {log.log_name === 'users-table' && log.event === 'created' && (
                 <>created user: {subjectName} </>
             )}
+            {log.log_name === 'report-downloaded' && <>By: {causer}</>}
         </span>
     );
 };
