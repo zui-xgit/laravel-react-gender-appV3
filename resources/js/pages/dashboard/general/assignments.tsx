@@ -24,7 +24,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { adminAssignments, adminCaseWorkflow, adminViewCase } from '@/routes';
+import { adminCaseWorkflow, adminViewCase } from '@/routes';
 import { Head, router } from '@inertiajs/react';
 import {
     Download,
@@ -48,23 +48,8 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import BackButton from '@/components/back-button';
 import { PaginatedData } from '@/types/types';
-
-// interface PaginationLinks {
-//     url: string | null;
-//     label: string;
-//     active: boolean;
-// }
-
-// interface PaginatedData<T> {
-//     data: T[];
-//     links: PaginationLinks[];
-//     current_page: number;
-//     from: number;
-//     to: number;
-//     total: number;
-// }
+import general from '@/routes/general';
 
 interface AssignmentsProps {
     assignments: PaginatedData<PersonalAssignment>;
@@ -74,13 +59,10 @@ interface AssignmentsProps {
     };
 }
 
-export default function PersonalAssignments({
-    assignments,
-    filters = {},
-}: AssignmentsProps) {
+const Assignments = ({ assignments, filters = {} }: AssignmentsProps) => {
     const handleFilterChange = (value: string) => {
         router.get(
-            adminAssignments(),
+            general.assignments(),
             { ...filters, filter: value === 'all' ? '' : value },
             { preserveState: true, preserveScroll: true, replace: true },
         );
@@ -119,7 +101,6 @@ export default function PersonalAssignments({
             <div className="flex flex-col gap-8 px-4 py-6 md:px-8">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div className="flex flex-row items-center gap-3">
-                        <BackButton />
                         <Heading
                             title="My Assignments"
                             description="View and manage cases assigned to you."
@@ -145,7 +126,7 @@ export default function PersonalAssignments({
                             </div>
                             <div className="flex items-center gap-2">
                                 <SearchInput
-                                    href={adminAssignments()}
+                                    href={general.assignments()}
                                     filters={filters}
                                 />
                                 <Select
@@ -168,7 +149,7 @@ export default function PersonalAssignments({
                                         <SelectItem value="low">Low</SelectItem>
                                     </SelectContent>
                                 </Select>
-                                <RefreshButton href={adminAssignments()} />
+                                <RefreshButton href={general.assignments()} />
                             </div>
                         </div>
                     </CardHeader>
@@ -390,4 +371,15 @@ export default function PersonalAssignments({
             </div>
         </>
     );
-}
+};
+
+export default Assignments;
+
+Assignments.layout = {
+    breadcrumbs: [
+        {
+            title: 'Assignments',
+            href: general.assignments(),
+        },
+    ],
+};

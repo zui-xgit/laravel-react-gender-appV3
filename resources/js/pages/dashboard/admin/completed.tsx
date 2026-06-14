@@ -26,7 +26,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { adminCompleted, adminViewCase } from '@/routes';
+import { adminViewCase } from '@/routes';
 import { Head, router } from '@inertiajs/react';
 import {
     AlertCircle,
@@ -45,6 +45,7 @@ import SearchInput from '@/components/search-input';
 import RefreshButton from '@/components/refresh-button';
 import BackButton from '@/components/back-button';
 import { PaginatedData } from '@/types/types';
+import admin from '@/routes/admin';
 
 interface CompletedProps {
     cases: PaginatedData<CompletedCase>;
@@ -70,7 +71,7 @@ type Stats = {
 export default function Completed({ cases, stats, filters }: CompletedProps) {
     const handleFilterChange = (value: string) => {
         router.get(
-            adminCompleted(),
+            admin.completed(),
             { ...filters, filter: value === 'all' ? '' : value },
             { preserveState: true, preserveScroll: true, replace: true },
         );
@@ -154,7 +155,7 @@ export default function Completed({ cases, stats, filters }: CompletedProps) {
                             </div>
                             <div className="flex items-center gap-2">
                                 <SearchInput
-                                    href={adminCompleted()}
+                                    href={admin.completed()}
                                     filters={filters}
                                 />
                                 <Select
@@ -174,7 +175,7 @@ export default function Completed({ cases, stats, filters }: CompletedProps) {
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
-                                <RefreshButton href={adminCompleted()} />
+                                <RefreshButton href={admin.completed()} />
                             </div>
                         </div>
                     </CardHeader>
@@ -359,7 +360,7 @@ Completed.layout = {
     breadcrumbs: [
         {
             title: 'Completed Cases',
-            href: adminCompleted(),
+            href: admin.completed(),
         },
     ],
 };

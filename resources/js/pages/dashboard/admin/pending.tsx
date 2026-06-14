@@ -26,7 +26,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { adminPending, adminViewCase } from '@/routes';
+import { adminViewCase } from '@/routes';
 import { Head, router } from '@inertiajs/react';
 import {
     AlertCircle,
@@ -50,6 +50,7 @@ import SearchInput from '@/components/search-input';
 import RefreshButton from '@/components/refresh-button';
 import BackButton from '@/components/back-button';
 import { PaginatedData } from '@/types/types';
+import admin from '@/routes/admin';
 
 // interface PaginationLinks {
 //     url: string | null;
@@ -104,7 +105,7 @@ export default function Pending({
 
     const handleFilterChange = (value: string) => {
         router.get(
-            adminPending(),
+            admin.pending(),
             { ...filters, filter: value === 'all' ? '' : value },
             { preserveState: true, preserveScroll: true, replace: true },
         );
@@ -193,7 +194,7 @@ export default function Pending({
                             </div>
                             <div className="flex items-center gap-2">
                                 <SearchInput
-                                    href={adminPending()}
+                                    href={admin.pending()}
                                     filters={filters}
                                 />
                                 <Select
@@ -213,7 +214,7 @@ export default function Pending({
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
-                                <RefreshButton href={adminPending()} />
+                                <RefreshButton href={admin.pending()} />
                             </div>
                         </div>
                     </CardHeader>
@@ -389,7 +390,7 @@ Pending.layout = {
     breadcrumbs: [
         {
             title: 'Pending Cases',
-            href: adminPending(),
+            href: admin.pending(),
         },
     ],
 };

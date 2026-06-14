@@ -22,27 +22,22 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import {
-    adminAssignments,
-    adminCompleted,
-    adminInProgress,
-    adminOverview,
-    adminPending,
-    auditLogs,
-} from '@/routes';
+
 import type { NavItem } from '@/types';
 import { UsePageProps } from '@/types/types';
 import admin from '@/routes/admin';
+import officer from '@/routes/officer';
+import general from '@/routes/general';
 
 const AdminNavItems: NavItem[] = [
     {
         title: 'Overview',
-        href: adminOverview(),
+        href: admin.overview(),
         icon: LayoutDashboard,
     },
     {
         title: 'Personal Assignment',
-        href: adminAssignments(),
+        href: general.assignments(),
         icon: UserCheck,
     },
     {
@@ -53,17 +48,17 @@ const AdminNavItems: NavItem[] = [
         items: [
             {
                 title: 'Pending',
-                href: adminPending(),
+                href: admin.pending(),
                 icon: Inbox,
             },
             {
                 title: 'In progress',
-                href: adminInProgress(),
+                href: admin.inProgress(),
                 icon: RefreshCw,
             },
             {
                 title: 'Completed',
-                href: adminCompleted(),
+                href: admin.completed(),
                 icon: CheckCircle2,
             },
         ],
@@ -80,16 +75,31 @@ const AdminNavItems: NavItem[] = [
     },
     {
         title: 'Audit Logs',
-        href: auditLogs(),
+        href: admin.auditLogs(),
         icon: History,
     },
 ];
 
 const OfficerNavItems: NavItem[] = [
     {
-        title: 'Officer Dashboard',
-        href: adminOverview(),
+        title: 'Overview',
+        href: officer.overview(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Assignments',
+        href: general.assignments(),
+        icon: UserCheck,
+    },
+    {
+        title: 'Report',
+        href: officer.report(),
+        icon: TrendingUp,
+    },
+    {
+        title: 'Logs',
+        href: officer.logs(),
+        icon: History,
     },
 ];
 
@@ -102,7 +112,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={adminOverview()} prefetch>
+                            <Link href={admin.overview()} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
@@ -113,6 +123,9 @@ export function AppSidebar() {
             <SidebarContent>
                 {auth.user.role === 'admin' && (
                     <NavMain items={AdminNavItems} />
+                )}
+                {auth.user.role === 'officer' && (
+                    <NavMain items={OfficerNavItems} />
                 )}
             </SidebarContent>
 

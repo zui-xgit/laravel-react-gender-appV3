@@ -10,7 +10,6 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { adminOverview, auditLogs } from '@/routes';
 import { Log } from '@/types/types';
 import { Head, router } from '@inertiajs/react';
 import {
@@ -27,6 +26,7 @@ import {
     Users,
 } from 'lucide-react';
 import { formatRelativeTime, getInitials } from '@/lib/helpers';
+
 import admin from '@/routes/admin';
 
 interface OverviewProps {
@@ -134,7 +134,7 @@ export default function Overview({ stats, logs }: OverviewProps) {
                             </div>
                             <Button
                                 onClick={() => {
-                                    router.get(auditLogs().url);
+                                    router.get(admin.auditLogs().url);
                                 }}
                                 variant="ghost"
                                 size="sm"
@@ -217,7 +217,7 @@ Overview.layout = {
     breadcrumbs: [
         {
             title: 'Overview',
-            href: adminOverview(),
+            href: admin.overview(),
         },
     ],
 };

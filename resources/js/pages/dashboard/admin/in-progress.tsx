@@ -26,7 +26,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { adminInProgress, adminViewCase } from '@/routes';
+import { adminViewCase } from '@/routes';
 import { Head, router } from '@inertiajs/react';
 import {
     AlertCircle,
@@ -46,6 +46,7 @@ import RefreshButton from '@/components/refresh-button';
 import BackButton from '@/components/back-button';
 import CaseProgressBar from '@/components/case-progress-bar';
 import { PaginatedData } from '@/types/types';
+import admin from '@/routes/admin';
 
 // interface PaginationLinks {
 //     url: string | null;
@@ -85,7 +86,7 @@ type Stats = {
 export default function InProgress({ cases, stats, filters }: InProgressProps) {
     const handleFilterChange = (value: string) => {
         router.get(
-            adminInProgress(),
+            admin.inProgress(),
             { ...filters, filter: value === 'all' ? '' : value },
             { preserveState: true, preserveScroll: true, replace: true },
         );
@@ -177,7 +178,7 @@ export default function InProgress({ cases, stats, filters }: InProgressProps) {
                             </div>
                             <div className="flex items-center gap-2">
                                 <SearchInput
-                                    href={adminInProgress()}
+                                    href={admin.inProgress()}
                                     filters={filters}
                                 />
                                 <Select
@@ -197,7 +198,7 @@ export default function InProgress({ cases, stats, filters }: InProgressProps) {
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
-                                <RefreshButton href={adminInProgress()} />
+                                <RefreshButton href={admin.inProgress()} />
                             </div>
                         </div>
                     </CardHeader>
@@ -393,7 +394,7 @@ InProgress.layout = {
     breadcrumbs: [
         {
             title: 'In Progress Cases',
-            href: adminInProgress(),
+            href: admin.inProgress(),
         },
     ],
 };

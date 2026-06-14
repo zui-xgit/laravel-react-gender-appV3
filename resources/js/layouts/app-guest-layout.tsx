@@ -17,13 +17,10 @@ import {
     SheetTitle,
 } from '@/components/ui/sheet';
 import QuickExitButton from '@/components/quick-exit-button';
-import {
-    reporterReport,
-    reporterSuccess,
-    adminOverview,
-    officerOverview,
-} from '@/routes';
+import { reporterReport, reporterSuccess } from '@/routes';
 import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
+import officer from '@/routes/officer';
+import admin from '@/routes/admin';
 
 interface AppLayoutProps {
     children: React.ReactNode;
@@ -37,8 +34,8 @@ export default function AppGuestLayout({ children }: AppLayoutProps) {
     if (props.auth.user) {
         dashboardHref =
             props.auth.user.role === 'admin'
-                ? adminOverview.url()
-                : officerOverview.url();
+                ? admin.overview().url
+                : officer.overview().url;
     }
 
     const navLinks = [

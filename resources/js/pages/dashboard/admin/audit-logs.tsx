@@ -42,9 +42,8 @@ import {
 import { Log } from '@/types/types';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import admin from '@/routes/admin';
-import { auditLogs } from '@/routes';
 import { Spinner } from '@/components/ui/spinner';
+import admin from '@/routes/admin';
 
 interface AuditLogsProps {
     logs: PaginatedData<Log>;
@@ -229,7 +228,7 @@ export default function AuditLogs({ logs, filters }: AuditLogsProps) {
 
     const handleFilterChange = (value: string) => {
         router.get(
-            auditLogs(),
+            admin.auditLogs(),
             { ...filters, filter: value === 'all' ? '' : value },
             {
                 preserveState: true,
@@ -306,7 +305,7 @@ export default function AuditLogs({ logs, filters }: AuditLogsProps) {
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
-                                <RefreshButton href={auditLogs()} />
+                                <RefreshButton href={admin.auditLogs()} />
                             </div>
                         </div>
                     </CardHeader>

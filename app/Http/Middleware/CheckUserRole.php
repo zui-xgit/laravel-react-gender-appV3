@@ -13,13 +13,19 @@ class CheckUserRole
      *
      * @param  Closure(Request): (Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
 
-            if(!$request->user() || $request->user()->role !== $role ){
-              return abort(403, 'Unauthorized access (TEST)');
-            }
+                  
+          if (!$request->user()) {
+              abort(403, 'Unauthorized access');
+          }
 
-            return $next($request);
+          // Check if the user's role is in the list of permitted roles
+          if (!in_array($request->user()->role, $roles)) {
+              abort(403, 'Unauthorized access');
+          }
+
+          return $next($request);
     }
 }

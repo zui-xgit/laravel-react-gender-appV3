@@ -26,7 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'check.role' => CheckUserRole::class, 
+            'check.roles' => CheckUserRole::class, 
             'check.status' => CheckUserStatus::class,
             'has.tracking' => EnsureReporterHasTrackingId::class
         ]); 
