@@ -125,7 +125,7 @@ const DatePickerField = ({
     );
 };
 
-const DataReport = ({
+const Report = ({
     summary,
     from_date,
     to_date,
@@ -357,7 +357,7 @@ const DataReport = ({
                                                             'animate-spin',
                                                     )}
                                                 />
-                                                <span>Reset All</span>
+                                                <span>Reset selection</span>
                                             </Button>
                                         )}
                                         <DatePickerField
@@ -520,7 +520,7 @@ const DataReport = ({
                                 </Card>
                             </div>
                         ) : (
-                            <div className="tborder animate-pulse rounded-2xl border border-dashed border-foreground/60 bg-muted/5 py-20 text-center">
+                            <div className="animate-pulse rounded-2xl border border-dashed border-foreground/60 bg-muted/5 py-5 text-center">
                                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground/50 shadow-inner">
                                     <FileText className="h-6 w-6" />
                                 </div>
@@ -541,7 +541,7 @@ const DataReport = ({
     );
 };
 
-DataReport.layout = {
+Report.layout = {
     breadcrumbs: [
         {
             title: 'Report',
@@ -550,4 +550,4 @@ DataReport.layout = {
     ],
 };
 
-export default DataReport;
+export default Report;

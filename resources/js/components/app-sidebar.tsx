@@ -38,6 +38,7 @@ const AdminNavItems: NavItem[] = [
     {
         title: 'Personal Assignment',
         href: general.assignments(),
+
         icon: UserCheck,
     },
     {
@@ -105,6 +106,10 @@ const OfficerNavItems: NavItem[] = [
 
 export function AppSidebar() {
     const { auth } = usePage<UsePageProps>().props;
+    const route =
+        auth.user.role === 'admin' ? admin.overview() : officer.overview();
+    const navItems =
+        auth.user.role === 'admin' ? AdminNavItems : OfficerNavItems;
 
     return (
         <Sidebar collapsible="icon" variant="inset">
@@ -112,7 +117,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={admin.overview()} prefetch>
+                            <Link href={route} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
@@ -121,12 +126,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                {auth.user.role === 'admin' && (
-                    <NavMain items={AdminNavItems} />
-                )}
-                {auth.user.role === 'officer' && (
-                    <NavMain items={OfficerNavItems} />
-                )}
+                <NavMain items={navItems} />
             </SidebarContent>
 
             <SidebarFooter>

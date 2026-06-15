@@ -39,6 +39,7 @@ export interface UsePageProps extends PageProps {
             username: string;
             first_name: string;
             last_name: string;
+            full_name: string;
             email: string;
             phone: string;
             gender: 'male' | 'female';

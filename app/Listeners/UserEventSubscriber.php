@@ -7,7 +7,7 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Carbon;
-
+use Inertia\Inertia;
 
 class UserEventSubscriber
 {
@@ -36,9 +36,12 @@ class UserEventSubscriber
             'userAgent' => request()->userAgent()
         ])
         ->log('User logged in');
+
+
     }
 
     public function handleUserLogout(Logout $event): void {
+
 
         /** @var User $user */
         $user = $event->user;   
@@ -50,15 +53,18 @@ class UserEventSubscriber
             ]);
         }
 
+
+        
         // activity log (log out) 
         activity('auth')
-         ->causedBy($user)
-         ->event('logout')
-         ->withProperties([
+        ->causedBy($user)
+        ->event('logout')
+        ->withProperties([
             'ip' => request()->ip(), 
             'userAgent' => request()->userAgent()
-         ])
-         ->log('User logged out');
+        ])
+        ->log('User logged out');
+            
     }
 
 
@@ -71,6 +77,7 @@ class UserEventSubscriber
     {
         return [
             Login::class => 'handleUserLogin',
+            Logout::class => 'handleUserLogout'
         ];
     }
 }

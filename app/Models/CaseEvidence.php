@@ -14,8 +14,8 @@ class CaseEvidence extends Model
         return $this->belongsTo(CaseDetail::class);
     }
 
-    public function uploadedBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'uploaded_by');
-    }
+    // public function uploadedBy(): BelongsTo
+    // {
+    //     return $this->belongsTo(User::class, 'uploaded_by');
+    // }
 }

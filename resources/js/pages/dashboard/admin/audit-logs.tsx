@@ -32,7 +32,6 @@ import {
 } from 'lucide-react';
 import { formatDate, formatTime } from '@/lib/helpers';
 import RefreshButton from '@/components/refresh-button';
-import BackButton from '@/components/back-button';
 import { PaginatedData } from '@/types/types';
 import {
     Collapsible,
@@ -248,7 +247,6 @@ export default function AuditLogs({ logs, filters }: AuditLogsProps) {
                 {/* Page Header - Perfectly matched with staff-management.tsx */}
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div className="flex flex-row items-center gap-3">
-                        <BackButton />
                         <Heading
                             title="System Audit Logs"
                             description="Monitor and track all administrative actions and system security events."

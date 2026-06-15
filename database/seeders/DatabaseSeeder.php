@@ -21,33 +21,33 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'role' => 'admin', 
-            'username' => 'admin.juma',
+            'username' => 'jacob.athuman',
 
-            'first_name'=> 'Admin', 
-            'last_name'=> 'Juma'
+            'first_name'=> 'Jacob', 
+            'last_name'=> 'Athuman'
         ]);
 
         
         User::factory()->create([
             'role' => 'officer', 
-            'username' => 'officer.juma',
+            'username' => 'elias.marc',
 
-            'first_name'=> 'Officer', 
-            'last_name'=> 'Juma'
+            'first_name'=> 'Elias', 
+            'last_name'=> 'Marc'
         ]);
 
-        $cases = CaseDetail::factory(1000)->create(); 
+        // $cases = CaseDetail::factory(1000)->create(); 
 
-        $cases->each(function ($case) {
-            if($case->is_anonymous){
-                InformantDetail::factory()->anonymous()->for($case)->create(); 
-            }else{
-                InformantDetail::factory()->for($case)->create(); 
-            }
-            VictimDetail::factory()->for($case)->create(); 
-            AccusedDetail::factory()->for($case)->create();
-            IncidentDetail::factory()->for($case)->create();
+        // $cases->each(function ($case) {
+        //     if($case->is_anonymous){
+        //         InformantDetail::factory()->anonymous()->for($case)->create(); 
+        //     }else{
+        //         InformantDetail::factory()->for($case)->create(); 
+        //     }
+        //     VictimDetail::factory()->for($case)->create(); 
+        //     AccusedDetail::factory()->for($case)->create();
+        //     IncidentDetail::factory()->for($case)->create();
 
-        }); 
+        // }); 
     }
 }

@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { LogOut, RefreshCcw, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -6,24 +6,42 @@ import {
     CardContent,
     CardDescription,
     CardHeader,
+    CardFooter,
     CardTitle,
 } from '@/components/ui/card';
-import AppLogo from '@/components/app-logo';
 import { logout } from '@/routes';
+import { UsePageProps } from '@/types/types';
+import admin from '@/routes/admin';
+import officer from '@/routes/officer';
+import { useState } from 'react';
+import { Spinner } from '@/components/ui/spinner';
+import { toast } from 'sonner';
+import { getInitials } from '@/lib/helpers';
 
 const Inactive = () => {
+    const { auth } = usePage<UsePageProps>().props;
+    const route =
+        auth.user.role === 'admin'
+            ? admin.overview().url
+            : officer.overview().url;
+
+    const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
     const handleRefresh = () => {
-        window.location.reload();
+        router.get(
+            route,
+            {},
+            {
+                onStart: () => setIsRefreshing(true),
+                onFinish: () => setIsRefreshing(false),
+            },
+        );
     };
 
     return (
         <>
             <Head title="Account Inactive" />
             <div className="flex min-h-screen flex-col items-center justify-center bg-muted/30 p-4">
-                <div className="mb-8">
-                    {/* <AppLogo className="h-10 w-auto" /> */}
-                </div>
-
                 <Card className="w-full max-w-md border-none shadow-lg ring-1 ring-border">
                     <CardHeader className="text-center">
                         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
@@ -32,13 +50,18 @@ const Inactive = () => {
                         <CardTitle className="text-2xl font-bold tracking-tight">
                             Account Inactive
                         </CardTitle>
+                        <CardTitle className="text-xl font-bold">
+                            {auth.user.full_name}
+                        </CardTitle>
+                        <CardDescription className="text-xs font-medium tracking-widest text-muted-foreground uppercase">
+                            Role: {auth.user.role}
+                        </CardDescription>
                         <CardDescription className="pt-2 text-balance text-muted-foreground">
-                            Access to the Gender Reporting System has been
-                            restricted for your account.
+                            Your account is inactive or deactivated.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6 pb-8">
-                        <div className="rounded-lg bg-muted/50 p-4 text-center">
+                        <div className="rounded-lg bg-muted/50 text-center">
                             <p className="text-sm leading-relaxed text-muted-foreground">
                                 Your account is currently marked as{' '}
                                 <span className="font-semibold text-foreground">
@@ -55,7 +78,15 @@ const Inactive = () => {
                                 variant="default"
                                 className="h-11 w-full"
                             >
-                                <RefreshCcw className="mr-2 h-4 w-4" />
+                                {isRefreshing ? (
+                                    <>
+                                        <Spinner />
+                                    </>
+                                ) : (
+                                    <>
+                                        <RefreshCcw className="mr-2 h-4 w-4" />
+                                    </>
+                                )}
                                 Refresh Status
                             </Button>
 

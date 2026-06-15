@@ -24,7 +24,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { adminCaseWorkflow, adminViewCase } from '@/routes';
+// import { adminCaseWorkflow, adminViewCase } from '@/routes';
 import { Head, router } from '@inertiajs/react';
 import {
     Download,
@@ -50,6 +50,7 @@ import {
 } from '@/components/ui/table';
 import { PaginatedData } from '@/types/types';
 import general from '@/routes/general';
+import admin from '@/routes/admin';
 
 interface AssignmentsProps {
     assignments: PaginatedData<PersonalAssignment>;
@@ -69,14 +70,14 @@ const Assignments = ({ assignments, filters = {} }: AssignmentsProps) => {
     };
 
     const viewCase = (uuid: string) => {
-        router.get(adminViewCase({ case: uuid }), {
+        router.get(general.viewCase({ case: uuid }), {
             from_page: 'My Assignments',
             from_url: window.location.pathname,
         });
     };
 
     const caseWorkFlow = (uuid: string) => {
-        router.get(adminCaseWorkflow({ case: uuid }), {
+        router.get(general.caseWorkflow({ case: uuid }), {
             from_page: 'My assignments',
             from_url: window.location.pathname,
         });

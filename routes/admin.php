@@ -16,10 +16,7 @@ Route::middleware(['auth', 'verified', 'check.roles:admin', 'check.status'])->gr
 
 
     Route::post("assign-case/{case:uuid}", [AdminController::class, 'assignCase'])->name('admin-assign-case');
-    Route::get('view-case/{case:uuid}', [AdminController::class, 'viewCase'])->name("admin-view-case"); 
-
-    Route::get('case-workflow/{case:uuid}', [CaseWorkflowController::class, "caseWorkflow"])->name('admin-case-workflow'); 
-
+    
 
     Route::post('add-staff', [AdminController::class, 'addStaff'])->name('admin.add-staff'); 
     Route::patch('update-staff/{user:uuid}', [AdminController::class, 'updateStaff'])->name('admin.update-staff');

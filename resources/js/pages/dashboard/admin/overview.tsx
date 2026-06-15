@@ -13,7 +13,6 @@ import {
 import { Log } from '@/types/types';
 import { Head, router } from '@inertiajs/react';
 import {
-    Activity,
     AlertCircle,
     CheckCircle2,
     Clock,
@@ -28,6 +27,7 @@ import {
 import { formatRelativeTime, getInitials } from '@/lib/helpers';
 
 import admin from '@/routes/admin';
+import { toast } from 'sonner';
 
 interface OverviewProps {
     stats: {
@@ -172,20 +172,7 @@ export default function Overview({ stats, logs }: OverviewProps) {
                                 <UserPlus className="mr-3 h-4 w-4" />
                                 Add Staff Member
                             </Button>
-                            {/* <Button
-                                variant="outline"
-                                className="w-full justify-start transition-colors hover:bg-primary/5 hover:text-primary"
-                            >
-                                <ShieldAlert className="mr-3 h-4 w-4" />
-                                Role Permissions
-                            </Button>
-                            <Button
-                                variant="outline"
-                                className="w-full justify-start transition-colors hover:bg-primary/5 hover:text-primary"
-                            >
-                                <Activity className="mr-3 h-4 w-4" />
-                                System Health
-                            </Button> */}
+
                             <div className="mt-4 rounded-xl bg-destructive/5 p-4 ring-1 ring-destructive/10">
                                 <div className="mb-2 flex items-center gap-2">
                                     <AlertCircle className="h-4 w-4 text-destructive" />
@@ -200,7 +187,12 @@ export default function Overview({ stats, logs }: OverviewProps) {
                                 <Button
                                     variant="destructive"
                                     size="sm"
-                                    className="w-full"
+                                    className="w-full cursor-pointer"
+                                    onClick={() => {
+                                        toast.info(
+                                            'This feature is in development',
+                                        );
+                                    }}
                                 >
                                     Lockdown System
                                 </Button>

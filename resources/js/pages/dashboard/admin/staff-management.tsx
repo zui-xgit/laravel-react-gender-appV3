@@ -56,7 +56,6 @@ import { useState } from 'react';
 import { formatDate, formatTime } from '@/lib/helpers';
 import SearchInput from '@/components/search-input';
 import RefreshButton from '@/components/refresh-button';
-import BackButton from '@/components/back-button';
 import { StaffMember, UsePageProps } from '@/types/types';
 import StaffDialog from '@/components/dialogs/staff-dialog';
 import admin from '@/routes/admin';
@@ -278,7 +277,6 @@ export default function StaffManagement({
             <div className="flex flex-col gap-8 px-4 py-6 md:px-8">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div className="flex flex-row items-center gap-3">
-                        <BackButton />
                         <Heading
                             title="Staff Management"
                             description="View and manage system administrators and field reporting officers."

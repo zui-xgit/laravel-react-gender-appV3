@@ -3,6 +3,7 @@
 use App\Http\Controllers\CaseWorkflowController;
 use App\Http\Controllers\GeneralController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::middleware(['auth', 'verified', 'check.roles:admin,officer', 'check.status'])->group(function () {
     Route::post('case-intake/{case:uuid}', [CaseWorkflowController::class, 'caseIntake'])->name('case-intake');
@@ -10,6 +11,19 @@ Route::middleware(['auth', 'verified', 'check.roles:admin,officer', 'check.statu
     Route::post('case-escalate/{case:uuid}', [CaseWorkflowController::class, 'caseEscalate'])->name('case-escalation');
     Route::post('case-resolve/{case:uuid}', [CaseWorkflowController::class, 'caseResolve'])->name('case-resolution');
     // this route is for assignments , since both admin and officer can deal with assignments.
+    // Route::get('general/assignments', [GeneralController::class, 'assignments'])->name('general.assignments'); 
     Route::get('general/assignments', [GeneralController::class, 'assignments'])->name('general.assignments'); 
+
+
+    Route::get('view-case/{case:uuid}', [GeneralController::class, 'viewCase'])->name("general.view-case"); 
+    Route::get('case-workflow/{case:uuid}', [CaseWorkflowController::class, "caseWorkflow"])->name('general.case-workflow'); 
 });
     
+
+Route::middleware(['auth', 'verified', 'check.roles:admin,officer'])->group(function () {
+    Route::get('inactive', function (){
+        Inertia::flash('toast', ['type' => 'error', 'message' => __('Contact your administrator to activate your account.')]);
+        return Inertia::render('inactive'); 
+    })->name('inactive'); 
+}); 
+

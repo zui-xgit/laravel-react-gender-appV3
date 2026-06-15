@@ -47,7 +47,11 @@ export default function Login({
         e.preventDefault();
 
         post(store().url, {
+            preserveScroll: true,
             onFinish: () => reset('password'),
+            onSuccess: () => {
+                toast.success('Logged in successfully');
+            },
         });
     };
 

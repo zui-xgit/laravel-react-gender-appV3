@@ -1,5 +1,5 @@
 import { Link, router, usePage } from '@inertiajs/react';
-import { LogOut, Settings } from 'lucide-react';
+import { CircleUser, LogOut, Settings } from 'lucide-react';
 import {
     DropdownMenuGroup,
     DropdownMenuItem,
@@ -12,6 +12,8 @@ import { logout } from '@/routes';
 import { edit } from '@/routes/profile';
 import type { User } from '@/types';
 import { UsePageProps } from '@/types/types';
+import officer from '@/routes/officer';
+import { toast } from 'sonner';
 
 type Props = {
     user: User;
@@ -25,6 +27,7 @@ export function UserMenuContent({ user }: Props) {
     const handleLogout = () => {
         cleanup();
         router.flushAll();
+        toast.success('Logged out successfully');
     };
 
     return (
@@ -48,6 +51,24 @@ export function UserMenuContent({ user }: Props) {
                             >
                                 <Settings className="mr-2" />
                                 Settings
+                            </Link>
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                </>
+            )}
+            {auth.user.role === 'officer' && (
+                <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem asChild>
+                            <Link
+                                className="block w-full cursor-pointer"
+                                href={officer.profile()}
+                                prefetch
+                                onClick={cleanup}
+                            >
+                                <CircleUser className="mr-2" />
+                                Profile
                             </Link>
                         </DropdownMenuItem>
                     </DropdownMenuGroup>

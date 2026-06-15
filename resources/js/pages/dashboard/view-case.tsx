@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { formatDate, formatTime } from '@/lib/helpers';
-import { adminViewCase } from '@/routes';
+import general from '@/routes/general';
 import { PendingCase, CaseDetail } from '@/types/types';
 import { Head } from '@inertiajs/react';
 import { usePDF } from '@react-pdf/renderer';
@@ -291,7 +291,7 @@ ViewCase.layout = (page: any) => {
             },
             {
                 title: 'View Case',
-                href: adminViewCase({ case: caseData.uuid }),
+                href: general.viewCase({ case: caseData.uuid }),
             },
         ],
     };

@@ -11,7 +11,7 @@ Route::middleware(['auth', 'check.roles:admin'])->group(function () {
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
-Route::middleware(['auth', 'verified', 'check.role:admin'])->group(function () {        
+Route::middleware(['auth', 'verified', 'check.roles:admin'])->group(function () {        
 
     // Route::get('settings/security', [SecurityController::class, 'edit'])->name('security.edit');
 

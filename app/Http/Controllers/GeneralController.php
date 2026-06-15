@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\CaseAssignment;
+use App\Models\CaseDetail;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -59,6 +61,77 @@ class GeneralController extends Controller
         return Inertia::render("dashboard/general/assignments", [
             "assignments" => $personal_assignments,
             "filters" => $request->only(['search', 'filter']),
+        ]);
+    }
+
+     public function viewCase(Request $request, CaseDetail $case)
+    {
+         $case->load([
+            'incidentDetail',
+            'victimDetail',
+            'accusedDetail',
+            'informantDetail',
+            'caseAssignment.assignedTo',
+            'caseAssignment.assignedBy',
+            'caseEvidence'
+        ]);
+
+        // 2. Map out the clean, structured data array
+        $caseDetailPayload = [
+            'uuid' => $case->uuid, 
+            'case_tracking_id' => $case->case_tracking_id, 
+            'is_anonymous' => (bool)$case->is_anonymous, 
+            'status' => $case->status,
+            'created_at' => $case->created_at->toIso8601String(),
+
+
+            'case_assignment' => $case->caseAssignment ? [
+                 'assigned_by' => [
+                        'first_name' => $case->caseAssignment->assignedBy?->first_name,
+                        'last_name'  => $case->caseAssignment->assignedBy?->last_name,
+                        'role'       => $case->caseAssignment->assignedBy?->role,
+                    ],
+                    'assigned_to' => [ 
+                         'first_name' => $case->caseAssignment->assignedTo?->first_name,
+                        'last_name'  => $case->caseAssignment->assignedTo?->last_name,
+                        'role' =>$case->caseAssignment->assignedTo?->role,
+                ],
+                'priority' => $case->caseAssignment->priority,
+            ] : null, 
+
+            'informant_detail' => $case->informantDetail ? $case->informantDetail->makeHidden([
+                'id', 'case_detail_id', 'created_at', 'updated_at'
+            ])->toArray() : [], 
+
+            'victim_detail' => $case->victimDetail ? $case->victimDetail->makeHidden([
+                'id', 'case_detail_id', 'created_at', 'updated_at'
+            ])->toArray() : [],
+
+            'accused_detail' => $case->accusedDetail ? $case->accusedDetail->makeHidden([
+                'id', 'case_detail_id', 'created_at', 'updated_at'
+            ])->toArray() : [],
+
+            'incident_detail' => $case->incidentDetail ? $case->incidentDetail->makeHidden([
+                'id', 'case_detail_id', 'created_at', 'updated_at'
+            ])->toArray() : []
+        ];
+
+        
+        $all_users = User::query()->latest()->get()->map(function ($user ){
+            return [
+                 'uuid' => $user->uuid,
+                 'first_name' => $user->first_name,
+                 'last_name' => $user->last_name,
+                 'role' => $user->role,
+            ];
+        });
+
+        // 3. Render page with Inertia passing the structured data
+        return Inertia::render('dashboard/view-case', [
+            'case_detail' => $caseDetailPayload,
+            'from_page'   => $request->query('from_page'), 
+            'from_url'    => $request->query('from_url'), 
+            'all_users'   => $all_users
         ]);
     }
 }

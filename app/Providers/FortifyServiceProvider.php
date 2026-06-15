@@ -35,9 +35,9 @@ class FortifyServiceProvider extends ServiceProvider
                 $user = $request->user(); 
 
                 if($user->isAdmin()){
-                    return redirect()->route('admin-overview');
+                    return redirect()->route('admin.overview');
                 }else if($user->isOfficer()){
-                   return redirect()->route('officer-overview');
+                   return redirect()->route('officer.overview');
                 }
 
                 return abort(403, 'You do not have permission to access this dashboard.');

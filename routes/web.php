@@ -32,7 +32,6 @@ Route::inertia('/test', 'test' )->name("test");
 
 // });
 
-Route::inertia('inactive', 'inactive')->name('inactive')->middleware('auth'); 
 
 
 Route::prefix('admin')->group(function (){
@@ -42,6 +41,5 @@ Route::prefix('admin')->group(function (){
 Route::prefix('officer')->group(function (){
     require __DIR__.'/officer.php';
 });
-
 require __DIR__.'/general.php';
 require __DIR__.'/settings.php';

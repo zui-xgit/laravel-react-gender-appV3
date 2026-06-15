@@ -26,7 +26,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { adminViewCase } from '@/routes';
 import { Head, router } from '@inertiajs/react';
 import {
     AlertCircle,
@@ -47,6 +46,7 @@ import BackButton from '@/components/back-button';
 import CaseProgressBar from '@/components/case-progress-bar';
 import { PaginatedData } from '@/types/types';
 import admin from '@/routes/admin';
+import general from '@/routes/general';
 
 // interface PaginationLinks {
 //     url: string | null;
@@ -93,7 +93,7 @@ export default function InProgress({ cases, stats, filters }: InProgressProps) {
     };
 
     const viewCase = (uuid: string) => {
-        router.get(adminViewCase({ case: uuid }), {
+        router.get(general.viewCase({ case: uuid }), {
             from_page: 'In Progress Cases',
             from_url: window.location.pathname,
         });

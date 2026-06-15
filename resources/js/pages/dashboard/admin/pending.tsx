@@ -26,7 +26,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { adminViewCase } from '@/routes';
 import { Head, router } from '@inertiajs/react';
 import {
     AlertCircle,
@@ -51,6 +50,7 @@ import RefreshButton from '@/components/refresh-button';
 import BackButton from '@/components/back-button';
 import { PaginatedData } from '@/types/types';
 import admin from '@/routes/admin';
+import general from '@/routes/general';
 
 // interface PaginationLinks {
 //     url: string | null;
@@ -117,7 +117,7 @@ export default function Pending({
     };
 
     const viewCase = (uuid: string) => {
-        router.get(adminViewCase({ case: uuid }), {
+        router.get(general.viewCase({ case: uuid }), {
             from_page: 'Pending Cases',
             from_url: window.location.pathname,
         });

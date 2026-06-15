@@ -2,6 +2,7 @@ import { Breadcrumbs } from '@/components/breadcrumbs';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
 import { ChangeTheme } from './change-theme';
+import UserProfileDropdown from './user-profile-dropdown';
 
 export function AppSidebarHeader({
     breadcrumbs = [],
@@ -17,6 +18,7 @@ export function AppSidebarHeader({
                 </div>
                 <div className="flex items-center justify-between gap-3">
                     <ChangeTheme />
+                    <UserProfileDropdown />
                 </div>
             </div>
         </header>
