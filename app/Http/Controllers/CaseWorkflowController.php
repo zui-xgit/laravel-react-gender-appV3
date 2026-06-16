@@ -20,6 +20,15 @@ class CaseWorkflowController extends Controller
         $escalation_data = $case->caseWorkflow()->where("phase", 'escalation')->value('form_data');
         $resolution_data = $case->caseWorkflow()->where("phase", 'resolution')->value('form_data');
 
+         $case_evidence = $case->caseEvidence->map(function ($evidence) {
+                return [
+                    'file_name' => $evidence->file_name,
+                    'file_type' => $evidence->file_type,
+                    'file_path' => asset('storage/' . $evidence->file_path),
+                    'created_at' => $evidence->created_at->toIso8601String(),
+                ];
+         });
+
        return Inertia::render('dashboard/case-workflow', [
             'case_uuid' => $case->uuid,
             'case_tracking_id' => $case->case_tracking_id,
@@ -27,7 +36,10 @@ class CaseWorkflowController extends Controller
             'from_url' => $request->query("from_url"), 
 
             // Tabs data (if or if not available is handled in the frontend); 
-            'intake_data' => $intake_data,
+            'intake' => [
+                'intake_data' => $intake_data, 
+                'case_evidence' => $case_evidence
+            ], 
             'investigation_data' => $investigation_data,    
             "escalation_data" => $escalation_data, 
             "resolution_data" => $resolution_data,

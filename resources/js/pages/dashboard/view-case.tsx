@@ -1,4 +1,6 @@
+import BackButton from '@/components/back-button';
 import AssignModal from '@/components/dialogs/assign-case-dialog';
+import EvidenceFilesCard from '@/components/evidence-files-card';
 import CaseDetailPDF from '@/components/pdf/case-detail-pdf';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -6,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { formatDate, formatTime } from '@/lib/helpers';
 import general from '@/routes/general';
-import { PendingCase, CaseDetail } from '@/types/types';
+import { PendingCase, CaseDetail, CaseEvidence } from '@/types/types';
 import { Head } from '@inertiajs/react';
 import { usePDF } from '@react-pdf/renderer';
 
@@ -15,7 +17,11 @@ import {
     CheckCircle2,
     Clock,
     Download,
+    ExternalLink,
+    FileIcon,
+    FileImage,
     FileText,
+    Paperclip,
     ShieldCheck,
     User,
     UserPlus,
@@ -70,32 +76,35 @@ const ViewCase = ({ case_detail, all_users }: ViewCaseProps) => {
             <div className="flex flex-col gap-8 px-4 py-6 md:px-8">
                 {/* Header */}
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            <h2 className="text-xl font-semibold tracking-tight text-primary">
-                                Case:{' '}
-                                <span className="text-blue-600">
-                                    {case_detail.case_tracking_id}
+                    <div className="flex items-center gap-2">
+                        <BackButton />
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-3">
+                                <h2 className="text-xl font-semibold tracking-tight text-primary">
+                                    Case:{' '}
+                                    <span className="text-blue-600">
+                                        {case_detail.case_tracking_id}
+                                    </span>
+                                </h2>
+                                <Badge
+                                    variant="outline"
+                                    className={`gap-1.5 px-3 py-1 text-xs font-bold capitalize ${statusColors[case_detail.status]}`}
+                                >
+                                    <StatusIcon className="h-3.5 w-3.5" />
+                                    {case_detail.status.replace('_', ' ')}
+                                </Badge>
+                            </div>
+                            <p className="text-sm font-medium text-muted-foreground">
+                                Reported on{' '}
+                                <span className="text-foreground">
+                                    {formatDate(case_detail.created_at)}
+                                </span>{' '}
+                                at{' '}
+                                <span className="text-foreground">
+                                    {formatTime(case_detail.created_at)}
                                 </span>
-                            </h2>
-                            <Badge
-                                variant="outline"
-                                className={`gap-1.5 px-3 py-1 text-xs font-bold capitalize ${statusColors[case_detail.status]}`}
-                            >
-                                <StatusIcon className="h-3.5 w-3.5" />
-                                {case_detail.status.replace('_', ' ')}
-                            </Badge>
+                            </p>
                         </div>
-                        <p className="text-sm font-medium text-muted-foreground">
-                            Reported on{' '}
-                            <span className="text-foreground">
-                                {formatDate(case_detail.created_at)}
-                            </span>{' '}
-                            at{' '}
-                            <span className="text-foreground">
-                                {formatTime(case_detail.created_at)}
-                            </span>
-                        </p>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3">
@@ -110,8 +119,11 @@ const ViewCase = ({ case_detail, all_users }: ViewCaseProps) => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                {instance.loading && <Spinner />}
-                                <Download className="mr-2 h-4 w-4" />
+                                {instance.loading ? (
+                                    <Spinner />
+                                ) : (
+                                    <Download className="mr-2 h-4 w-4" />
+                                )}
                                 View Document PDF
                             </a>
                         </Button>
@@ -220,6 +232,12 @@ const ViewCase = ({ case_detail, all_users }: ViewCaseProps) => {
                         </CardContent>
                     </Card>
                 </div>
+
+                {/* Evidencep FILES Card */}
+                <EvidenceFilesCard
+                    title="Case Evidence & Attachments"
+                    value={case_detail}
+                />
             </div>
 
             <AssignModal
@@ -258,40 +276,22 @@ const DetailItem = ({
 
 export default ViewCase;
 
-interface ViewCaseLayout {
-    caseData: CaseDetail;
+ViewCase.layout = ({
+    from_page,
+    from_url,
+}: {
     from_page: string;
     from_url: string;
-}
-
-ViewCase.layout = (page: any) => {
-    const { caseData, from_page, from_url } = (page?.props ||
-        {}) as ViewCaseLayout;
-
-    if (!caseData) {
-        return {
-            breadcrumbs: [
-                {
-                    title: from_page || 'Dashboard',
-                    href: from_url || '#',
-                },
-                {
-                    title: 'View Case',
-                    href: '#',
-                },
-            ],
-        };
-    }
-
+}) => {
     return {
         breadcrumbs: [
             {
-                title: from_page || 'Dashboard',
-                href: from_url || '#',
+                title: from_page,
+                href: from_url,
             },
             {
                 title: 'View Case',
-                href: general.viewCase({ case: caseData.uuid }),
+                href: '#',
             },
         ],
     };

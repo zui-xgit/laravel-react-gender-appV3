@@ -112,6 +112,13 @@ export interface IncidentDetail {
     other_involved: string;
 }
 
+export interface CaseEvidence {
+    file_path: string;
+    file_name: string;
+    file_type: string;
+    created_at: string;
+}
+
 export interface CaseDetail {
     uuid: string;
     case_tracking_id: string;
@@ -127,6 +134,7 @@ export interface CaseDetail {
     victim_detail: VictimDetail;
     accused_detail: AccusedDetail;
     incident_detail: IncidentDetail;
+    case_evidence: CaseEvidence[];
 }
 
 export interface PendingCase {

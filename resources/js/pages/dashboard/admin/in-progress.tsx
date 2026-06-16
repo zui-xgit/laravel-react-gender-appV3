@@ -42,7 +42,6 @@ import { InProgressCase, PendingCase } from '@/types/types';
 import { Hint } from '@/components/hint';
 import SearchInput from '@/components/search-input';
 import RefreshButton from '@/components/refresh-button';
-import BackButton from '@/components/back-button';
 import CaseProgressBar from '@/components/case-progress-bar';
 import { PaginatedData } from '@/types/types';
 import admin from '@/routes/admin';
@@ -139,13 +138,10 @@ export default function InProgress({ cases, stats, filters }: InProgressProps) {
 
             <div className="flex flex-col gap-8 px-4 py-6 md:px-8">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <div className="flex flex-row items-center gap-3">
-                        <BackButton />
-                        <Heading
-                            title="In Progress Cases"
-                            description="Cases currently under active investigation."
-                        />
-                    </div>
+                    <Heading
+                        title="In Progress Cases"
+                        description="Cases currently under active investigation."
+                    />
                     <div className="flex items-center gap-2">
                         <Button variant="outline" size="sm">
                             <Download className="mr-2 h-4 w-4" />

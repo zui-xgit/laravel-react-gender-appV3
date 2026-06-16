@@ -113,7 +113,16 @@ class GeneralController extends Controller
 
             'incident_detail' => $case->incidentDetail ? $case->incidentDetail->makeHidden([
                 'id', 'case_detail_id', 'created_at', 'updated_at'
-            ])->toArray() : []
+            ])->toArray() : [],
+
+            'case_evidence' => $case->caseEvidence->map(function ($evidence) {
+                return [
+                    'file_name' => $evidence->file_name,
+                    'file_type' => $evidence->file_type,
+                    'file_path' => asset('storage/app/public/' . $evidence->file_path),
+                    'created_at' => $evidence->created_at->toIso8601String(),
+                ];
+            }),
         ];
 
         

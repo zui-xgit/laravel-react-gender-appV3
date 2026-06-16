@@ -35,6 +35,10 @@ import {
     FileText,
     Info,
     LucideIcon,
+    Paperclip,
+    FileImage,
+    FileIcon,
+    ExternalLink,
 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from './ui/badge';
@@ -54,6 +58,7 @@ import {
 } from '@/routes';
 import { toast } from 'sonner';
 import { useEffect } from 'react';
+import EvidenceFilesCard from './evidence-files-card';
 
 interface StepCardProps {
     title: string;
@@ -145,25 +150,33 @@ type IntakeViewUseForm = {
 
 interface IntakeViewProps {
     case_uuid: string;
-    intake_data: {
-        checklist: {
-            identity: boolean;
-            jurisdiction: boolean;
-            safety: boolean;
-        };
-        observations: string;
-    } | null;
+    intake: {
+        intake_data: {
+            checklist: {
+                identity: boolean;
+                jurisdiction: boolean;
+                safety: boolean;
+            };
+            observations: string;
+        } | null;
+        case_evidence: {
+            file_path: string;
+            file_name: string;
+            file_type: string;
+            created_at: string;
+        }[];
+    };
 }
 
-export const IntakeView = ({ case_uuid, intake_data }: IntakeViewProps) => {
+export const IntakeView = ({ case_uuid, intake }: IntakeViewProps) => {
     const { data, setData, errors, setError, clearErrors, processing, post } =
         useForm<IntakeViewUseForm>({
-            checklist: intake_data?.checklist ?? {
+            checklist: intake.intake_data?.checklist ?? {
                 identity: false,
                 jurisdiction: false,
                 safety: false,
             },
-            observations: intake_data?.observations ?? '',
+            observations: intake.intake_data?.observations ?? '',
         });
 
     const handleCheckChange = (id: string, checked: boolean) => {
@@ -189,8 +202,6 @@ export const IntakeView = ({ case_uuid, intake_data }: IntakeViewProps) => {
         }
 
         if (hasErrors) return;
-
-        // console.log('Intake Review Verified Successfully:', data);
 
         post(caseIntake({ case: case_uuid }).url, {
             onError: (errors) => {
@@ -221,47 +232,11 @@ export const IntakeView = ({ case_uuid, intake_data }: IntakeViewProps) => {
                         </AlertDescription>
                     </Alert>
 
-                    {/* Documents */}
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                        {[
-                            {
-                                name: 'Victim_Statement.pdf',
-                                colorClass:
-                                    'bg-destructive/10 text-destructive',
-                            },
-                            {
-                                name: 'Incident_Photos.zip',
-                                colorClass: 'bg-primary/10 text-primary',
-                            },
-                        ].map((doc) => (
-                            <Card
-                                key={doc.name}
-                                className="border-none shadow-sm ring-1 ring-border transition-all hover:ring-primary/30"
-                            >
-                                <CardContent className="flex items-center justify-between p-4">
-                                    <div className="flex items-center gap-3">
-                                        <div
-                                            className={`rounded-md p-2 ${doc.colorClass}`}
-                                        >
-                                            <FileText className="h-4 w-4" />
-                                        </div>
-                                        <span className="text-sm font-medium">
-                                            {doc.name}
-                                        </span>
-                                    </div>
-                                    <Hint content="View File">
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-8 w-8"
-                                        >
-                                            <Eye className="h-4 w-4" />
-                                        </Button>
-                                    </Hint>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
+                    {/* Evidence Documents */}
+                    <EvidenceFilesCard
+                        title="Case Evidence & Attachments"
+                        value={intake}
+                    />
 
                     <Separator />
 
@@ -356,7 +331,7 @@ export const IntakeView = ({ case_uuid, intake_data }: IntakeViewProps) => {
                             <>
                                 <CheckCircle className="mr-2 h-4 w-4" />
 
-                                {intake_data
+                                {intake.intake_data
                                     ? 'Update Intake Review'
                                     : 'Verify & Lock Intake Review'}
                             </>
@@ -406,7 +381,6 @@ export const InvestigationView = ({
 
         if (hasErrors) return;
 
-        // console.log('Investigation Log Updated Successfully:', data);
         post(caseInvestigation({ case: case_uuid }).url, {
             onError: (errors) => {
                 if (errors) {

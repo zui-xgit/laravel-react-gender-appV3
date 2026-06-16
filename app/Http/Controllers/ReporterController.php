@@ -15,21 +15,8 @@ use Inertia\Inertia;
 
 class ReporterController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+   
+   
 
     /**
      * Store a newly created resource in storage.
@@ -223,39 +210,54 @@ class ReporterController extends Controller
             ]); 
 
         }
-    }   
+    }
+    
+    
+    public function trackCase(Request $request) 
+    {
+        $validated = $request->validate([
+             'tracking_id' => ['required','string',  'regex:/^PS-\d{4}-\d{2}-\d{2}-[A-Z0-9]{5}$/'],
+        ], [
+            'tracking_id.regex' => 'The tracking ID format is invalid. Please use PS-YYYY-MM-DD-AAAAA.',
+        ]);
+
+        $case = CaseDetail::where('case_tracking_id', $validated['tracking_id'])
+            ->with([
+                'informantDetail',
+                'victimDetail',
+                'accusedDetail',
+                'incidentDetail',
+                'caseEvidence',
+                'caseAssignment.assignedTo:id,first_name,last_name,role',
+                'caseWorkflow.completedBy:id,first_name,last_name,role',
+               
+            ])
+            ->first();
+
+        if (!$case) {
+            return back()->withErrors([
+                'tracking_id' => 'We could not find a case with that tracking ID. Please check and try again.'
+            ]);
+        }
+
+        // Calculate progress based on workflow phases
+        $workflow_phases = ['intake', 'investigation', 'escalation', 'resolution'];
+        $completed_phases = $case->caseWorkflow->pluck('phase')->toArray();
+        
+        $progress = [
+            'percentage' => $case->case_workflow_percentage,
+            'completed_phases' => $completed_phases,
+            'all_phases' => $workflow_phases,
+            'current_status' => $case->status,
+        ];
+
+        return Inertia::render('reporter/track', [
+            'case' => $case,
+            'progress' => $progress,
+        ]); 
+    }
 
     
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+   
 }

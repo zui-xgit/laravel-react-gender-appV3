@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AppGuestLayout from '@/layouts/app-guest-layout';
 import { Link } from '@inertiajs/react';
 import {
@@ -24,8 +24,10 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { reporterReport } from '@/routes';
+import TrackExistingReportDialog from '@/components/dialogs/track-existing-report-dialog';
 
 export default function Home() {
+    const [isTrackDialogOpen, setIsTrackDialogOpen] = useState<boolean>(false);
     // Core application features
     const coreFeatures = [
         {
@@ -87,6 +89,8 @@ export default function Home() {
         },
     ];
 
+    const handleTrackExistingReport = () => {};
+
     return (
         <div className="flex flex-col gap-20 py-12 md:py-20">
             {/* --- HERO SECTION --- */}
@@ -126,20 +130,7 @@ export default function Home() {
                     </Button>
 
                     {/* Secondary Action: Follow Up */}
-                    <Button
-                        asChild
-                        size="lg"
-                        variant="secondary"
-                        className="w-full font-medium text-secondary-foreground hover:bg-secondary/80 sm:w-auto"
-                    >
-                        <Link
-                            href="/track-report"
-                            className="flex items-center gap-2"
-                        >
-                            <Search className="h-5 w-5 text-muted-foreground" />
-                            Track Existing Report
-                        </Link>
-                    </Button>
+                    <TrackExistingReportDialog />
 
                     {/* Tertiary Action: Info */}
                     <Button

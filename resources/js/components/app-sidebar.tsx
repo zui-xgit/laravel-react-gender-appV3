@@ -36,7 +36,7 @@ const AdminNavItems: NavItem[] = [
         icon: LayoutDashboard,
     },
     {
-        title: 'Personal Assignment',
+        title: 'Personal Assignments',
         href: general.assignments(),
 
         icon: UserCheck,

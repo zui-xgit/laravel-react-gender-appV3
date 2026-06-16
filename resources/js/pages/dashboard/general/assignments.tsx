@@ -379,7 +379,7 @@ export default Assignments;
 Assignments.layout = {
     breadcrumbs: [
         {
-            title: 'Assignments',
+            title: 'My Assignments',
             href: general.assignments(),
         },
     ],

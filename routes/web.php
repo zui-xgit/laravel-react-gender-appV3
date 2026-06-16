@@ -28,6 +28,7 @@ Route::inertia('/test', 'test' )->name("test");
     Route::inertia('faq', 'reporter/faq')->name('faq');
     Route::inertia('education', 'reporter/education')->name('education');
     Route::inertia('suspended', 'suspended')->name('suspended'); 
+    Route::get('track-case', [ReporterController::class, 'trackCase'])->name('track-case'); 
 
 
 // });

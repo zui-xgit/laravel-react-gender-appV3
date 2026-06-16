@@ -14,6 +14,7 @@ import {
 } from '@/components/workflow';
 import Heading from '@/components/heading';
 import CaseProgressBar, { IntRange } from '@/components/case-progress-bar';
+import BackButton from '@/components/back-button';
 
 interface CaseWorkFlowProps {
     case_uuid: string;
@@ -21,14 +22,22 @@ interface CaseWorkFlowProps {
     from_page: string;
     from_url: URL;
     caseWorkflowPercentage: IntRange<0, 100>;
-    intake_data: {
-        checklist: {
-            identity: boolean;
-            jurisdiction: boolean;
-            safety: boolean;
-        };
-        observations: string;
-    } | null;
+    intake: {
+        intake_data: {
+            checklist: {
+                identity: boolean;
+                jurisdiction: boolean;
+                safety: boolean;
+            };
+            observations: string;
+        } | null;
+        case_evidence: {
+            file_path: string;
+            file_name: string;
+            file_type: string;
+            created_at: string;
+        }[];
+    };
     investigation_data: {
         subjectName: string;
         relationship: string;
@@ -51,7 +60,7 @@ interface CaseWorkFlowProps {
 const CaseWorkFlow = ({
     case_uuid,
     case_tracking_id,
-    intake_data,
+    intake,
     investigation_data,
     escalation_data,
     resolution_data,
@@ -63,15 +72,7 @@ const CaseWorkFlow = ({
             {/* ── Page Header ── */}
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
-                    <Hint content="Go Back">
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-9 w-9 shrink-0 rounded-full border-none shadow-sm ring-1 ring-border"
-                        >
-                            <ChevronLeft className="h-4 w-4" />
-                        </Button>
-                    </Hint>
+                    <BackButton />
                     <Heading
                         variant="small"
                         title={case_tracking_id}
@@ -118,10 +119,7 @@ const CaseWorkFlow = ({
 
                         {/* Tab Content Card */}
                         <TabsContent value="intake" className="mt-0">
-                            <IntakeView
-                                case_uuid={case_uuid}
-                                intake_data={intake_data}
-                            />
+                            <IntakeView case_uuid={case_uuid} intake={intake} />
                         </TabsContent>
                         <TabsContent value="investigation" className="mt-0">
                             <InvestigationView

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import { CaseDetail } from '@/types/types';
 import { formatDate, formatTime } from '@/lib/helpers';
@@ -374,6 +373,26 @@ const CaseDetailPDF = ({ caseData }: CaseDetailPDFProps) => {
                             label="Workplace"
                             value={caseData.informant_detail.workplace}
                         />
+                    </View>
+                ) : null}
+
+                {/* Case Evidence */}
+                {caseData.case_evidence && caseData.case_evidence.length > 0 ? (
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>
+                            5. Filed Evidence & Attachments
+                        </Text>
+                        {caseData.case_evidence.map((evidence, index) => (
+                            <View key={index} style={styles.row}>
+                                <Text style={styles.label}>
+                                    Attachment {index + 1}:
+                                </Text>
+                                <Text style={styles.value}>
+                                    {evidence.file_name} (
+                                    {evidence.file_type.toUpperCase()})
+                                </Text>
+                            </View>
+                        ))}
                     </View>
                 ) : null}
 
