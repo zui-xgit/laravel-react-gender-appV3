@@ -12,34 +12,34 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
     AlertCircle,
-    FileText,
-    History,
     Info,
     MapPin,
     User,
     Users,
     Calendar,
-    Clock,
     Shield,
     Paperclip,
     CheckCircle2,
-    ArrowRight,
     Search,
     UserCheck,
     Briefcase,
+    LogOut,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { formatDate, formatTime } from '@/lib/helpers';
-import { Head } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
+import EvidenceFilesCard from '@/components/evidence-files-card';
+import { Button } from '@/components/ui/button';
+import { destroySession } from '@/routes';
 
 interface User {
-    id: number;
     first_name: string;
     last_name: string;
     role: string;
 }
 
 interface Case {
+    uuid: string;
     case_tracking_id: string;
     status: 'pending' | 'in_progress' | 'completed';
     is_anonymous: number;
@@ -90,10 +90,10 @@ interface Case {
         other_involved: string;
     };
     case_evidence: Array<{
-        id: number;
+        uuid: string;
         file_name: string;
         file_type: string;
-        file_path: string;
+        // file_path: string;
         created_at: string;
     }>;
     case_assignment?: {
@@ -143,10 +143,13 @@ const phaseMap: Record<string, string> = {
 };
 
 export default function Track({ case: caseData, progress }: TrackProps) {
-    console.log(caseData.is_anonymous);
+    const handleExitSession = () => {
+        router.post(destroySession().url);
+    };
+
     return (
         <div>
-            <Head title={`Track Case - ${caseData.case_tracking_id}`} />
+            <Head title={'Track Case'} />
 
             <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 p-4 md:p-8">
                 {/* Header Section */}
@@ -184,6 +187,14 @@ export default function Track({ case: caseData, progress }: TrackProps) {
                         <Badge variant="secondary" className="px-3 py-1">
                             {caseData.incident_detail.incident_type}
                         </Badge>
+                        <Button
+                            onClick={handleExitSession}
+                            variant={'outline'}
+                            className="group flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-red-600 transition-all duration-200 hover:bg-red-50 hover:text-red-700 focus:ring-2 focus:ring-red-200 focus:outline-none active:scale-95"
+                        >
+                            <LogOut size={18} className="animate-bounce" />
+                            <span>Exit Session</span>
+                        </Button>
                     </div>
                 </div>
 
@@ -599,50 +610,12 @@ export default function Track({ case: caseData, progress }: TrackProps) {
                                                     "
                                                 </p>
                                             </div>
-
-                                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                                {caseData.case_evidence.length >
-                                                0 ? (
-                                                    caseData.case_evidence.map(
-                                                        (file) => (
-                                                            <div
-                                                                key={file.id}
-                                                                className="group flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-muted/50"
-                                                            >
-                                                                <div className="flex h-10 w-10 items-center justify-center rounded bg-primary/10 text-primary">
-                                                                    <FileText className="h-5 w-5" />
-                                                                </div>
-                                                                <div className="min-w-0 flex-1">
-                                                                    <p className="truncate text-sm font-medium">
-                                                                        {
-                                                                            file.file_name
-                                                                        }
-                                                                    </p>
-                                                                    <p className="text-xs text-muted-foreground uppercase">
-                                                                        {
-                                                                            file.file_type.split(
-                                                                                '/',
-                                                                            )[1]
-                                                                        }
-                                                                    </p>
-                                                                </div>
-                                                                <Badge
-                                                                    variant="outline"
-                                                                    className="opacity-0 transition-opacity group-hover:opacity-100"
-                                                                >
-                                                                    View
-                                                                </Badge>
-                                                            </div>
-                                                        ),
-                                                    )
-                                                ) : (
-                                                    <div className="col-span-2 rounded-lg border-2 border-dashed py-8 text-center text-muted-foreground">
-                                                        <Paperclip className="mx-auto mb-2 h-8 w-8 opacity-20" />
-                                                        <p className="text-sm">
-                                                            No files uploaded
-                                                        </p>
-                                                    </div>
-                                                )}
+                                            <div>
+                                                <EvidenceFilesCard
+                                                    case_evidence={
+                                                        caseData.case_evidence
+                                                    }
+                                                />
                                             </div>
                                         </div>
                                     </CardContent>

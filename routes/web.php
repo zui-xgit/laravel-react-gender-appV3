@@ -25,10 +25,19 @@ Route::inertia('/test', 'test' )->name("test");
     Route::inertia('reporter/report', 'reporter/report')->name('reporter-report'); 
     Route::inertia('reporter/track', 'reporter/track')->name('reporter-track'); 
     Route::inertia('reporter/success', 'reporter/success')->name('reporter-success'); 
-    Route::inertia('faq', 'reporter/faq')->name('faq');
+    Route::inertia('faq', 'reporter/faq')->name('faq'); 
     Route::inertia('education', 'reporter/education')->name('education');
     Route::inertia('suspended', 'suspended')->name('suspended'); 
-    Route::get('track-case', [ReporterController::class, 'trackCase'])->name('track-case'); 
+
+        Route::post('track-case', [ReporterController::class, 'trackCase'])->name('track-case'); 
+        Route::post('/logout/session', [ReporterController::class, 'destroyTrackCaseSession'])->name('destroy-session'); 
+        
+        Route::middleware(['track.case.session'])->group(function(){
+            Route::get('track/show-case', [ReporterController::class, 'showCase'])->name('track.show-case'); 
+            Route::get('track/download-file/{file:uuid}', [ReporterController::class, 'downloadFile'])->name('track.download-file'); 
+        }); 
+
+
 
 
 // });

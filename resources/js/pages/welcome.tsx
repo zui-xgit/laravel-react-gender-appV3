@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-import AppGuestLayout from '@/layouts/app-guest-layout';
 import { Link } from '@inertiajs/react';
 import {
     ShieldAlert,
@@ -13,7 +11,6 @@ import {
     Inbox,
     UserCheck,
     Building2,
-    Search,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -27,7 +24,6 @@ import { reporterReport } from '@/routes';
 import TrackExistingReportDialog from '@/components/dialogs/track-existing-report-dialog';
 
 export default function Home() {
-    const [isTrackDialogOpen, setIsTrackDialogOpen] = useState<boolean>(false);
     // Core application features
     const coreFeatures = [
         {
@@ -88,8 +84,6 @@ export default function Home() {
             badge: 'Independent Third-Party',
         },
     ];
-
-    const handleTrackExistingReport = () => {};
 
     return (
         <div className="flex flex-col gap-20 py-12 md:py-20">

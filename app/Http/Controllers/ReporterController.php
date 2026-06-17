@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\CaseDetail;
+use App\Models\CaseEvidence;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use ZipArchive;
 
 class ReporterController extends Controller
 {
@@ -88,7 +88,7 @@ class ReporterController extends Controller
 
         ]); 
        
-       
+
 
         try{
 
@@ -160,7 +160,7 @@ class ReporterController extends Controller
             // 6. Evidence Files and description
             if($request->hasFile('evidenceFiles')){
                 foreach($request->file('evidenceFiles') as $file){
-                   $path = $file->store('evidence_files', 'public');
+                   $path = Storage::disk('local')->put('evidence_files', $file); 
 
                    $case->caseEvidence()->create([
                       'file_path' => $path,
@@ -174,14 +174,6 @@ class ReporterController extends Controller
 
 
             DB::commit(); 
-
-            // create the log for creating the submition
-            // Log::info("Case created successfully", [
-            //      'reference_number' => $case->case_tracking_id
-            // ]); 
-
-
-            // dd($case->evidence_description);
 
             Inertia::flash('case_tracking_id', $case->case_tracking_id); 
             $request->session()->put('case_tracking_id', $case->case_tracking_id); 
@@ -213,15 +205,44 @@ class ReporterController extends Controller
     }
     
     
-    public function trackCase(Request $request) 
+    // post request
+    public function trackCase(Request $request) : RedirectResponse
     {
         $validated = $request->validate([
              'tracking_id' => ['required','string',  'regex:/^PS-\d{4}-\d{2}-\d{2}-[A-Z0-9]{5}$/'],
         ], [
-            'tracking_id.regex' => 'The tracking ID format is invalid. Please use PS-YYYY-MM-DD-AAAAA.',
+            'tracking_id.regex' => 'Invalid Tracking ID.',
         ]);
 
-        $case = CaseDetail::where('case_tracking_id', $validated['tracking_id'])
+        $trackingIdExists = CaseDetail::where('case_tracking_id', $validated['tracking_id'])->exists(); 
+
+        if(!$trackingIdExists){
+            return back()->withErrors([
+                'tracking_id' => 'We could not find a case with that tracking ID. Please check and try again.'
+            ]);
+        }
+          
+        $request->session()->put('case_tracking_id', $validated['tracking_id']); 
+        $request->session()->put('case_session_expires_at', now()->addMinutes(5)->timestamp);
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Session created Successfully. ')]);
+
+
+        return redirect()->route('track.show-case'); 
+
+    }   
+    
+    // get request
+    public function showCase(Request $request)
+    {
+           
+
+           // The track.case.session middleware handles the check if the session case_tracking_id is valid
+           // So no need to define that here.    
+
+           $case_tracking_id =  $request->session()->get('case_tracking_id'); 
+
+           $case = CaseDetail::where('case_tracking_id', $case_tracking_id)
             ->with([
                 'informantDetail',
                 'victimDetail',
@@ -234,11 +255,94 @@ class ReporterController extends Controller
             ])
             ->first();
 
-        if (!$case) {
-            return back()->withErrors([
-                'tracking_id' => 'We could not find a case with that tracking ID. Please check and try again.'
-            ]);
-        }
+     
+
+      
+
+        $formattedCase =  [  
+            'uuid' => $case->uuid, 
+            'case_tracking_id' => $case->case_tracking_id, 
+            'status' => $case->status, 
+            'is_anonymous'=> $case->is_anonymous, 
+            'evidence_description' => $case->evidence_description, 
+            'created_at' => $case->created_at->toIso8601String(), 
+
+            // we check informant_detail first if it is present , since the reporter could be anonymous meaning null
+            'informant_detail' => $case->informantDetail ? [
+                'name'      => $case->informantDetail->name,
+                'title'     => $case->informantDetail->title,
+                'sex'       => $case->informantDetail->sex,
+                'age'       => $case->informantDetail->age,
+                'phone'     => $case->informantDetail->phone,
+                'workplace' => $case->informantDetail->workplace,
+            ] : null,
+
+            'victim_detail' => [
+                'name'        => $case->victimDetail->name,
+                'title'       => $case->victimDetail->title,
+                'sex'         => $case->victimDetail->sex,
+                'age'         => $case->victimDetail->age,
+                'phone'       => $case->victimDetail->phone,
+                'email'       => $case->victimDetail->email,
+                'education'   => $case->victimDetail->education,
+                'residence'   => $case->victimDetail->residence,
+                'disability'  => $case->victimDetail->disability,
+                'workplace'   => $case->victimDetail->workplace,
+            ], 
+            'accused_detail' => [
+                'name'      => $case->accusedDetail->name,
+                'title'     => $case->accusedDetail->title,
+                'sex'       => $case->accusedDetail->sex,
+                'age'       => $case->accusedDetail->age,
+                'phone'     => $case->accusedDetail->phone,
+                'email'     => $case->accusedDetail->email,
+                'education' => $case->accusedDetail->education,
+                'residence' => $case->accusedDetail->residence,
+                'workplace' => $case->accusedDetail->workplace,
+            ], 
+            'incident_detail' => [
+                'incident_date'     => $case->incidentDetail->incident_date,
+                'incident_time'     => $case->incidentDetail->incident_time,
+                'location'          => $case->incidentDetail->location,
+                'exact_location'    => $case->incidentDetail->exact_location,
+                'incident_type'     => $case->incidentDetail->incident_type,
+                'cause'             => $case->incidentDetail->cause,
+                'description'       => $case->incidentDetail->description,
+                'actions_taken'     => $case->incidentDetail->actions_taken,
+                'injuries'          => $case->incidentDetail->injuries,
+                'assistance_needed' => $case->incidentDetail->assistance_needed,
+                'other_involved'    => $case->incidentDetail->other_involved,
+            ], 
+            'case_evidence' => $case->caseEvidence->map(fn($evidence) => [  
+                'uuid' => $evidence->uuid, 
+                'file_name'  => $evidence->file_name,
+                'file_type'  => $evidence->file_type,
+                // 'file_path'  => Storage::disk('public')->url($evidence->file_path), 
+                // 'file_path'  => Storage::temporaryUrl(
+                //         $evidence->file_path,
+                //         now()->addMinutes(5) // expires in 1 minute
+                //     ),   
+                'created_at' => $evidence->created_at->toIso8601String(),
+            ]),
+            'case_assignment' => $case->caseAssignment ? [
+                'assigned_to' => [
+                    'first_name' => $case->caseAssignment->assignedTo->first_name,
+                    'last_name'  => $case->caseAssignment->assignedTo->last_name,
+                    'role'       => $case->caseAssignment->assignedTo->role,
+                ], 
+                'priority'    => $case->caseAssignment->priority,
+                'created_at'  => $case->caseAssignment->created_at->toIso8601String(),
+            ] : null, 
+            'case_workflow' => $case->caseWorkflow->map(fn($workflow) => [
+                'phase'        => $workflow->phase,
+                'completed_at' => $workflow->completed_at ? $workflow->completed_at->toIso8601String() : null,
+                'completed_by' => [
+                    'first_name' => $workflow->completedBy->first_name,
+                    'last_name'  => $workflow->completedBy->last_name,
+                    'role'       => $workflow->completedBy->role,
+                ],
+            ]),
+        ]; 
 
         // Calculate progress based on workflow phases
         $workflow_phases = ['intake', 'investigation', 'escalation', 'resolution'];
@@ -251,13 +355,44 @@ class ReporterController extends Controller
             'current_status' => $case->status,
         ];
 
+
+        
         return Inertia::render('reporter/track', [
-            'case' => $case,
+            'case' => $formattedCase,
             'progress' => $progress,
         ]); 
     }
-
     
+
+    public function destroyTrackCaseSession(Request $request): RedirectResponse
+    {
+        $request->session()->forget(['case_tracking_id', 'case_session_expires_at']);  
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Session Destroyed Successfully.')]);
+
+        return redirect()->route('home');
+    }
+
+
+    // viewing the file using Storage::response
+    // public function viewFile(Request $request, CaseEvidence $file)
+    // {
+    //     // dd(Storage::disk('local')->exists($file->file_path));
+
+    //     // return Storage::download($file->file_path, $file->file_name);
+    //     return Storage::response(
+    //         $file->file_path,
+    //         $file->file_name,
+    //         ['Content-Disposition' => 'inline']
+    //     );
+    // }
+
+    //download File(s)
+    public function downloadFile(CaseEvidence $file)
+    {
+         return Storage::download($file->file_path, $file->file_name);   
+    }
+
+   
 
    
 }

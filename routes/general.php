@@ -17,6 +17,10 @@ Route::middleware(['auth', 'verified', 'check.roles:admin,officer', 'check.statu
 
     Route::get('view-case/{case:uuid}', [GeneralController::class, 'viewCase'])->name("general.view-case"); 
     Route::get('case-workflow/{case:uuid}', [CaseWorkflowController::class, "caseWorkflow"])->name('general.case-workflow'); 
+
+    Route::get('view-files', [GeneralController::class, 'viewFile'])->name('general.view-file'); 
+
+    Route::get('downloadFile/{file:uuid}', [GeneralController::class, 'downloadFile'])->name('general.download-file'); ; 
 });
     
 

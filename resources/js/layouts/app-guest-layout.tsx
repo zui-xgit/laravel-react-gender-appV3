@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import {
     Shield,
@@ -47,6 +47,12 @@ export default function AppGuestLayout({ children }: AppLayoutProps) {
             : { href: '/login', label: 'Login', icon: GraduationCap },
     ];
 
+    useEffect(() => {
+        if (url !== reporterReport.url()) {
+            resetForm();
+        }
+    }, [url]);
+
     return (
         <div className="flex min-h-screen flex-col bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground">
             {/* Navigation Bar */}
@@ -71,7 +77,6 @@ export default function AppGuestLayout({ children }: AppLayoutProps) {
                             <>
                                 <button
                                     onClick={() => {
-                                        resetForm();
                                         window.history.back();
                                     }}
                                     className="flex items-center gap-1 rounded-md px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"

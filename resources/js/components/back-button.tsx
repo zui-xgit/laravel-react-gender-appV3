@@ -1,7 +1,6 @@
 import React from 'react';
 import { ArrowLeft, ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { Hint } from './hint';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

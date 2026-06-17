@@ -5,6 +5,8 @@ use App\Http\Middleware\CheckUserStatus;
 use App\Http\Middleware\EnsureReporterHasTrackingId;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\PreventShowCaseHistory;
+use App\Http\Middleware\TrackCaseSession;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -28,7 +30,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'check.roles' => CheckUserRole::class, 
             'check.status' => CheckUserStatus::class,
-            'has.tracking' => EnsureReporterHasTrackingId::class
+            'has.tracking' => EnsureReporterHasTrackingId::class, 
+
+            'no.cache' => PreventShowCaseHistory::class,
+
+            'track.case.session' => TrackCaseSession::class
         ]); 
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -113,6 +113,7 @@ export interface IncidentDetail {
 }
 
 export interface CaseEvidence {
+    uuid: string;
     file_path: string;
     file_name: string;
     file_type: string;

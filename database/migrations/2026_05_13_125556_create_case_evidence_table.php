@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('case_evidence', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique(); 
             $table->foreignIdFor(CaseDetail::class)->constrained()->onDelete('cascade');
             $table->string('file_path');
             $table->string('file_name');

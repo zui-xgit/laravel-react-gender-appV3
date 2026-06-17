@@ -19,13 +19,13 @@ import { trackCase } from '@/routes';
 
 const TrackExistingReportDialog = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const { data, setData, processing, errors, get, reset, clearErrors } =
+    const { data, setData, processing, errors, post, reset, clearErrors } =
         useForm({
             tracking_id: '',
         });
 
     const handleTrack = () => {
-        get(trackCase().url, {
+        post(trackCase().url, {
             preserveState: true,
             preserveScroll: true,
             onSuccess: () => {

@@ -32,7 +32,7 @@ interface CaseWorkFlowProps {
             observations: string;
         } | null;
         case_evidence: {
-            file_path: string;
+            uuid: string;
             file_name: string;
             file_type: string;
             created_at: string;

@@ -91,10 +91,8 @@ const Report = () => {
                 onStart: () => setProcessing(true), // Triggers your PortalLoader
                 onFinish: () => setProcessing(false), // Hides your PortalLoader
                 onError: (error) => {
-                    // console.log('ERROR: ', error);
                     toast.error(error.error);
                 },
-                onSuccess: () => {},
             },
         );
     };

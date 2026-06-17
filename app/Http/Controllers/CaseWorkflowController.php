@@ -22,9 +22,10 @@ class CaseWorkflowController extends Controller
 
          $case_evidence = $case->caseEvidence->map(function ($evidence) {
                 return [
+                    'uuid' => $evidence->uuid, 
                     'file_name' => $evidence->file_name,
                     'file_type' => $evidence->file_type,
-                    'file_path' => asset('storage/' . $evidence->file_path),
+                  //   'file_path' => asset('storage/' . $evidence->file_path),
                     'created_at' => $evidence->created_at->toIso8601String(),
                 ];
          });

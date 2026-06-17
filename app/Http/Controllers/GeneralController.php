@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\CaseAssignment;
 use App\Models\CaseDetail;
+use App\Models\CaseEvidence;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class GeneralController extends Controller
@@ -117,9 +119,10 @@ class GeneralController extends Controller
 
             'case_evidence' => $case->caseEvidence->map(function ($evidence) {
                 return [
+                    'uuid' => $evidence->uuid, 
                     'file_name' => $evidence->file_name,
                     'file_type' => $evidence->file_type,
-                    'file_path' => asset('storage/app/public/' . $evidence->file_path),
+                    // 'file_path' => asset('storage/app/public/' . $evidence->file_path),
                     'created_at' => $evidence->created_at->toIso8601String(),
                 ];
             }),
@@ -142,5 +145,10 @@ class GeneralController extends Controller
             'from_url'    => $request->query('from_url'), 
             'all_users'   => $all_users
         ]);
+    }
+
+    public function downloadFile(CaseEvidence $file) 
+    {
+        return Storage::download($file->file_path, $file->file_name); 
     }
 }

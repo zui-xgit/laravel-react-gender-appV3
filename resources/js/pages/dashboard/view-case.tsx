@@ -234,10 +234,20 @@ const ViewCase = ({ case_detail, all_users }: ViewCaseProps) => {
                 </div>
 
                 {/* Evidencep FILES Card */}
-                <EvidenceFilesCard
-                    title="Case Evidence & Attachments"
-                    value={case_detail}
-                />
+
+                <Card className="overflow-hidden border-none shadow-sm ring-1 ring-border/50">
+                    <CardHeader className="bg-muted/30">
+                        <CardTitle className="flex items-center gap-2 text-base font-bold">
+                            <Paperclip className="h-4 w-4 text-blue-600" />
+                            Case Evidence & Attachments
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-6">
+                        <EvidenceFilesCard
+                            case_evidence={case_detail.case_evidence}
+                        />
+                    </CardContent>
+                </Card>
             </div>
 
             <AssignModal

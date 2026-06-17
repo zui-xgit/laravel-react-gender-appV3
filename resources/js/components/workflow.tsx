@@ -160,7 +160,7 @@ interface IntakeViewProps {
             observations: string;
         } | null;
         case_evidence: {
-            file_path: string;
+            uuid: string;
             file_name: string;
             file_type: string;
             created_at: string;
@@ -233,10 +233,19 @@ export const IntakeView = ({ case_uuid, intake }: IntakeViewProps) => {
                     </Alert>
 
                     {/* Evidence Documents */}
-                    <EvidenceFilesCard
-                        title="Case Evidence & Attachments"
-                        value={intake}
-                    />
+                    <Card className="overflow-hidden border-none shadow-sm ring-1 ring-border/50">
+                        <CardHeader className="bg-muted/30">
+                            <CardTitle className="flex items-center gap-2 text-base font-bold">
+                                <Paperclip className="h-4 w-4 text-blue-600" />
+                                Case Evidence & Attachments
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="pt-6">
+                            <EvidenceFilesCard
+                                case_evidence={intake.case_evidence}
+                            />
+                        </CardContent>
+                    </Card>
 
                     <Separator />
 
