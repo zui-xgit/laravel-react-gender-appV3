@@ -17,8 +17,8 @@ createInertiaApp({
                 return AppGuestLayout;
             case name.startsWith('reporter/'):
                 return AppGuestLayout;
-            case name === 'test':
-                return null;
+            // case name === 'test':
+            //     return null;
             case name === 'suspended':
                 return null;
             case name === 'inactive':

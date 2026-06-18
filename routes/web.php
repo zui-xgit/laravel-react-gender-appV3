@@ -10,7 +10,7 @@ use Inertia\Inertia;
 
 Route::inertia('/', 'welcome')->name('home');
 
-Route::inertia('/test', 'test' )->name("test");
+// Route::inertia('/test', 'test' )->name("test");
 
 
 // Route::middleware(['guest'])->group(function () {
