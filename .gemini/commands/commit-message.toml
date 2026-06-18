@@ -6,7 +6,7 @@ prompt = """
 !{git diff --staged}
 ```
 
-  use the following for types of changes: 
+  use the following for types of changes:   
   - for style changes use  STYLE: 
   - for bug fixes use  BUG: 
   - for new features use  FEATURE: 
