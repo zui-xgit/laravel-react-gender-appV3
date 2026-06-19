@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { create, createStore } from 'zustand';
+import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 /* =========================================================

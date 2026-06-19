@@ -4,8 +4,6 @@ import {
     Lock,
     User,
     CheckCircle2,
-    LucideIcon,
-    Users,
 } from 'lucide-react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';

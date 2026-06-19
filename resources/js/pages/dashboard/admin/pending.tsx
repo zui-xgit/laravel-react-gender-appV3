@@ -7,7 +7,6 @@ import {
     Clock,
     Download,
     Eye,
-    MoreHorizontal,
     ShieldCheck,
     UserPlus,
 } from 'lucide-react';

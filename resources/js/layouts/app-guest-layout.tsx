@@ -5,7 +5,6 @@ import {
     GraduationCap,
     HelpCircle,
     Home,
-    LogIn,
     ArrowLeft,
 } from 'lucide-react';
 import React, { useEffect } from 'react';
@@ -18,7 +17,7 @@ import {
     SheetTitle,
 } from '@/components/ui/sheet';
 import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
-import { reporterReport, reporterSuccess } from '@/routes';
+import { reporterReport } from '@/routes';
 import admin from '@/routes/admin';
 import officer from '@/routes/officer';
 

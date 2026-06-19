@@ -1,13 +1,8 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
-    BadgeAlert,
-    Clock,
-    Download,
     Edit2,
     Mail,
     MoreHorizontal,
-    Phone,
-    Plus,
     ShieldAlert,
     ShieldCheck,
     Trash2,
@@ -81,10 +76,6 @@ interface StaffManagementProps {
 }
 
 // Define a safe type for our modal configuration
-interface DialogState {
-    uuid: string;
-    type: 'activate' | 'suspend';
-}
 
 export default function StaffManagement({
     staff_members,

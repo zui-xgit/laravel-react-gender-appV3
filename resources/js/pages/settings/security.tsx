@@ -1,11 +1,11 @@
-import { Form, Head, useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import { useRef } from 'react';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { update } from '@/routes/profile';
+
 import { edit } from '@/routes/security';
 import userPassword from '@/routes/user-password';
 

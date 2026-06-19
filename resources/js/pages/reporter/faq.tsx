@@ -6,7 +6,7 @@ import {
     AlertCircle,
     LifeBuoy,
 } from 'lucide-react';
-import Heading from '@/components/heading';
+
 import {
     Accordion,
     AccordionContent,

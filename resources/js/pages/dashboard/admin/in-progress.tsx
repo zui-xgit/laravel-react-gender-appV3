@@ -3,7 +3,6 @@ import type {
     LucideIcon} from 'lucide-react';
 import {
     AlertCircle,
-    Calendar,
     Clock,
     Download,
     Eye,
@@ -45,7 +44,7 @@ import { formatDate, formatTime } from '@/lib/helpers';
 
 import admin from '@/routes/admin';
 import general from '@/routes/general';
-import { PendingCase } from '@/types/types';
+
 import type { InProgressCase} from '@/types/types';
 import type { PaginatedData } from '@/types/types';
 

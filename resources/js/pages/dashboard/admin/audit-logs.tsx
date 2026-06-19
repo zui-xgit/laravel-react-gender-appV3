@@ -3,7 +3,6 @@ import {
     ChevronDown,
     ChevronRight,
     ClipboardList,
-    Monitor,
 } from 'lucide-react';
 import { useState } from 'react';
 import Heading from '@/components/heading';

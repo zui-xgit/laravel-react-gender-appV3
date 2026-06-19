@@ -1,4 +1,4 @@
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import { PDFViewer } from '@react-pdf/renderer';
 import {
     UploadCloud,
     FileText,
@@ -6,7 +6,6 @@ import {
     ShieldIcon,
     Image as ImageIcon,
     Eye,
-    FileDown,
 } from 'lucide-react';
 import type { ChangeEvent } from 'react';
 import { toast } from 'sonner';

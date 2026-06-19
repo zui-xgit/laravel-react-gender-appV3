@@ -1,5 +1,5 @@
-import { Head, Link } from '@inertiajs/react';
-import { LogOut, RefreshCcw, OctagonX, ArrowLeft } from 'lucide-react';
+import { Head } from '@inertiajs/react';
+import { RefreshCcw, OctagonX, ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {

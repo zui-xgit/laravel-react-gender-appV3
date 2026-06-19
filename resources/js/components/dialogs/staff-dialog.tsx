@@ -1,5 +1,5 @@
 import { useForm } from '@inertiajs/react';
-import { UserPlus, User, Mail, Phone, Shield, Lock } from 'lucide-react';
+import { UserPlus, User, Mail, Shield, Lock } from 'lucide-react';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 import InputError from '@/components/input-error';

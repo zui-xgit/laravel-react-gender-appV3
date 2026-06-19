@@ -1,18 +1,17 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { LogOut, RefreshCcw, ShieldAlert } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
+
 import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
-    CardFooter,
     CardTitle,
 } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
-import { getInitials } from '@/lib/helpers';
+
 import { logout } from '@/routes';
 import admin from '@/routes/admin';
 import officer from '@/routes/officer';

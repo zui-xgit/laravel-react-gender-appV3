@@ -7,7 +7,6 @@ import {
     Calendar,
     CheckCircle,
     Clock,
-    Eye,
     Landmark,
     MessageSquare,
     PenTool,
@@ -18,14 +17,9 @@ import {
     ShieldAlert,
     Upload,
     User,
-    FileText,
     Info,
     Paperclip,
-    FileImage,
-    FileIcon,
-    ExternalLink,
 } from 'lucide-react';
-import { useEffect } from 'react';
 import { toast } from 'sonner';
 import InputError from '@/components/input-error';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -51,7 +45,6 @@ import {
     caseResolution,
 } from '@/routes';
 import EvidenceFilesCard from './evidence-files-card';
-import { Hint } from './hint';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';

@@ -4,7 +4,6 @@ import {
     Text,
     View,
     StyleSheet,
-    Font,
 } from '@react-pdf/renderer';
 import React from 'react';
 import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';

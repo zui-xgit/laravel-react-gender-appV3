@@ -1,10 +1,10 @@
 import { Head } from '@inertiajs/react';
-import { ChevronLeft, ChevronRight, Clock } from 'lucide-react';
+import { ChevronRight, Clock } from 'lucide-react';
 import BackButton from '@/components/back-button';
 import type { IntRange } from '@/components/case-progress-bar';
 import CaseProgressBar from '@/components/case-progress-bar';
 import Heading from '@/components/heading';
-import { Hint } from '@/components/hint';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 

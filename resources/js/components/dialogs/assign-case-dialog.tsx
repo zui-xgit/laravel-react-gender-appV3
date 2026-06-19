@@ -1,4 +1,4 @@
-import { useForm, usePage } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import {
     UserCheck,
     ShieldAlert,
@@ -27,7 +27,6 @@ import {
 
 import { adminAssignCase } from '@/routes';
 import type { PendingCase} from '@/types/types';
-import { UsePageProps } from '@/types/types';
 import { Spinner } from '../ui/spinner';
 
 interface AssignModalProps {

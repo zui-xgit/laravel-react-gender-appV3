@@ -1,6 +1,6 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import { Shield, User, Lock, ArrowRight, Info } from 'lucide-react';
-import { useState } from 'react';
+
 import type { FormEventHandler} from 'react';
 import { toast } from 'sonner';
 
@@ -9,14 +9,7 @@ import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import { PortalLoader } from '@/components/portal-loader';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

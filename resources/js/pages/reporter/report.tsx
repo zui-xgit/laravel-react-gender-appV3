@@ -2,7 +2,7 @@
 
 import { router } from '@inertiajs/react';
 import { CheckIcon, LoaderCircle } from 'lucide-react';
-import { Activity, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { PortalLoader } from '@/components/portal-loader';
 import { Step1 } from '@/components/reporter/stepper/step1';

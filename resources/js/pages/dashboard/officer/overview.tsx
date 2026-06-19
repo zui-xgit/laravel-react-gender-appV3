@@ -5,7 +5,6 @@ import {
     Clock,
     Filter,
     History,
-    LayoutGrid,
     TrendingUp,
     UserCheck,
 } from 'lucide-react';

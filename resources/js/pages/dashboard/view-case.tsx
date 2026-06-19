@@ -5,9 +5,6 @@ import {
     CheckCircle2,
     Clock,
     Download,
-    ExternalLink,
-    FileIcon,
-    FileImage,
     FileText,
     Paperclip,
     ShieldCheck,
@@ -24,9 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { formatDate, formatTime } from '@/lib/helpers';
-import general from '@/routes/general';
 import type { PendingCase, CaseDetail} from '@/types/types';
-import { CaseEvidence } from '@/types/types';
 
 
 interface User {

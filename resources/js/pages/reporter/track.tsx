@@ -1,4 +1,4 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { format } from 'date-fns';
 import {
     AlertCircle,
@@ -28,7 +28,7 @@ import {
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import AppLayout from '@/layouts/app-layout';
+
 import { formatDate, formatTime } from '@/lib/helpers';
 import { destroySession } from '@/routes';
 

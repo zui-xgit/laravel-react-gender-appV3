@@ -5,11 +5,7 @@ import {
     Clock,
     Filter,
     History,
-    Plus,
-    ShieldAlert,
-    TrendingUp,
     UserPlus,
-    Users,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import Heading from '@/components/heading';

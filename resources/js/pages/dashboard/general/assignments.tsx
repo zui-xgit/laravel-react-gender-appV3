@@ -47,7 +47,6 @@ import {
 } from '@/components/ui/table';
 import { formatDate, formatTime } from '@/lib/helpers';
 
-import admin from '@/routes/admin';
 import general from '@/routes/general';
 import type { PersonalAssignment } from '@/types/types';
 import type { PaginatedData } from '@/types/types';

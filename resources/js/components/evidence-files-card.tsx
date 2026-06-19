@@ -1,6 +1,5 @@
-import { router, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import {
-    Download,
     ExternalLink,
     FileIcon,
     FileImage,
@@ -11,7 +10,6 @@ import general from '@/routes/general';
 import track from '@/routes/track';
 import type { UsePageProps } from '@/types/types';
 import { Hint } from './hint';
-import { Button } from './ui/button';
 
 const FileTypeIcon = ({ type }: { type: string }) => {
     if (type.includes('image')) {

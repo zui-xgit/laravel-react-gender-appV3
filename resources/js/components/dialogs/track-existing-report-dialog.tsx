@@ -1,5 +1,5 @@
 import { useForm } from '@inertiajs/react';
-import { Search, Loader2 } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
