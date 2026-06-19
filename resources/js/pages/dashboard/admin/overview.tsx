@@ -1,16 +1,3 @@
-import Heading from '@/components/heading';
-import StatCard from '@/components/stat-card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { Log } from '@/types/types';
 import { Head, router } from '@inertiajs/react';
 import {
     AlertCircle,
@@ -24,10 +11,23 @@ import {
     UserPlus,
     Users,
 } from 'lucide-react';
+import { toast } from 'sonner';
+import Heading from '@/components/heading';
+import StatCard from '@/components/stat-card';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
 import { formatRelativeTime, getInitials } from '@/lib/helpers';
 
 import admin from '@/routes/admin';
-import { toast } from 'sonner';
+import type { Log } from '@/types/types';
 
 interface OverviewProps {
     stats: {
@@ -97,6 +97,7 @@ export default function Overview({ stats, logs }: OverviewProps) {
             color: 'text-green-600',
         },
     ];
+
     return (
         <>
             <Head title="Admin Overview" />

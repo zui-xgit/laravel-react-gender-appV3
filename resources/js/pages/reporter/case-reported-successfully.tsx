@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Link, usePage } from '@inertiajs/react'; // 1. Added usePage import
 import {
     Copy,
@@ -12,6 +11,8 @@ import {
     Lock,
     AlertCircle, // Added an alert icon for the expired state
 } from 'lucide-react';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -21,7 +22,6 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { home, reporterTrack } from '@/routes';
-import { toast } from 'sonner';
 
 export default function CaseReportedSuccessfully() {
     const [copied, setCopied] = useState(false);
@@ -35,7 +35,10 @@ export default function CaseReportedSuccessfully() {
     }
 
     const copyToClipboard = () => {
-        if (!trackingId) return;
+        if (!trackingId) {
+return;
+}
+
         navigator.clipboard.writeText(trackingId);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
@@ -147,6 +150,7 @@ export default function CaseReportedSuccessfully() {
             <section className="grid grid-cols-1 gap-6 px-4 md:grid-cols-3">
                 {nextSteps.map((step, idx) => {
                     const Icon = step.icon;
+
                     return (
                         <Card
                             key={idx}

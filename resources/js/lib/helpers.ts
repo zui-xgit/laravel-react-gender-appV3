@@ -29,7 +29,9 @@
  * Formats: Oct 24, 2026
  */
 export const formatDate = (dateString: string | null | undefined): string => {
-    if (!dateString) return 'N/A';
+    if (!dateString) {
+return 'N/A';
+}
 
     return new Date(dateString).toLocaleDateString(undefined, {
         month: 'short',
@@ -42,7 +44,9 @@ export const formatDate = (dateString: string | null | undefined): string => {
  * Formats: 05:27 PM
  */
 export const formatTime = (dateString: string | null | undefined): string => {
-    if (!dateString) return 'N/A';
+    if (!dateString) {
+return 'N/A';
+}
 
     return new Date(dateString).toLocaleTimeString([], {
         hour: '2-digit',
@@ -57,7 +61,9 @@ export const formatTime = (dateString: string | null | undefined): string => {
 export const formatRelativeTime = (
     dateString: string | null | undefined,
 ): string => {
-    if (!dateString) return 'N/A';
+    if (!dateString) {
+return 'N/A';
+}
 
     const date = new Date(dateString);
     const now = new Date();
@@ -66,7 +72,9 @@ export const formatRelativeTime = (
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
     // Handle potential future dates or slight system clock mismatches
-    if (diffInSeconds < 5) return 'Just now';
+    if (diffInSeconds < 5) {
+return 'Just now';
+}
 
     // Time intervals defined in seconds
     const intervals = [
@@ -80,6 +88,7 @@ export const formatRelativeTime = (
 
     for (const interval of intervals) {
         const count = Math.floor(diffInSeconds / interval.seconds);
+
         if (count >= 1) {
             return `${count} ${interval.label}${count > 1 ? 's' : ''} ago`;
         }
@@ -92,10 +101,15 @@ export const formatRelativeTime = (
  * Extracts uppercase initials from a full name (e.g., "Juma Asha" -> "JA").
  */
 export const getInitials = (name: string | null | undefined): string => {
-    if (!name || typeof name !== 'string') return '';
+    if (!name || typeof name !== 'string') {
+return '';
+}
 
     const trimmedName = name.trim();
-    if (!trimmedName) return '';
+
+    if (!trimmedName) {
+return '';
+}
 
     const parts = trimmedName.split(/\s+/); // Splits by any amount of whitespace
 

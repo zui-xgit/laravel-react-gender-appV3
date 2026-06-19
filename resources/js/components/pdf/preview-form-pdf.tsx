@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     Document,
     Page,
@@ -7,6 +6,7 @@ import {
     StyleSheet,
     Font,
 } from '@react-pdf/renderer';
+import React from 'react';
 import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
 
 // Register fonts if needed, but for now we'll use defaults for maximum compatibility

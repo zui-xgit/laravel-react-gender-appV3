@@ -1,3 +1,4 @@
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import {
     UploadCloud,
     FileText,
@@ -7,21 +8,14 @@ import {
     Eye,
     FileDown,
 } from 'lucide-react';
-import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
-import { ChangeEvent } from 'react';
+import type { ChangeEvent } from 'react';
 import { toast } from 'sonner';
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import InputError from '@/components/input-error';
 import FormPreviewPDF from '@/components/pdf/preview-form-pdf';
 
 // Shadcn UI Components
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
-import StepHeader from './step-header';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
     Dialog,
@@ -30,6 +24,12 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
+import StepHeader from './step-header';
 
 export const Step6 = () => {
     const { formData, errors, setFormData, setErrors } = useStepperFormStore();
@@ -45,10 +45,12 @@ export const Step6 = () => {
 
         const filteredFiles = files.filter((file) => {
             const isValidType = validTypes.includes(file.type);
+
             if (!isValidType) {
                 toast.error(
                     `"${file.name}" is not a supported format (PDF, PNG, JPG, JPEG only).`,
                 );
+
                 return false;
             }
 
@@ -58,6 +60,7 @@ export const Step6 = () => {
 
             if (isDuplicate) {
                 toast.error(`"${file.name}" has already been added.`);
+
                 return false;
             }
 
@@ -84,10 +87,14 @@ export const Step6 = () => {
     };
 
     const formatFileSize = (bytes: number) => {
-        if (bytes === 0) return '0 Bytes';
+        if (bytes === 0) {
+return '0 Bytes';
+}
+
         const k = 1024;
         const sizes = ['Bytes', 'KB', 'MB', 'GB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
+
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
 

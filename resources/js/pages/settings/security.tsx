@@ -5,8 +5,8 @@ import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { edit } from '@/routes/security';
 import { update } from '@/routes/profile';
+import { edit } from '@/routes/security';
 import userPassword from '@/routes/user-password';
 
 export default function Security() {

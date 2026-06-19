@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import {
     Shield,
@@ -9,6 +8,8 @@ import {
     LogIn,
     ArrowLeft,
 } from 'lucide-react';
+import React, { useEffect } from 'react';
+import QuickExitButton from '@/components/quick-exit-button';
 import { Button } from '@/components/ui/button';
 import {
     Sheet,
@@ -16,11 +17,10 @@ import {
     SheetTrigger,
     SheetTitle,
 } from '@/components/ui/sheet';
-import QuickExitButton from '@/components/quick-exit-button';
-import { reporterReport, reporterSuccess } from '@/routes';
 import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
-import officer from '@/routes/officer';
+import { reporterReport, reporterSuccess } from '@/routes';
 import admin from '@/routes/admin';
+import officer from '@/routes/officer';
 
 interface AppLayoutProps {
     children: React.ReactNode;
@@ -31,6 +31,7 @@ export default function AppGuestLayout({ children }: AppLayoutProps) {
     const resetForm = useStepperFormStore((state) => state.resetForm);
 
     let dashboardHref = '';
+
     if (props.auth.user) {
         dashboardHref =
             props.auth.user.role === 'admin'
@@ -127,6 +128,7 @@ export default function AppGuestLayout({ children }: AppLayoutProps) {
                                     <nav className="flex flex-col gap-2">
                                         {navLinks.map((link) => {
                                             const Icon = link.icon;
+
                                             return (
                                                 <Link
                                                     key={link.href}

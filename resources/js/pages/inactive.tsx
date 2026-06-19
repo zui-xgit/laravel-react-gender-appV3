@@ -1,5 +1,7 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { LogOut, RefreshCcw, ShieldAlert } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -9,14 +11,12 @@ import {
     CardFooter,
     CardTitle,
 } from '@/components/ui/card';
+import { Spinner } from '@/components/ui/spinner';
+import { getInitials } from '@/lib/helpers';
 import { logout } from '@/routes';
-import { UsePageProps } from '@/types/types';
 import admin from '@/routes/admin';
 import officer from '@/routes/officer';
-import { useState } from 'react';
-import { Spinner } from '@/components/ui/spinner';
-import { toast } from 'sonner';
-import { getInitials } from '@/lib/helpers';
+import type { UsePageProps } from '@/types/types';
 
 const Inactive = () => {
     const { auth } = usePage<UsePageProps>().props;

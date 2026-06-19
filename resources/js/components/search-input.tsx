@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { InertiaLinkProps, router } from '@inertiajs/react';
+import type { InertiaLinkProps} from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import { Search } from 'lucide-react';
-import { Input } from './ui/input';
+import React, { useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-import { adminPending } from '@/routes';
 import { cn } from '@/lib/utils';
+import { adminPending } from '@/routes';
+import { Input } from './ui/input';
 import { Spinner } from './ui/spinner';
 
 interface SearchInputProps {

@@ -1,12 +1,12 @@
+import { usePage } from '@inertiajs/react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getInitials } from '@/lib/helpers';
-import { usePage } from '@inertiajs/react';
-import { UsePageProps } from '@/types/types';
+import type { UsePageProps } from '@/types/types';
 import { UserMenuContent } from './user-menu-content';
 
 const UserProfileDropdown = () => {

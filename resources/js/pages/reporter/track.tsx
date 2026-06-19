@@ -1,15 +1,5 @@
-import AppLayout from '@/layouts/app-layout';
-import { Badge } from '@/components/ui/badge';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Head, Link, router } from '@inertiajs/react';
+import { format } from 'date-fns';
 import {
     AlertCircle,
     Info,
@@ -25,11 +15,21 @@ import {
     Briefcase,
     LogOut,
 } from 'lucide-react';
-import { format } from 'date-fns';
-import { formatDate, formatTime } from '@/lib/helpers';
-import { Head, Link, router } from '@inertiajs/react';
 import EvidenceFilesCard from '@/components/evidence-files-card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import AppLayout from '@/layouts/app-layout';
+import { formatDate, formatTime } from '@/lib/helpers';
 import { destroySession } from '@/routes';
 
 interface User {

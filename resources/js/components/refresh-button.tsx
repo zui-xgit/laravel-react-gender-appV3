@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { InertiaLinkProps, router } from '@inertiajs/react';
+import type { InertiaLinkProps} from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import { RotateCw } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 

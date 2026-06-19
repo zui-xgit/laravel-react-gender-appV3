@@ -1,5 +1,5 @@
-import React from 'react';
 import { ArrowLeft, ChevronLeft } from 'lucide-react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Hint } from './hint';
 

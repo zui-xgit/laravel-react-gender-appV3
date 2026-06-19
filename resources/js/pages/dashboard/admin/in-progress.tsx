@@ -1,4 +1,19 @@
+import { Head, router } from '@inertiajs/react';
+import type {
+    LucideIcon} from 'lucide-react';
+import {
+    AlertCircle,
+    Calendar,
+    Clock,
+    Download,
+    Eye,
+    ShieldCheck,
+} from 'lucide-react';
+import CaseProgressBar from '@/components/case-progress-bar';
 import Heading from '@/components/heading';
+import { Hint } from '@/components/hint';
+import RefreshButton from '@/components/refresh-button';
+import SearchInput from '@/components/search-input';
 import StatCard from '@/components/stat-card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -11,6 +26,13 @@ import {
     CardFooter,
 } from '@/components/ui/card';
 import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import {
     Table,
     TableBody,
     TableCell,
@@ -19,33 +41,13 @@ import {
     TableRow,
 } from '@/components/ui/table';
 
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import { Head, router } from '@inertiajs/react';
-import {
-    AlertCircle,
-    Calendar,
-    Clock,
-    Download,
-    Eye,
-    LucideIcon,
-    ShieldCheck,
-} from 'lucide-react';
 import { formatDate, formatTime } from '@/lib/helpers';
 
-import { InProgressCase, PendingCase } from '@/types/types';
-import { Hint } from '@/components/hint';
-import SearchInput from '@/components/search-input';
-import RefreshButton from '@/components/refresh-button';
-import CaseProgressBar from '@/components/case-progress-bar';
-import { PaginatedData } from '@/types/types';
 import admin from '@/routes/admin';
 import general from '@/routes/general';
+import { PendingCase } from '@/types/types';
+import type { InProgressCase} from '@/types/types';
+import type { PaginatedData } from '@/types/types';
 
 // interface PaginationLinks {
 //     url: string | null;
@@ -375,6 +377,7 @@ export default function InProgress({ cases, stats, filters }: InProgressProps) {
                                             </Button>
                                         );
                                     }
+
                                     return null;
                                 })}
                             </div>

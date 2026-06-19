@@ -1,20 +1,6 @@
-import { Button } from './ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
+import { useForm } from '@inertiajs/react';
+import type {
+    LucideIcon} from 'lucide-react';
 import {
     AlertCircle,
     ArrowUpRight,
@@ -34,31 +20,46 @@ import {
     User,
     FileText,
     Info,
-    LucideIcon,
     Paperclip,
     FileImage,
     FileIcon,
     ExternalLink,
 } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Badge } from './ui/badge';
-import { Textarea } from './ui/textarea';
-import { Separator } from './ui/separator';
-import { Hint } from './hint';
-import { Checkbox } from './ui/checkbox';
-import { cn } from '@/lib/utils';
-import { useForm } from '@inertiajs/react';
+import { useEffect } from 'react';
+import { toast } from 'sonner';
 import InputError from '@/components/input-error';
-import { Spinner } from './ui/spinner';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 import {
     caseEscalation,
     caseIntake,
     caseInvestigation,
     caseResolution,
 } from '@/routes';
-import { toast } from 'sonner';
-import { useEffect } from 'react';
 import EvidenceFilesCard from './evidence-files-card';
+import { Hint } from './hint';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import { Checkbox } from './ui/checkbox';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Separator } from './ui/separator';
+import { Spinner } from './ui/spinner';
+import { Textarea } from './ui/textarea';
 
 interface StepCardProps {
     title: string;
@@ -196,12 +197,15 @@ export const IntakeView = ({ case_uuid, intake }: IntakeViewProps) => {
         }
 
         const allChecked = Object.values(data.checklist).every(Boolean);
+
         if (!allChecked) {
             setError('checklist', 'All verification steps must be completed.');
             hasErrors = true;
         }
 
-        if (hasErrors) return;
+        if (hasErrors) {
+return;
+}
 
         post(caseIntake({ case: case_uuid }).url, {
             onError: (errors) => {
@@ -379,16 +383,20 @@ export const InvestigationView = ({
             setError('subjectName', 'Subject name is required.');
             hasErrors = true;
         }
+
         if (!data.relationship) {
             setError('relationship', 'Please select a relationship.');
             hasErrors = true;
         }
+
         if (!data.summary.trim()) {
             setError('summary', 'Investigation summary is required.');
             hasErrors = true;
         }
 
-        if (hasErrors) return;
+        if (hasErrors) {
+return;
+}
 
         post(caseInvestigation({ case: case_uuid }).url, {
             onError: (errors) => {
@@ -588,16 +596,20 @@ export const EscalationView = ({
             setError('targetUnit', 'Target unit is required.');
             hasErrors = true;
         }
+
         if (!data.reason) {
             setError('reason', 'Reason for escalation is required.');
             hasErrors = true;
         }
+
         if (!data.notes.trim()) {
             setError('notes', 'Handover notes are required.');
             hasErrors = true;
         }
 
-        if (hasErrors) return;
+        if (hasErrors) {
+return;
+}
 
         post(caseEscalation({ case: case_uuid }).url, {
             onError: (errors) => {
@@ -801,24 +813,30 @@ export const ResolutionView = ({
             setError('coordinatorName', 'Coordinator name is required.');
             hasErrors = true;
         }
+
         if (!data.phone.trim()) {
             setError('phone', 'Phone number is required.');
             hasErrors = true;
         }
+
         if (!data.comment.trim()) {
             setError('comment', 'Final comment is required.');
             hasErrors = true;
         }
+
         if (!data.date) {
             setError('date', 'Resolution date is required.');
             hasErrors = true;
         }
+
         if (!data.time) {
             setError('time', 'Resolution time is required.');
             hasErrors = true;
         }
 
-        if (hasErrors) return;
+        if (hasErrors) {
+return;
+}
 
         post(caseResolution({ case: case_uuid }).url, {
             onError: (errors) => {

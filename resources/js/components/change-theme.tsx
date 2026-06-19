@@ -1,7 +1,5 @@
-import * as React from 'react';
 import { Monitor, Moon, Sun, Check } from 'lucide-react';
-import { useAppearance, type Appearance } from '@/hooks/use-appearance';
-
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -9,6 +7,9 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useAppearance  } from '@/hooks/use-appearance';
+import type {Appearance} from '@/hooks/use-appearance';
+
 
 export function ChangeTheme() {
     const { appearance, updateAppearance } = useAppearance();

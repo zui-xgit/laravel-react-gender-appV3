@@ -1,7 +1,7 @@
-import type { AuthLayoutProps } from '@/types';
-import { ShieldAlert, ArrowLeft } from 'lucide-react';
 import { Link } from '@inertiajs/react';
+import { ShieldAlert, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import type { AuthLayoutProps } from '@/types';
 
 export default function AuthSimpleLayout({ children }: AuthLayoutProps) {
     return (

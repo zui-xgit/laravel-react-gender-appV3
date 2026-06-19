@@ -1,4 +1,7 @@
 import { useForm } from '@inertiajs/react';
+import { Search, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -8,14 +11,11 @@ import {
     DialogTrigger,
     DialogFooter,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Search, Loader2 } from 'lucide-react';
+import { trackCase } from '@/routes';
 import InputError from '../input-error';
 import { Spinner } from '../ui/spinner';
-import { useState } from 'react';
-import { trackCase } from '@/routes';
 
 const TrackExistingReportDialog = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);

@@ -1,3 +1,14 @@
+import { Head, router } from '@inertiajs/react';
+import {
+    AlertCircle,
+    CheckCircle2,
+    Clock,
+    Filter,
+    History,
+    LayoutGrid,
+    TrendingUp,
+    UserCheck,
+} from 'lucide-react';
 import Heading from '@/components/heading';
 import StatCard from '@/components/stat-card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -10,22 +21,11 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { Log } from '@/types/types';
-import { Head, router } from '@inertiajs/react';
-import {
-    AlertCircle,
-    CheckCircle2,
-    Clock,
-    Filter,
-    History,
-    LayoutGrid,
-    TrendingUp,
-    UserCheck,
-} from 'lucide-react';
 import { formatRelativeTime, getInitials } from '@/lib/helpers';
 
-import officer from '@/routes/officer';
 import general from '@/routes/general';
+import officer from '@/routes/officer';
+import type { Log } from '@/types/types';
 
 interface OverviewProps {
     stats: {

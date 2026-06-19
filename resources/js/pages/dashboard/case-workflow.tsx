@@ -1,10 +1,14 @@
+import { Head } from '@inertiajs/react';
+import { ChevronLeft, ChevronRight, Clock } from 'lucide-react';
+import BackButton from '@/components/back-button';
+import type { IntRange } from '@/components/case-progress-bar';
+import CaseProgressBar from '@/components/case-progress-bar';
+import Heading from '@/components/heading';
+import { Hint } from '@/components/hint';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Hint } from '@/components/hint';
-import { Head } from '@inertiajs/react';
-import { ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 import {
     EscalationView,
     IntakeView,
@@ -12,9 +16,6 @@ import {
     ResolutionView,
     STEPS,
 } from '@/components/workflow';
-import Heading from '@/components/heading';
-import CaseProgressBar, { IntRange } from '@/components/case-progress-bar';
-import BackButton from '@/components/back-button';
 
 interface CaseWorkFlowProps {
     case_uuid: string;
@@ -98,6 +99,7 @@ const CaseWorkFlow = ({
                         >
                             {STEPS.map((step, index) => {
                                 const Icon = step.icon;
+
                                 return (
                                     // <Hint content={step.hint}>
                                     <TabsTrigger

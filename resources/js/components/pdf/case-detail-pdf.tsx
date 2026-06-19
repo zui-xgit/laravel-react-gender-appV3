@@ -1,6 +1,6 @@
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
-import { CaseDetail } from '@/types/types';
 import { formatDate, formatTime } from '@/lib/helpers';
+import type { CaseDetail } from '@/types/types';
 
 const styles = StyleSheet.create({
     page: {
@@ -127,7 +127,10 @@ const toDisplayString = (
     value: string | number | null | undefined,
     fallback: string,
 ): string => {
-    if (value === null || value === undefined || value === '') return fallback;
+    if (value === null || value === undefined || value === '') {
+return fallback;
+}
+
     return String(value);
 };
 

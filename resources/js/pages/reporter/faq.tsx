@@ -1,4 +1,13 @@
 import {
+    HelpCircle,
+    Lock,
+    MessageCircle,
+    FileText,
+    AlertCircle,
+    LifeBuoy,
+} from 'lucide-react';
+import Heading from '@/components/heading';
+import {
     Accordion,
     AccordionContent,
     AccordionItem,
@@ -11,15 +20,6 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import {
-    HelpCircle,
-    Lock,
-    MessageCircle,
-    FileText,
-    AlertCircle,
-    LifeBuoy,
-} from 'lucide-react';
-import Heading from '@/components/heading';
 
 const faqCategories = [
     {

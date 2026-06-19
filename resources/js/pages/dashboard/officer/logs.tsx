@@ -1,5 +1,10 @@
+import { Head, router } from '@inertiajs/react';
+import { ChevronDown, ChevronRight, ClipboardList } from 'lucide-react';
+import { useState } from 'react';
 import Heading from '@/components/heading';
+import RefreshButton from '@/components/refresh-button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -9,13 +14,10 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import {
     Select,
     SelectContent,
@@ -23,21 +25,19 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Head, router } from '@inertiajs/react';
-import { ChevronDown, ChevronRight, ClipboardList } from 'lucide-react';
-import { formatDate, formatTime } from '@/lib/helpers';
-import RefreshButton from '@/components/refresh-button';
-import { PaginatedData } from '@/types/types';
-import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-} from '@/components/ui/collapsible';
-import { Log } from '@/types/types';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { formatDate, formatTime } from '@/lib/helpers';
 import officer from '@/routes/officer';
+import type { PaginatedData } from '@/types/types';
+import type { Log } from '@/types/types';
 
 interface LogsProps {
     logs: PaginatedData<Log>;
@@ -50,6 +50,7 @@ const LogPlatformProperties = ({ log }: { log: Log }) => {
     if (!log.properties) {
         return null;
     }
+
     const { ip, userAgent } = log.properties;
 
     if (!ip && !userAgent) {
@@ -377,6 +378,7 @@ export default function Logs({ logs, filters }: LogsProps) {
                                             </Button>
                                         );
                                     }
+
                                     return null;
                                 })}
                             </div>

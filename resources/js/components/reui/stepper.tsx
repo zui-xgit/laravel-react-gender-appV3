@@ -1,9 +1,10 @@
+import type {
+    HTMLAttributes,
+    ReactElement} from 'react';
 import {
     Children,
     createContext,
-    HTMLAttributes,
     isValidElement,
-    ReactElement,
     useCallback,
     useContext,
     useEffect,
@@ -54,13 +55,21 @@ const StepItemContext = createContext<StepItemContextValue | undefined>(
 
 function useStepper() {
     const ctx = useContext(StepperContext);
-    if (!ctx) throw new Error('useStepper must be used within a Stepper');
+
+    if (!ctx) {
+throw new Error('useStepper must be used within a Stepper');
+}
+
     return ctx;
 }
 
 function useStepItem() {
     const ctx = useContext(StepItemContext);
-    if (!ctx) throw new Error('useStepItem must be used within a StepperItem');
+
+    if (!ctx) {
+throw new Error('useStepItem must be used within a StepperItem');
+}
+
     return ctx;
 }
 
@@ -103,6 +112,7 @@ function Stepper({
             if (value === undefined) {
                 setActiveStep(step);
             }
+
             onValueChange?.(step);
         },
         [value, onValueChange],
@@ -112,7 +122,9 @@ function Stepper({
 
     // Keyboard navigation logic
     const focusTrigger = (idx: number) => {
-        if (triggerNodes[idx]) triggerNodes[idx].focus();
+        if (triggerNodes[idx]) {
+triggerNodes[idx].focus();
+}
     };
     const focusNext = (currentIdx: number) =>
         focusTrigger((currentIdx + 1) % triggerNodes.length);
@@ -266,20 +278,36 @@ function StepperTrigger({
             case 'ArrowRight':
             case 'ArrowDown':
                 e.preventDefault();
-                if (myIdx !== -1 && focusNext) focusNext(myIdx);
+
+                if (myIdx !== -1 && focusNext) {
+focusNext(myIdx);
+}
+
                 break;
             case 'ArrowLeft':
             case 'ArrowUp':
                 e.preventDefault();
-                if (myIdx !== -1 && focusPrev) focusPrev(myIdx);
+
+                if (myIdx !== -1 && focusPrev) {
+focusPrev(myIdx);
+}
+
                 break;
             case 'Home':
                 e.preventDefault();
-                if (focusFirst) focusFirst();
+
+                if (focusFirst) {
+focusFirst();
+}
+
                 break;
             case 'End':
                 e.preventDefault();
-                if (focusLast) focusLast();
+
+                if (focusLast) {
+focusLast();
+}
+
                 break;
             case 'Enter':
             case ' ':

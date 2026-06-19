@@ -1,38 +1,3 @@
-import Heading from '@/components/heading';
-import StatCard from '@/components/stat-card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
     BadgeAlert,
@@ -53,17 +18,52 @@ import {
     UserX,
 } from 'lucide-react';
 import { useState } from 'react';
-import { formatDate, formatTime } from '@/lib/helpers';
-import SearchInput from '@/components/search-input';
-import RefreshButton from '@/components/refresh-button';
-import { StaffMember, UsePageProps } from '@/types/types';
-import StaffDialog from '@/components/dialogs/staff-dialog';
-import admin from '@/routes/admin';
-import ConfirmationDialog from '@/components/dialogs/confirmation-dialog';
-import { edit } from '@/routes/profile';
-// import { fa } from 'zod/v4/locales';
-import { PortalLoader } from '@/components/portal-loader';
 import { toast } from 'sonner';
+import ConfirmationDialog from '@/components/dialogs/confirmation-dialog';
+import StaffDialog from '@/components/dialogs/staff-dialog';
+import Heading from '@/components/heading';
+import { PortalLoader } from '@/components/portal-loader';
+import RefreshButton from '@/components/refresh-button';
+import SearchInput from '@/components/search-input';
+import StatCard from '@/components/stat-card';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { formatDate, formatTime } from '@/lib/helpers';
+import admin from '@/routes/admin';
+import { edit } from '@/routes/profile';
+import type { StaffMember, UsePageProps } from '@/types/types';
+// import { fa } from 'zod/v4/locales';
 
 interface StaffManagementProps {
     staff_members: StaffMember[];

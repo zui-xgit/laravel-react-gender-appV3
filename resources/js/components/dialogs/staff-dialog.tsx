@@ -1,3 +1,10 @@
+import { useForm } from '@inertiajs/react';
+import { UserPlus, User, Mail, Phone, Shield, Lock } from 'lucide-react';
+import { useEffect } from 'react';
+import { toast } from 'sonner';
+import InputError from '@/components/input-error';
+import PasswordInput from '@/components/password-input';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -6,7 +13,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -16,14 +22,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { useForm } from '@inertiajs/react';
-import InputError from '@/components/input-error';
-import { UserPlus, User, Mail, Phone, Shield, Lock } from 'lucide-react';
-import PasswordInput from '@/components/password-input';
 import admin from '@/routes/admin';
-import { toast } from 'sonner';
-import { StaffMember } from '@/types/types';
-import { useEffect } from 'react';
+import type { StaffMember } from '@/types/types';
 import { Spinner } from '../ui/spinner';
 
 interface AddNewStaffDialogProps {

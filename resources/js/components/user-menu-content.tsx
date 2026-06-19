@@ -1,5 +1,6 @@
 import { Link, router, usePage } from '@inertiajs/react';
 import { CircleUser, LogOut, Settings } from 'lucide-react';
+import { toast } from 'sonner';
 import {
     DropdownMenuGroup,
     DropdownMenuItem,
@@ -9,11 +10,10 @@ import {
 import { UserInfo } from '@/components/user-info';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { logout } from '@/routes';
+import officer from '@/routes/officer';
 import { edit } from '@/routes/profile';
 import type { User } from '@/types';
-import { UsePageProps } from '@/types/types';
-import officer from '@/routes/officer';
-import { toast } from 'sonner';
+import type { UsePageProps } from '@/types/types';
 
 type Props = {
     user: User;

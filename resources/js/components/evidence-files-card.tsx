@@ -1,3 +1,4 @@
+import { router, usePage } from '@inertiajs/react';
 import {
     Download,
     ExternalLink,
@@ -6,18 +7,21 @@ import {
     FileText,
     Paperclip,
 } from 'lucide-react';
-import { Button } from './ui/button';
-import { Hint } from './hint';
-import track from '@/routes/track';
-import { router, usePage } from '@inertiajs/react';
-import { UsePageProps } from '@/types/types';
 import general from '@/routes/general';
+import track from '@/routes/track';
+import type { UsePageProps } from '@/types/types';
+import { Hint } from './hint';
+import { Button } from './ui/button';
 
 const FileTypeIcon = ({ type }: { type: string }) => {
-    if (type.includes('image'))
-        return <FileImage className="h-4 w-4 text-blue-500" />;
-    if (type.includes('pdf'))
-        return <FileText className="h-4 w-4 text-red-500" />;
+    if (type.includes('image')) {
+return <FileImage className="h-4 w-4 text-blue-500" />;
+}
+
+    if (type.includes('pdf')) {
+return <FileText className="h-4 w-4 text-red-500" />;
+}
+
     return <FileIcon className="h-4 w-4 text-gray-500" />;
 };
 

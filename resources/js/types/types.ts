@@ -1,5 +1,5 @@
-import { IntRange } from '@/components/case-progress-bar';
-import { PageProps } from '@inertiajs/core';
+import type { PageProps } from '@inertiajs/core';
+import type { IntRange } from '@/components/case-progress-bar';
 
 export type Sex = 'Male' | 'Female' | 'Other' | null;
 

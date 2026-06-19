@@ -1,20 +1,5 @@
-import Heading from '@/components/heading';
-import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import officer from '@/routes/officer';
 import { Head, router } from '@inertiajs/react';
+import { format } from 'date-fns';
 import {
     AlertCircle,
     CalendarIcon,
@@ -30,8 +15,23 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { format } from 'date-fns';
+import Heading from '@/components/heading';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
+import officer from '@/routes/officer';
 
 interface DatePickerFieldProps {
     label: string;
@@ -55,8 +55,12 @@ const safeFormat = (
     dateString: string | null | undefined,
     formatStr: string = 'PP',
 ) => {
-    if (!dateString) return '...';
+    if (!dateString) {
+return '...';
+}
+
     const parsed = new Date(dateString);
+
     return isNaN(parsed.getTime()) ? '...' : format(parsed, formatStr);
 };
 
@@ -115,6 +119,7 @@ const Report = ({ summary, from_date, to_date }: ReportProps) => {
     const handleProceed = () => {
         if (!fromDate || !toDate) {
             toast.error('Choose the date range');
+
             return;
         }
 
@@ -134,6 +139,7 @@ const Report = ({ summary, from_date, to_date }: ReportProps) => {
                     const summary = page.props.summary as {
                         total: number;
                     } | null;
+
                     if (summary && summary.total > 0) {
                         toast.success(
                             `${summary.total} cases found in your assignment for the selected range.`,

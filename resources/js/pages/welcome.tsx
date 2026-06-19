@@ -12,6 +12,7 @@ import {
     UserCheck,
     Building2,
 } from 'lucide-react';
+import TrackExistingReportDialog from '@/components/dialogs/track-existing-report-dialog';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -21,7 +22,6 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { reporterReport } from '@/routes';
-import TrackExistingReportDialog from '@/components/dialogs/track-existing-report-dialog';
 
 export default function Home() {
     // Core application features
@@ -142,6 +142,7 @@ export default function Home() {
             <section className="grid grid-cols-1 gap-6 px-4 md:grid-cols-3">
                 {coreFeatures.map((feature, idx) => {
                     const Icon = feature.icon;
+
                     return (
                         <Card
                             key={idx}
@@ -183,6 +184,7 @@ export default function Home() {
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                     {reportingChannels.map((channel, idx) => {
                         const Icon = channel.icon;
+
                         return (
                             <Card
                                 key={idx}

@@ -1,4 +1,3 @@
-import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
 import {
     Shield,
     Info,
@@ -8,7 +7,6 @@ import {
     LucideIcon,
     Users,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
@@ -18,6 +16,8 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
+import { cn } from '@/lib/utils';
 
 import StepHeader from './step-header';
 

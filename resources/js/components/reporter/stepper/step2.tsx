@@ -1,10 +1,9 @@
 import { User } from 'lucide-react';
-import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
+import InputError from '@/components/input-error';
+import { Input } from '@/components/ui/input';
 
 // Shadcn UI Components
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import {
     Select,
     SelectContent,
@@ -12,7 +11,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import InputError from '@/components/input-error';
+import { Textarea } from '@/components/ui/textarea';
+import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
 import StepHeader from './step-header';
 
 export const Step2 = () => {

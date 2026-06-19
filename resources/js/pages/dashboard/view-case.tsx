@@ -1,17 +1,5 @@
-import BackButton from '@/components/back-button';
-import AssignModal from '@/components/dialogs/assign-case-dialog';
-import EvidenceFilesCard from '@/components/evidence-files-card';
-import CaseDetailPDF from '@/components/pdf/case-detail-pdf';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Spinner } from '@/components/ui/spinner';
-import { formatDate, formatTime } from '@/lib/helpers';
-import general from '@/routes/general';
-import { PendingCase, CaseDetail, CaseEvidence } from '@/types/types';
 import { Head } from '@inertiajs/react';
 import { usePDF } from '@react-pdf/renderer';
-
 import {
     AlertCircle,
     CheckCircle2,
@@ -27,6 +15,19 @@ import {
     UserPlus,
 } from 'lucide-react';
 import { useState } from 'react';
+import BackButton from '@/components/back-button';
+import AssignModal from '@/components/dialogs/assign-case-dialog';
+import EvidenceFilesCard from '@/components/evidence-files-card';
+import CaseDetailPDF from '@/components/pdf/case-detail-pdf';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Spinner } from '@/components/ui/spinner';
+import { formatDate, formatTime } from '@/lib/helpers';
+import general from '@/routes/general';
+import type { PendingCase, CaseDetail} from '@/types/types';
+import { CaseEvidence } from '@/types/types';
+
 
 interface User {
     uuid: string;

@@ -1,7 +1,7 @@
 // custom
 
-import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
 import { ShieldAlert } from 'lucide-react';
+import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
 
 const QuickExitButton = () => {
     const resetForm = useStepperFormStore((state) => state.resetForm);
@@ -12,6 +12,7 @@ const QuickExitButton = () => {
             'https://www.google.com/search?q=current+weather',
         );
     };
+
     return (
         <button
             onClick={handleQuickExit}

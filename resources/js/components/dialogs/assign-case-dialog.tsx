@@ -1,3 +1,13 @@
+import { useForm, usePage } from '@inertiajs/react';
+import {
+    UserCheck,
+    ShieldAlert,
+    ClipboardList,
+    CheckCircle2,
+    User,
+} from 'lucide-react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -14,20 +24,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import {
-    UserCheck,
-    ShieldAlert,
-    ClipboardList,
-    CheckCircle2,
-    User,
-} from 'lucide-react';
 
-import { PendingCase, UsePageProps } from '@/types/types';
-import { useForm, usePage } from '@inertiajs/react';
 import { adminAssignCase } from '@/routes';
+import type { PendingCase} from '@/types/types';
+import { UsePageProps } from '@/types/types';
 import { Spinner } from '../ui/spinner';
-import { toast } from 'sonner';
 
 interface AssignModalProps {
     isOpen: boolean;

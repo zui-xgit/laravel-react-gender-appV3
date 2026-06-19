@@ -1,27 +1,5 @@
-import Heading from '@/components/heading';
-import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import admin from '@/routes/admin';
 import { Head, router, usePage } from '@inertiajs/react';
+import { format } from 'date-fns';
 import {
     AlertCircle,
     CalendarIcon,
@@ -40,10 +18,32 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
-import { UsePageProps } from '@/types/types';
+import Heading from '@/components/heading';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { cn } from '@/lib/utils';
+import admin from '@/routes/admin';
+import type { UsePageProps } from '@/types/types';
 
 interface DatePickerFieldProps {
     label: string;
@@ -74,8 +74,12 @@ const safeFormat = (
     dateString: string | null | undefined,
     formatStr: string = 'PP',
 ) => {
-    if (!dateString) return '...';
+    if (!dateString) {
+return '...';
+}
+
     const parsed = new Date(dateString);
+
     return isNaN(parsed.getTime()) ? '...' : format(parsed, formatStr);
 };
 
@@ -149,11 +153,13 @@ const Report = ({
     const handleProceed = () => {
         if (!fromDate || !toDate) {
             toast.error('Choose the date range');
+
             return;
         }
 
         if (reportScope === 'personnel' && !selectedPersonnel) {
             toast.error('Please select personnel');
+
             return;
         }
 
@@ -175,6 +181,7 @@ const Report = ({
                     const summary = page.props.summary as {
                         total: number;
                     } | null;
+
                     if (summary && summary.total > 0) {
                         toast.success(
                             `${summary.total} reports found for the selected criteria.`,

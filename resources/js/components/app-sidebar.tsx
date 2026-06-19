@@ -23,11 +23,11 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 
-import type { NavItem } from '@/types';
-import { UsePageProps } from '@/types/types';
 import admin from '@/routes/admin';
-import officer from '@/routes/officer';
 import general from '@/routes/general';
+import officer from '@/routes/officer';
+import type { NavItem } from '@/types';
+import type { UsePageProps } from '@/types/types';
 
 const AdminNavItems: NavItem[] = [
     {

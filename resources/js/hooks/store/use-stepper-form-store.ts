@@ -1,7 +1,7 @@
+import { toast } from 'sonner';
+import { z } from 'zod';
 import { create, createStore } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { z } from 'zod';
-import { toast } from 'sonner';
 
 /* =========================================================
    TYPES
@@ -259,20 +259,36 @@ export const useStepperFormStore = create<StepperFormState>()(
                                 informantWorkplace: '',
                             },
                         }));
+
                         return true;
                     }
                 }
 
                 // Assign schemas per step
-                if (currentStep === 2) stepSchema = Step2Schema;
-                if (currentStep === 3) stepSchema = Step3Schema;
-                if (currentStep === 4) stepSchema = Step4Schema;
-                if (currentStep === 5) stepSchema = Step5Schema;
-                if (currentStep === 6) stepSchema = Step6Schema;
+                if (currentStep === 2) {
+stepSchema = Step2Schema;
+}
+
+                if (currentStep === 3) {
+stepSchema = Step3Schema;
+}
+
+                if (currentStep === 4) {
+stepSchema = Step4Schema;
+}
+
+                if (currentStep === 5) {
+stepSchema = Step5Schema;
+}
+
+                if (currentStep === 6) {
+stepSchema = Step6Schema;
+}
 
                 // If anonymous skips step 2 or no specific schema maps out, it automatically passes
                 if (!stepSchema) {
                     set({ errors: {} });
+
                     return true;
                 }
 
@@ -286,10 +302,12 @@ export const useStepperFormStore = create<StepperFormState>()(
                         errors[issueFieldName] = issueMessage;
                     });
                     set({ errors });
+
                     return false;
                 }
 
                 set({ errors: {} });
+
                 return true;
             },
 
@@ -326,6 +344,7 @@ export const useStepperFormStore = create<StepperFormState>()(
                                 '.',
                         );
                     }
+
                     window.scrollTo({
                         top: 0,
                         behavior: 'smooth',
@@ -363,6 +382,7 @@ export const useStepperFormStore = create<StepperFormState>()(
                             | 6,
                     }));
                 }
+
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth',

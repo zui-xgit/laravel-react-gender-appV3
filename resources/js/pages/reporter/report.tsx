@@ -1,6 +1,17 @@
 'use client';
 
+import { router } from '@inertiajs/react';
+import { CheckIcon, LoaderCircle } from 'lucide-react';
 import { Activity, useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { PortalLoader } from '@/components/portal-loader';
+import { Step1 } from '@/components/reporter/stepper/step1';
+
+import { Step2 } from '@/components/reporter/stepper/step2';
+import { Step3 } from '@/components/reporter/stepper/step3';
+import { Step4 } from '@/components/reporter/stepper/step4';
+import { Step5 } from '@/components/reporter/stepper/step5';
+import { Step6 } from '@/components/reporter/stepper/step6';
 import {
     Stepper,
     StepperContent,
@@ -11,21 +22,10 @@ import {
     StepperSeparator,
     StepperTrigger,
 } from '@/components/reui/stepper';
-
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useStepperFormStore } from '@/hooks/store/use-stepper-form-store';
-import { Step1 } from '@/components/reporter/stepper/step1';
-import { Step2 } from '@/components/reporter/stepper/step2';
-import { Step3 } from '@/components/reporter/stepper/step3';
-import { Step4 } from '@/components/reporter/stepper/step4';
-import { Step5 } from '@/components/reporter/stepper/step5';
-import { Step6 } from '@/components/reporter/stepper/step6';
-import { router } from '@inertiajs/react';
 import { reporter, reporterReport } from '@/routes';
-import { PortalLoader } from '@/components/portal-loader';
-import { Badge } from '@/components/ui/badge';
-import { CheckIcon, LoaderCircle } from 'lucide-react';
-import { toast } from 'sonner';
 
 const steps = [
     {

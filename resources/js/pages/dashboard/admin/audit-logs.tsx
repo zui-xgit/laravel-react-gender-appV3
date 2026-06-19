@@ -1,5 +1,15 @@
+import { Head, router } from '@inertiajs/react';
+import {
+    ChevronDown,
+    ChevronRight,
+    ClipboardList,
+    Monitor,
+} from 'lucide-react';
+import { useState } from 'react';
 import Heading from '@/components/heading';
+import RefreshButton from '@/components/refresh-button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -9,13 +19,10 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import {
     Select,
     SelectContent,
@@ -23,26 +30,19 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Head, router } from '@inertiajs/react';
-import {
-    ChevronDown,
-    ChevronRight,
-    ClipboardList,
-    Monitor,
-} from 'lucide-react';
-import { formatDate, formatTime } from '@/lib/helpers';
-import RefreshButton from '@/components/refresh-button';
-import { PaginatedData } from '@/types/types';
-import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-} from '@/components/ui/collapsible';
-import { Log } from '@/types/types';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { formatDate, formatTime } from '@/lib/helpers';
 import admin from '@/routes/admin';
+import type { PaginatedData } from '@/types/types';
+import type { Log } from '@/types/types';
 
 interface AuditLogsProps {
     logs: PaginatedData<Log>;
@@ -56,6 +56,7 @@ const LogPlatformProperties = ({ log }: { log: Log }) => {
     if (!log.properties) {
         return null;
     }
+
     const { ip, userAgent } = log.properties;
 
     // 2. Return early if neither ip nor userAgent are present in the payload
@@ -153,6 +154,7 @@ const LogDescription = ({ log, causer }: { log: Log; causer: string }) => {
 const LogProperties = ({ log, causer }: { log: Log; causer: string }) => {
     const assignedToNameAndRole: string = `${log.properties.assigned_to_name}  (${log.properties.assigned_to_role})`;
     const subjectName: string = `${log.subject?.first_name} ${log.subject?.last_name}`;
+
     return (
         <span className="text-xs text-foreground">
             {log.log_name === 'case-assigned' && (
@@ -328,6 +330,7 @@ export default function AuditLogs({ logs, filters }: AuditLogsProps) {
                                 {logs.data.length > 0 ? (
                                     logs.data.map((log, index) => {
                                         const causer = `${log.causer_name} (${log.causer_role})`;
+
                                         return (
                                             <TableRow
                                                 key={index}
@@ -438,6 +441,7 @@ export default function AuditLogs({ logs, filters }: AuditLogsProps) {
                                             </Button>
                                         );
                                     }
+
                                     return null;
                                 })}
                             </div>

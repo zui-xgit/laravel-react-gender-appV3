@@ -5,9 +5,6 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import profile, { edit } from '@/routes/profile';
-import { UsePageProps } from '@/types/types';
-import { Spinner } from '@/components/ui/spinner';
 import {
     Select,
     SelectContent,
@@ -15,6 +12,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Spinner } from '@/components/ui/spinner';
+import profile, { edit } from '@/routes/profile';
+import type { UsePageProps } from '@/types/types';
 
 export default function Profile({
     mustVerifyEmail,

@@ -61,5 +61,6 @@ jobs:
       - name: Build Assets
         run: npm run build
 
-      - name: Tests
-        run: ./vendor/bin/phpunit
+      # did not have any test prepared
+      # - name: Tests
+      #   run: ./vendor/bin/phpunit

@@ -1,14 +1,3 @@
-import Heading from '@/components/heading';
-import { Badge } from '@/components/ui/badge';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import officer from '@/routes/officer';
 import { Head } from '@inertiajs/react';
 import {
     Calendar,
@@ -20,8 +9,19 @@ import {
     ShieldCheck,
     User,
 } from 'lucide-react';
-import { formatDate, formatTime, getInitials } from '@/lib/helpers';
 import BackButton from '@/components/back-button';
+import Heading from '@/components/heading';
+import { Badge } from '@/components/ui/badge';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { formatDate, formatTime, getInitials } from '@/lib/helpers';
+import officer from '@/routes/officer';
 
 interface ProfileProps {
     profile: {

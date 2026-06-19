@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import { LogOut, RefreshCcw, OctagonX, ArrowLeft } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -9,7 +10,6 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
-import { useState } from 'react';
 
 const Suspended = () => {
     const [isRefreshing, setIsRefreshing] = useState(false);

@@ -1,4 +1,16 @@
+import { Head, router } from '@inertiajs/react';
+import {
+    Download,
+    Eye,
+    MoreHorizontal,
+    ShieldCheck,
+    SquarePen,
+} from 'lucide-react';
+import CaseProgressBar from '@/components/case-progress-bar';
 import Heading from '@/components/heading';
+import { Hint } from '@/components/hint';
+import RefreshButton from '@/components/refresh-button';
+import SearchInput from '@/components/search-input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,13 +22,6 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -24,22 +29,14 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-// import { adminCaseWorkflow, adminViewCase } from '@/routes';
-import { Head, router } from '@inertiajs/react';
 import {
-    Download,
-    Eye,
-    MoreHorizontal,
-    ShieldCheck,
-    SquarePen,
-} from 'lucide-react';
-import { formatDate, formatTime } from '@/lib/helpers';
-
-import { PersonalAssignment } from '@/types/types';
-import { Hint } from '@/components/hint';
-import SearchInput from '@/components/search-input';
-import RefreshButton from '@/components/refresh-button';
-import CaseProgressBar from '@/components/case-progress-bar';
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+// import { adminCaseWorkflow, adminViewCase } from '@/routes';
 import {
     Table,
     TableBody,
@@ -48,9 +45,12 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { PaginatedData } from '@/types/types';
-import general from '@/routes/general';
+import { formatDate, formatTime } from '@/lib/helpers';
+
 import admin from '@/routes/admin';
+import general from '@/routes/general';
+import type { PersonalAssignment } from '@/types/types';
+import type { PaginatedData } from '@/types/types';
 
 interface AssignmentsProps {
     assignments: PaginatedData<PersonalAssignment>;
@@ -95,6 +95,7 @@ const Assignments = ({ assignments, filters = {} }: AssignmentsProps) => {
                 return 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-400';
         }
     };
+
     return (
         <>
             <Head title="My Assignments" />
@@ -363,6 +364,7 @@ const Assignments = ({ assignments, filters = {} }: AssignmentsProps) => {
                                             </Button>
                                         );
                                     }
+
                                     return null;
                                 })}
                             </div>
