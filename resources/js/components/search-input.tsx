@@ -1,4 +1,4 @@
-import type { InertiaLinkProps} from '@inertiajs/react';
+import type { InertiaLinkProps } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
 import { Search } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
