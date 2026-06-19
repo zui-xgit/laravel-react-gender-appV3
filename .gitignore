@@ -27,5 +27,9 @@ yarn-error.log
 /.vscode
 /.zed
 
-# added by me
+
 /boost.json
+
+
+# personal , you can delete this
+/z.txt
