@@ -21,14 +21,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { formatDate, formatTime } from '@/lib/helpers';
-import type { PendingCase, CaseDetail} from '@/types/types';
-
+import type { PendingCase, CaseDetail } from '@/types/types';
 
 interface User {
     uuid: string;
     first_name: string;
     last_name: string;
-    role: string;
+    roles: string[];
 }
 
 interface ViewCaseProps {
@@ -184,8 +183,13 @@ const ViewCase = ({ case_detail, all_users }: ViewCaseProps) => {
                                     <DetailItem
                                         label="Personnel Designation"
                                         value={
-                                            case_detail.case_assignment
-                                                .assigned_to.role
+                                            <>
+                                                [
+                                                {case_detail.case_assignment.assigned_to.roles.join(
+                                                    ', ',
+                                                )}
+                                                ]
+                                            </>
                                         }
                                     />
                                     <div className="flex items-center justify-between border-t border-border/50 pt-4">

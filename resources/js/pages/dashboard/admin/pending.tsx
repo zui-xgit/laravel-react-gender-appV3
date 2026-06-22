@@ -1,6 +1,5 @@
 import { Head, router } from '@inertiajs/react';
-import type {
-    LucideIcon} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import {
     AlertCircle,
     Calendar,
@@ -45,26 +44,10 @@ import {
 
 import { formatDate, formatTime } from '@/lib/helpers';
 
-
 import admin from '@/routes/admin';
 import general from '@/routes/general';
 import type { PendingCase } from '@/types/types';
 import type { PaginatedData } from '@/types/types';
-
-// interface PaginationLinks {
-//     url: string | null;
-//     label: string;
-//     active: boolean;
-// }
-
-// interface PaginatedData<T> {
-//     data: T[];
-//     links: PaginationLinks[];
-//     current_page: number;
-//     from: number;
-//     to: number;
-//     total: number;
-// }
 
 interface PendingProps {
     cases: PaginatedData<PendingCase>;
@@ -82,7 +65,7 @@ interface PendingProps {
         uuid: string;
         first_name: string;
         last_name: string;
-        role: string;
+        roles: string[];
     }[];
 }
 

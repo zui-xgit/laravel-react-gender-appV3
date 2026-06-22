@@ -13,6 +13,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Permission\Traits\HasRoles;
 
 
 #[Guarded(['id', 'uuid', 'created_at', "updated_at"])]
@@ -23,9 +24,9 @@ class User extends Authenticatable
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasUuids, TwoFactorAuthenticatable, LogsActivity;
+    use HasRoles; // From spatie/laravel-permission 
 
-    const ROLE_ADMIN = 'admin';
-    const ROLE_OFFICER = 'officer';
+   
 
     const STATUS_ACTIVE = 'active';
     const STATUS_INACTIVE = 'inactive';
@@ -44,7 +45,7 @@ class User extends Authenticatable
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['role', 'username', 'first_name', 'last_name', 'gender', 'email', 'phone', 'status'])
+        ->logOnly(['username', 'first_name', 'last_name', 'gender', 'email', 'phone', 'status'])
         ->logOnlyDirty()
         ->dontLogEmptyChanges()
         ->useLogName("users-table") 
@@ -104,14 +105,7 @@ class User extends Authenticatable
     }
 
 
-   // ==================== HELPER METHODS ====================
-    public static function getRoles(): array
-    {
-        return [
-            self::ROLE_ADMIN => 'Administrator',
-            self::ROLE_OFFICER => 'Case Officer',
-        ];
-    }
+  
 
      public static function getStatuses(): array
     {
@@ -123,26 +117,7 @@ class User extends Authenticatable
     }
 
 
-      // ==================== ROLE CHECKING METHODS ====================
-    public function isAdmin(): bool
-    {
-        return $this->role === self::ROLE_ADMIN;
-    }
-
-    public function isOfficer(): bool
-    {
-        return $this->role === self::ROLE_OFFICER;
-    }
-
-    public function hasRole(string $role): bool
-    {
-        return $this->role === $role;
-    }
-
-    // public function hasAnyRole(array $roles): bool
-    // {
-    //     return in_array($this->role, $roles);
-    // }
+  
 
     // ==================== STATUS CHECKING METHODS ====================
 
@@ -161,7 +136,6 @@ class User extends Authenticatable
         return $this->status === self::STATUS_SUSPENDED;
     }
 
-    // ==================== STATUS CHECKING METHODS FOR UPDATING ROLES ====================
 
     public function activate(): bool
     {
@@ -180,16 +154,7 @@ class User extends Authenticatable
 
         // ==================== QUERY SCOPES ====================
 
-    public function scopeAdmins($query)
-    {
-        return $query->where('role', self::ROLE_ADMIN);
-    }
-
-    public function scopeOfficers($query)
-    {
-        return $query->where('role', self::ROLE_OFFICER);
-    }
-
+   
 
     public function scopeActive($query)
     {

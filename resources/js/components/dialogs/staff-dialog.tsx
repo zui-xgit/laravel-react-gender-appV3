@@ -32,6 +32,18 @@ interface AddNewStaffDialogProps {
     staffMember?: StaffMember | null;
 }
 
+interface UseFormProps {
+    first_name: string;
+    last_name: string;
+    username: string;
+    email: string;
+    phone: string;
+    gender: string;
+    role: string | 'male' | 'female';
+    password: string;
+    password_confirmation: string;
+}
+
 const StaffDialog = ({
     open,
     onOpenChange,
@@ -46,14 +58,14 @@ const StaffDialog = ({
         errors,
         reset,
         clearErrors,
-    } = useForm({
+    } = useForm<UseFormProps>({
         first_name: '',
         last_name: '',
         username: '',
         email: '',
         phone: '',
-        gender: '' as 'male' | 'female' | '',
-        role: '' as 'admin' | 'officer' | '',
+        gender: '',
+        role: '',
         password: '',
         password_confirmation: '',
     });
@@ -67,7 +79,7 @@ const StaffDialog = ({
                 email: staffMember.email || '',
                 phone: staffMember.phone || '',
                 gender: staffMember.gender || '',
-                role: staffMember.role || '',
+                role: staffMember.roles[0] || '',
                 password: '',
                 password_confirmation: '',
             });
@@ -282,6 +294,16 @@ const StaffDialog = ({
                                 <Lock className="h-4 w-4" />
                                 Security & Authentication
                             </h4>
+                            <span className="text-green-800">
+                                {staffMember && (
+                                    <>
+                                        {' '}
+                                        ( This is not required incase if you
+                                        don't want to update the password)
+                                    </>
+                                )}
+                            </span>
+
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
                                     <Label htmlFor="password">Password</Label>
@@ -354,10 +376,10 @@ const StaffDialog = ({
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="admin">
-                                                System Administrator
+                                                Admin
                                             </SelectItem>
                                             <SelectItem value="officer">
-                                                Field Reporting Officer
+                                                Officer
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>

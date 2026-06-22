@@ -1,13 +1,6 @@
 import { Head, router } from '@inertiajs/react';
-import type {
-    LucideIcon} from 'lucide-react';
-import {
-    AlertCircle,
-    Clock,
-    Download,
-    Eye,
-    ShieldCheck,
-} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { AlertCircle, Clock, Download, Eye, ShieldCheck } from 'lucide-react';
 import CaseProgressBar from '@/components/case-progress-bar';
 import Heading from '@/components/heading';
 import { Hint } from '@/components/hint';
@@ -45,23 +38,8 @@ import { formatDate, formatTime } from '@/lib/helpers';
 import admin from '@/routes/admin';
 import general from '@/routes/general';
 
-import type { InProgressCase} from '@/types/types';
+import type { InProgressCase } from '@/types/types';
 import type { PaginatedData } from '@/types/types';
-
-// interface PaginationLinks {
-//     url: string | null;
-//     label: string;
-//     active: boolean;
-// }
-
-// interface PaginatedData<T> {
-//     data: T[];
-//     links: PaginationLinks[];
-//     current_page: number;
-//     from: number;
-//     to: number;
-//     total: number;
-// }
 
 interface InProgressProps {
     cases: PaginatedData<InProgressCase>;
@@ -279,10 +257,11 @@ export default function InProgress({ cases, stats, filters }: InProgressProps) {
                                                         }
                                                     </span>
                                                     <span className="text-xs text-muted-foreground">
-                                                        {
-                                                            item.case_assignment
-                                                                ?.assigned_to_role
-                                                        }
+                                                        [
+                                                        {item.case_assignment?.assigned_to_roles.join(
+                                                            ', ',
+                                                        )}
+                                                        ]
                                                     </span>
                                                 </div>
                                             </TableCell>
@@ -295,10 +274,11 @@ export default function InProgress({ cases, stats, filters }: InProgressProps) {
                                                         }
                                                     </span>
                                                     <span className="text-xs text-muted-foreground">
-                                                        {
-                                                            item.case_assignment
-                                                                ?.assigned_by_role
-                                                        }
+                                                        [
+                                                        {item.case_assignment?.assigned_by_roles.join(
+                                                            ', ',
+                                                        )}
+                                                        ]
                                                     </span>
                                                 </div>
                                             </TableCell>

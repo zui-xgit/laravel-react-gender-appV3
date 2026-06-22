@@ -422,10 +422,16 @@ export default function StaffManagement({
                                             <TableCell>
                                                 <div className="flex flex-col gap-0.5">
                                                     <span className="text-sm font-medium capitalize">
-                                                        {member.role}
+                                                        [
+                                                        {member.roles.join(
+                                                            ', ',
+                                                        )}
+                                                        ]
                                                     </span>
                                                     <span className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
-                                                        {member.role === 'admin'
+                                                        {member.roles.includes(
+                                                            'admin',
+                                                        )
                                                             ? 'Management'
                                                             : 'Operations'}
                                                     </span>

@@ -5,7 +5,7 @@ use App\Http\Controllers\GeneralController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::middleware(['auth', 'verified', 'check.roles:admin,officer', 'check.status'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:admin|officer', 'check.status'])->group(function () {
     Route::post('case-intake/{case:uuid}', [CaseWorkflowController::class, 'caseIntake'])->name('case-intake');
     Route::post('case-investigate/{case:uuid}', [CaseWorkflowController::class, 'caseInvestigate'])->name('case-investigation');
     Route::post('case-escalate/{case:uuid}', [CaseWorkflowController::class, 'caseEscalate'])->name('case-escalation');
@@ -24,7 +24,7 @@ Route::middleware(['auth', 'verified', 'check.roles:admin,officer', 'check.statu
 });
     
 
-Route::middleware(['auth', 'verified', 'check.roles:admin,officer'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:admin|officer'])->group(function () {
     Route::get('inactive', function (){
         Inertia::flash('toast', ['type' => 'error', 'message' => __('Contact your administrator to activate your account.')]);
         return Inertia::render('inactive'); 

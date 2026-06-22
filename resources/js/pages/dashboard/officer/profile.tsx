@@ -26,7 +26,7 @@ import officer from '@/routes/officer';
 interface ProfileProps {
     profile: {
         uuid: string;
-        role: string;
+        roles: string[];
         username: string;
         full_name: string;
         gender: string;
@@ -123,7 +123,7 @@ const Profile = ({ profile }: ProfileProps) => {
                                     {profile.full_name}
                                 </CardTitle>
                                 <CardDescription className="text-xs font-medium tracking-widest text-muted-foreground uppercase">
-                                    Role: {profile.role}
+                                    Role: <>[{profile.roles.join(', ')}]</>
                                 </CardDescription>
                                 <div className="mt-4 flex justify-center">
                                     {getStatusBadge(profile.status)}

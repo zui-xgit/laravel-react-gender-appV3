@@ -66,7 +66,7 @@ interface DataReportProps {
     users: {
         uuid: string;
         full_name: string;
-        role: string;
+        roles: string[];
     }[];
 }
 
@@ -75,8 +75,8 @@ const safeFormat = (
     formatStr: string = 'PP',
 ) => {
     if (!dateString) {
-return '...';
-}
+        return '...';
+    }
 
     const parsed = new Date(dateString);
 
@@ -137,6 +137,7 @@ const Report = ({
     scope,
     selected_personnel_uuid,
 }: DataReportProps) => {
+    console.log(users);
     const [reportScope, setReportScope] = useState<'general' | 'personnel'>(
         scope || 'general',
     );
@@ -324,7 +325,7 @@ const Report = ({
                                                                 }
                                                                 className="rounded-lg"
                                                             >
-                                                                {`${user.full_name}, Role: ${user.role}`}
+                                                                {`${user.full_name}, Role: ${user.roles}`}
 
                                                                 {auth.user
                                                                     .uuid ===

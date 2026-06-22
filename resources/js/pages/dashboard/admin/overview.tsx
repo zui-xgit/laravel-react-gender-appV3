@@ -21,6 +21,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { formatRelativeTime, getInitials } from '@/lib/helpers';
+import OverviewLogs from '@/components/overview-logs';
 
 import admin from '@/routes/admin';
 import type { Log } from '@/types/types';
@@ -45,7 +46,13 @@ const LogDescription = ({ log }: { log: Log }) => {
             </Avatar>
             <div className="flex-1 space-y-1">
                 <p className="text-sm leading-none font-medium">
-                    {log.causer_role} {log.causer_name}
+                    {log.causer_name === 'System' ? (
+                        <>{log.causer_name}</>
+                    ) : (
+                        <>
+                            [{log.causer_roles.join(', ')}] {log.causer_name}
+                        </>
+                    )}
                 </p>
                 <p className="text-sm text-muted-foreground">
                     {log.description}
@@ -121,34 +128,15 @@ export default function Overview({ stats, logs }: OverviewProps) {
 
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
                     {/* TODO:  recent activity (using spatie laravel activity log)*/}
-                    <Card className="col-span-4 border-none shadow-sm ring-1 ring-border">
-                        <CardHeader className="flex flex-row items-center justify-between">
-                            <div className="space-y-1">
-                                <CardTitle>Recent Activity</CardTitle>
-                                <CardDescription>
-                                    Latest actions across the platform.
-                                </CardDescription>
-                            </div>
-                            <Button
-                                onClick={() => {
-                                    router.get(admin.auditLogs().url);
-                                }}
-                                variant="ghost"
-                                size="sm"
-                                className="text-xs"
-                            >
-                                <History className="mr-2 h-3 w-3" />
-                                View All
-                            </Button>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-6">
-                                {logs.map((log, index) => (
-                                    <LogDescription key={index} log={log} />
-                                ))}
-                            </div>
-                        </CardContent>
-                    </Card>
+
+                    <OverviewLogs
+                        title="Recent Activity"
+                        subtitle="   Latest actions across the platform."
+                        logsLink={() => {
+                            router.get(admin.auditLogs().url);
+                        }}
+                        logs={logs}
+                    />
 
                     {/* TODO: system lockdown - system managements */}
                     <Card className="col-span-3 border-none shadow-sm ring-1 ring-border">

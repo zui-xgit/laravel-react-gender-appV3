@@ -1,11 +1,10 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\CaseWorkflowController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::middleware(['auth', 'verified', 'check.roles:admin', 'check.status'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:admin', 'check.status'])->group(function () {
     Route::get('overview', [AdminController::class, 'overview'])->name('admin.overview');
     Route::get('pending', [AdminController::class, 'pending'])->name('admin.pending');
     Route::get('in-progress', [AdminController::class, 'inProgress'])->name('admin.in-progress');

@@ -32,7 +32,7 @@ class OfficerController extends Controller
             'completed'   => $statusCounts->get('completed', 0),
         ];
 
-        // 2. Fetch recent activity logs for this officer
+        // 2. Fetch recent activity logs for this user
         $logs = Activity::where('causer_id', $auth_id)
             ->with(['causer', 'subject'])
             ->latest()
@@ -46,7 +46,7 @@ class OfficerController extends Controller
                     'causer_name'       => $log->causer 
                         ? ($log->causer->first_name . ' ' . $log->causer->last_name) 
                         : 'System',
-                    'causer_role'       => $log->causer?->role,
+                    'causer_roles'      => $log->causer ? $log->causer->getRoleNames() : [],
                     'subject'           => $log->subject, 
                     'subject_type'      => $log->subject_type,
                     'attribute_changes' => $log->attribute_changes, 
@@ -127,7 +127,7 @@ class OfficerController extends Controller
             'anonymous'   => $cases->where('is_anonymous', true)->count(),
         ];
 
-        $pdf = Pdf::view('pdfs.test', [
+        $pdf = Pdf::view('pdfs.report', [
             'cases'       => $cases,
             'stats'       => $stats,
             'fromDate'    => $from_date,
@@ -180,7 +180,9 @@ class OfficerController extends Controller
                 'causer_name'       => $log->causer 
                     ? ($log->causer->first_name . ' ' . $log->causer->last_name) 
                     : 'System',
-                'causer_role'       => $log->causer?->role,
+                 'causer_roles'  => $log->causer 
+                    ? $log->causer->getRoleNames()
+                    : [],
                 'subject'           => $log->subject, 
                 'subject_type'      => $log->subject_type,
                 'attribute_changes' => $log->attribute_changes, 
@@ -200,11 +202,13 @@ class OfficerController extends Controller
 
     public function profile()
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
+        $user->load('roles:name');
         
         $profile = [
             'uuid'              => $user->uuid,
-            'role'              => $user->role,
+            'roles'             => $user->getRoleNames(),
             'username'          => $user->username,
             'full_name'         => $user->first_name . ' ' . $user->last_name,
             'gender'            => $user->gender,

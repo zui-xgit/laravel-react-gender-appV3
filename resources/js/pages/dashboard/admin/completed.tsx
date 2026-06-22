@@ -1,6 +1,5 @@
 import { Head, router } from '@inertiajs/react';
-import type {
-    LucideIcon} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import {
     AlertCircle,
     Calendar,
@@ -238,10 +237,11 @@ export default function Completed({ cases, stats, filters }: CompletedProps) {
                                                         }
                                                     </span>
                                                     <span className="text-xs text-muted-foreground">
-                                                        {
-                                                            item.case_assignment
-                                                                ?.assigned_by_role
-                                                        }
+                                                        [
+                                                        {item.case_assignment?.assigned_by_roles.join(
+                                                            ', ',
+                                                        )}
+                                                        ]
                                                     </span>
                                                 </div>
                                             </TableCell>
@@ -254,10 +254,11 @@ export default function Completed({ cases, stats, filters }: CompletedProps) {
                                                         }
                                                     </span>
                                                     <span className="text-xs text-muted-foreground">
-                                                        {
-                                                            item.case_assignment
-                                                                ?.assigned_to_role
-                                                        }
+                                                        [
+                                                        {item.case_assignment?.assigned_to_roles.join(
+                                                            ', ',
+                                                        )}
+                                                        ]
                                                     </span>
                                                 </div>
                                             </TableCell>

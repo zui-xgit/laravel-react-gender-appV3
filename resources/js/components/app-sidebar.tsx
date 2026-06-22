@@ -106,10 +106,11 @@ const OfficerNavItems: NavItem[] = [
 
 export function AppSidebar() {
     const { auth } = usePage<UsePageProps>().props;
-    const route =
-        auth.user.role === 'admin' ? admin.overview() : officer.overview();
-    const navItems =
-        auth.user.role === 'admin' ? AdminNavItems : OfficerNavItems;
+
+    const isAdmin = auth.user.roles.includes('admin');
+
+    const route = isAdmin ? admin.overview() : officer.overview();
+    const navItems = isAdmin ? AdminNavItems : OfficerNavItems;
 
     return (
         <Sidebar collapsible="icon" variant="inset">

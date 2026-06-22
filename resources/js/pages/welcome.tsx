@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import {
     ShieldAlert,
     FileText,
@@ -24,6 +24,7 @@ import {
 import { reporterReport } from '@/routes';
 
 export default function Home() {
+    console.log('working now');
     // Core application features
     const coreFeatures = [
         {

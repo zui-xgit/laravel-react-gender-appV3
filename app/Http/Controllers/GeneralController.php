@@ -49,7 +49,7 @@ class GeneralController extends Controller
                 ], 
                 'assignedBy' => [    
                     "assigned_by" => $case_assignment->assignedBy->first_name . ' ' . $case_assignment->assignedBy->last_name,
-                    'assigned_by_role'=> $case_assignment->assignedBy->role,   
+                    'assigned_by_roles'=> $case_assignment->assignedBy->getRoleNames(),   
                 ], 
                 
                 "priority"      => $case_assignment->priority,
@@ -91,12 +91,12 @@ class GeneralController extends Controller
                  'assigned_by' => [
                         'first_name' => $case->caseAssignment->assignedBy?->first_name,
                         'last_name'  => $case->caseAssignment->assignedBy?->last_name,
-                        'role'       => $case->caseAssignment->assignedBy?->role,
+                        'roles'       => $case->caseAssignment->assignedBy?->getRoleNames(),
                     ],
                     'assigned_to' => [ 
                          'first_name' => $case->caseAssignment->assignedTo?->first_name,
                         'last_name'  => $case->caseAssignment->assignedTo?->last_name,
-                        'role' =>$case->caseAssignment->assignedTo?->role,
+                        'roles' =>$case->caseAssignment->assignedTo?->getRoleNames(),
                 ],
                 'priority' => $case->caseAssignment->priority,
             ] : null, 
@@ -129,13 +129,19 @@ class GeneralController extends Controller
         ];
 
         
-        $all_users = User::query()->latest()->get()->map(function ($user ){
-            return [
-                 'uuid' => $user->uuid,
-                 'first_name' => $user->first_name,
-                 'last_name' => $user->last_name,
-                 'role' => $user->role,
-            ];
+        
+
+         $all_users = User::select('id', 'uuid', 'first_name', 'last_name') 
+            ->with('roles:name') // 2. Eager load role names smoothly
+            ->latest()
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'uuid'       => $user->uuid,
+                    'first_name' => $user->first_name,
+                    'last_name'  => $user->last_name,
+                    'roles'      => $user->getRoleNames(),
+                ];
         });
 
         // 3. Render page with Inertia passing the structured data

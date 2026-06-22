@@ -196,11 +196,12 @@ const Assignments = ({ assignments, filters = {} }: AssignmentsProps) => {
                                                                 .assigned_by
                                                         }
                                                     </span>
-                                                    <span className="text-xs text-muted-foreground uppercase">
-                                                        {
-                                                            item.assignedBy
-                                                                .assigned_by_role
-                                                        }
+                                                    <span className="text-xs text-muted-foreground">
+                                                        [
+                                                        {item.assignedBy.assigned_by_roles.join(
+                                                            ', ',
+                                                        )}
+                                                        ]
                                                     </span>
                                                 </div>
                                             </TableCell>

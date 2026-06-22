@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/select';
 
 import { adminAssignCase } from '@/routes';
-import type { PendingCase} from '@/types/types';
+import type { PendingCase } from '@/types/types';
 import { Spinner } from '../ui/spinner';
 
 interface AssignModalProps {
@@ -37,7 +37,7 @@ interface AssignModalProps {
         uuid: string;
         first_name: string;
         last_name: string;
-        role: string;
+        roles: string[];
     }[];
 }
 
@@ -160,10 +160,10 @@ const AssignModal = ({
 
                             <SelectContent className="max-h-[300px]">
                                 {all_users?.length > 0 ? (
-                                    all_users.map((officer) => (
+                                    all_users.map((user) => (
                                         <SelectItem
-                                            key={officer.uuid}
-                                            value={officer.uuid}
+                                            key={user.uuid}
+                                            value={user.uuid}
                                             className="cursor-pointer py-3 focus:bg-primary/5"
                                         >
                                             <div className="flex items-start gap-3">
@@ -175,12 +175,16 @@ const AssignModal = ({
                                                 {/* Info */}
                                                 <div className="flex flex-col gap-0.5">
                                                     <span className="text-xs leading-none font-semibold">
-                                                        {officer.first_name}{' '}
-                                                        {officer.last_name}
+                                                        {user.first_name}{' '}
+                                                        {user.last_name}
                                                     </span>
                                                     <div className="flex items-center gap-1.5">
                                                         <span className="text-xs font-medium tracking-wider text-muted-foreground">
-                                                            {officer.role}
+                                                            [
+                                                            {user.roles.join(
+                                                                ', ',
+                                                            )}
+                                                            ]
                                                         </span>
                                                     </div>
                                                 </div>

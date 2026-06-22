@@ -25,6 +25,7 @@ import { formatRelativeTime, getInitials } from '@/lib/helpers';
 import general from '@/routes/general';
 import officer from '@/routes/officer';
 import type { Log } from '@/types/types';
+import OverviewLogs from '@/components/overview-logs';
 
 interface OverviewProps {
     stats: {
@@ -35,36 +36,6 @@ interface OverviewProps {
     };
     logs: Log[];
 }
-
-const LogDescription = ({ log }: { log: Log }) => {
-    return (
-        <div className="flex items-start gap-4">
-            <Avatar className="h-9 w-9 border ring-offset-2">
-                <AvatarFallback className="bg-primary/5 text-xs font-semibold text-primary">
-                    {getInitials(log.causer_name)}
-                </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 space-y-1">
-                <p className="text-sm leading-none font-medium">
-                    {log.causer_role} {log.causer_name}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                    {log.description}
-                </p>
-                <p className="flex items-center gap-1 pt-1 text-xs text-muted-foreground">
-                    <Clock className="h-3 w-3" />
-                    {formatRelativeTime(log.created_at)}
-                </p>
-            </div>
-            <Badge
-                variant="outline"
-                className="text-[10px] tracking-wider uppercase"
-            >
-                Log
-            </Badge>
-        </div>
-    );
-};
 
 export default function Overview({ stats, logs }: OverviewProps) {
     const statsConfig = [
@@ -119,42 +90,14 @@ export default function Overview({ stats, logs }: OverviewProps) {
                 </div>
 
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-                    <Card className="col-span-4 border-none shadow-sm ring-1 ring-border">
-                        <CardHeader className="flex flex-row items-center justify-between">
-                            <div className="space-y-1">
-                                <CardTitle>My Recent Activity</CardTitle>
-                                <CardDescription>
-                                    Your latest actions in the system.
-                                </CardDescription>
-                            </div>
-                            <Button
-                                onClick={() => {
-                                    router.get(officer.logs().url);
-                                }}
-                                variant="ghost"
-                                size="sm"
-                                className="text-xs"
-                            >
-                                <History className="mr-2 h-3 w-3" />
-                                View All
-                            </Button>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-6">
-                                {logs && logs.length > 0 ? (
-                                    logs.map((log, index) => (
-                                        <LogDescription key={index} log={log} />
-                                    ))
-                                ) : (
-                                    <div className="flex h-32 flex-col items-center justify-center text-center">
-                                        <p className="text-sm text-muted-foreground">
-                                            No recent activity found.
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <OverviewLogs
+                        title="My Recent Activity"
+                        subtitle=" Your latest actions in the system."
+                        logsLink={() => {
+                            router.get(officer.logs().url);
+                        }}
+                        logs={logs}
+                    />
 
                     <Card className="col-span-3 border-none shadow-sm ring-1 ring-border">
                         <CardHeader>

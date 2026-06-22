@@ -24,6 +24,9 @@ export function UserMenuContent({ user }: Props) {
 
     const { auth } = usePage<UsePageProps>().props;
 
+    const isAdmin = auth.user.roles.includes('admin');
+    const isOfficer = auth.user.roles.includes('officer');
+
     const handleLogout = () => {
         cleanup();
         router.flushAll();
@@ -38,7 +41,7 @@ export function UserMenuContent({ user }: Props) {
                 </div>
             </DropdownMenuLabel>
 
-            {auth.user.role === 'admin' && (
+            {isAdmin && (
                 <>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
@@ -56,7 +59,7 @@ export function UserMenuContent({ user }: Props) {
                     </DropdownMenuGroup>
                 </>
             )}
-            {auth.user.role === 'officer' && (
+            {isOfficer && (
                 <>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>

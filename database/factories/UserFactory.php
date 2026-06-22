@@ -28,7 +28,6 @@ class UserFactory extends Factory
             'username' => fake()->userName(), 
             "first_name" => fake()->firstName(), 
             "last_name" => fake()->lastName(), 
-            'role' => 'admin', 
 
             'email' => fake()->safeEmail(),
             'phone' => fake()->numerify('07########'),

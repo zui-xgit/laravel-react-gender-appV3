@@ -52,10 +52,10 @@ class AdminController extends Controller
                 'log_name'          => $log->log_name,
                 'description'       => $log->description, 
                 'event'             => $log->event, 
-                'causer_name'       => $log->causer 
+                 'causer_name'       => $log->causer 
                     ? ($log->causer->first_name . ' ' . $log->causer->last_name) 
                     : 'System',
-                'causer_role'       => $log->causer?->role,
+                'causer_roles'      => $log->causer ? $log->causer->getRoleNames() : [],
                 'subject'           => $log->subject, 
                 'subject_type'      => $log->subject_type,
                 'attribute_changes' => $log->attribute_changes, 
@@ -114,13 +114,17 @@ class AdminController extends Controller
               ];
         });
 
-        $all_users = User::query()->latest()->get()->map(function ($user ){
-            return [
-                 'uuid' => $user->uuid,
-                 'first_name' => $user->first_name,
-                 'last_name' => $user->last_name,
-                 'role' => $user->role,
-            ];
+        $all_users = User::select('id', 'uuid', 'first_name', 'last_name') 
+            ->with('roles:name') // 2. Eager load role names smoothly
+            ->latest()
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'uuid'       => $user->uuid,
+                    'first_name' => $user->first_name,
+                    'last_name'  => $user->last_name,
+                    'roles'      => $user->getRoleNames(),
+                ];
         });
 
         $stats = [
@@ -162,7 +166,7 @@ class AdminController extends Controller
 
 
 
-            $targetUser = User::where('uuid', $validated['assigned_to'])->firstOrFail(['id', 'first_name', 'last_name', 'role']); 
+            $targetUser = User::where('uuid', $validated['assigned_to'])->firstOrFail(['id', 'first_name', 'last_name']); 
             $assigned_to_id = $targetUser->id; 
             $assigned_by_id = Auth::id(); 
 
@@ -174,7 +178,7 @@ class AdminController extends Controller
 
 
             $case->update([
-                'status' => 'in_progress',
+                'status' => 'in_progress',  
             ]);
 
 
@@ -185,7 +189,7 @@ class AdminController extends Controller
                  'userAgent' => $request->userAgent(), 
                  'tracking_id' => $case->case_tracking_id, 
                  'assigned_to_name' => $targetUser->first_name . ' ' .  $targetUser->last_name, 
-                 'assigned_to_role' => $targetUser->role
+                 'assigned_to_role' => $targetUser->getRoleNames()
               ])
               ->log("Case with trackingID: :properties.tracking_id  was assigned.");
 
@@ -250,9 +254,9 @@ class AdminController extends Controller
                     'priority' => $case->caseAssignment->priority, 
                     'case_assigned_at' => $case->caseAssignment->created_at->toIso8601String(),
                     'assigned_to' => $case->caseAssignment->assignedTo->first_name . ' ' . $case->caseAssignment->assignedTo->last_name, 
-                    'assigned_to_role' => $case->caseAssignment->assignedTo->role,
+                    'assigned_to_role' => $case->caseAssignment->assignedTo->getRoleNames(),
                     'assigned_by' => $case->caseAssignment->assignedBy->first_name . ' ' . $case->caseAssignment->assignedBy->last_name,
-                    'assigned_by_role' => $case->caseAssignment->assignedBy->role
+                    'assigned_by_role' => $case->caseAssignment->assignedBy->getRoleNames(),
                 ]
             ];
         });
@@ -309,9 +313,9 @@ class AdminController extends Controller
                 'case_assignment' => [
                     'case_assigned_at' => $case->caseAssignment->created_at->toIso8601String(),
                     'assigned_by' => $case->caseAssignment->assignedBy->first_name . ' ' . $case->caseAssignment->assignedBy->last_name, 
-                    'assigned_by_role' => $case->caseAssignment->assignedBy->role, 
+                    'assigned_by_role' => $case->caseAssignment->assignedBy->getRoleNames(), 
                     'assigned_to' => $case->caseAssignment->assignedTo->first_name . ' ' . $case->caseAssignment->assignedTo->last_name, 
-                    'assigned_to_role' => $case->caseAssignment->assignedTo->role
+                    'assigned_to_role' => $case->caseAssignment->assignedTo->getRoleNames()
                 ]
             ];
         });
@@ -333,7 +337,7 @@ class AdminController extends Controller
     // staff management
     public function staffManagement(Request $request)
     {
-        $query = User::query();
+        $query = User::query()->with('roles:name');;
 
         // Filter by search (name, email, username)
         if ($request->filled('search')) {
@@ -348,7 +352,7 @@ class AdminController extends Controller
 
         // Filter by role
         if ($request->filled('role')) {
-            $query->where('role', $request->role);
+            $query->role($request->role);
         }
 
         // Filter by status
@@ -357,7 +361,8 @@ class AdminController extends Controller
         }
 
         // Fetch staff members with relevant fields
-        $staff_members = $query->latest()
+        $staff_members = $query->with(['roles:name'])
+            ->latest()
             ->get()
             ->map(fn($user) => [
                 'uuid' => $user->uuid,
@@ -367,7 +372,7 @@ class AdminController extends Controller
                 'gender' => $user->gender, 
                 'email' => $user->email,
                 'phone' => $user->phone,
-                'role' => $user->role,
+                'roles' => $user->getRoleNames(),
                 'status' => $user->status,
                 'last_login_at' => $user->last_login_at ? $user->last_login_at->toIso8601String() : null,
                 'last_logout_at' => $user->last_logout_at ? $user->last_logout_at->toIso8601String() : null,
@@ -376,8 +381,8 @@ class AdminController extends Controller
         // Calculate statistics for the dashboard
         $stats = [
             'total' => User::count(),
-            'admins' => User::where('role', 'admin')->count(),
-            'officers' => User::where('role', 'officer')->count(),
+            'admins' => User::role('admin')->count(),
+            'officers' => User::role('officer')->count(),
             'suspended' => User::where('status', 'suspended')->count(),
         ];
 
@@ -408,10 +413,18 @@ class AdminController extends Controller
         try {
             DB::beginTransaction();
 
-            User::create([
+            // 1. Store the role in a separate variable first!
+            $roleName = $validated['role'];
+
+            // 2. Safely remove it from the array so mass-assignment doesn't break
+            unset($validated['role']);
+
+            $user = User::create([
                 ...$validated,
                 'password' => Hash::make($validated['password']),
             ]);
+
+            $user->assignRole($roleName); 
 
 
             DB::commit(); 
@@ -419,12 +432,13 @@ class AdminController extends Controller
             return back(); 
 
         }catch(Exception $e){
+            dd($e->getMessage());
             DB::rollBack(); 
             return back()->withErrors([
                 'error' => 'Failed to add staff member. Please contact support'
             ]);
         }
-    }
+    }   
 
     public function updateStaff(User $user, Request $request){
         $validated = $request->validate([
@@ -435,7 +449,8 @@ class AdminController extends Controller
             'email' => ['required' , 'email', Rule::unique(User::class)->ignore($user->id)],
             'phone' => 'required|string|max:20',
             'role' => 'required|in:admin,officer',
-            'password' => 'required|string|min:8|confirmed',    
+            // 'password' => 'required|string|min:8|confirmed',   
+            'password'   => 'nullable|string|min:8|confirmed', 
 
             
         ], [
@@ -446,10 +461,22 @@ class AdminController extends Controller
         try{
            DB::beginTransaction();
 
-            $user->update([
-                ...$validated,
-                'password' => Hash::make($validated['password']),
-            ]);
+            $roleName = $validated['role'];
+            unset($validated['role']);
+
+            $updatedData = $validated; 
+
+            if (!empty($validated['password'])) {
+                $updatedData['password'] = Hash::make($validated['password']);
+            } else {
+                // Remove it so we don't accidentally overwrite the password hash with null
+                unset($updatedData['password']); 
+            }
+
+
+
+            $user->update($updatedData);
+            $user->syncRoles($roleName);
            
            DB::commit(); 
            Inertia::flash('toast', ['type' => 'success', 'message' => __('Staff member updated successfully')]);
@@ -514,7 +541,7 @@ class AdminController extends Controller
     // audit logset
     public function auditLogs(Request $request)
     {
-        $query = Activity::with(['causer', 'subject'])->latest(); 
+        $query = Activity::with(['causer.roles:name', 'subject'])->latest(); 
 
 
 
@@ -536,7 +563,9 @@ class AdminController extends Controller
                 'causer_name' => $log->causer 
                     ? ($log->causer->first_name . ' ' . $log->causer->last_name) 
                     : 'System',
-                'causer_role' => $log->causer?->role,
+                'causer_roles'  => $log->causer 
+                    ? $log->causer->getRoleNames()
+                    : [],
                 'subject' => $log->subject, 
                 'subject_type' => $log->subject_type,
                 'attribute_changes' => $log->attribute_changes, 
@@ -599,12 +628,13 @@ class AdminController extends Controller
           
       }
 
-        $users = User::select('uuid', 'first_name', 'last_name', 'role')
+        $users = User::select('id', 'uuid', 'first_name', 'last_name')
+            ->with('roles:name')
             ->get()
             ->map(fn($user) => [
                 'uuid'      => $user->uuid,
                 'full_name' => "{$user->first_name} {$user->last_name}",
-                'role'      => $user->role
+                'roles'      => $user->getRoleNames(),
         ]);
 
        return Inertia::render('dashboard/admin/report', [
@@ -679,7 +709,7 @@ class AdminController extends Controller
        
 
 
-        $pdf = Pdf::view('pdfs.test', [
+        $pdf = Pdf::view('pdfs.report', [
             'cases' => $cases,
             'stats' => $stats,
             'fromDate' => $from_date,

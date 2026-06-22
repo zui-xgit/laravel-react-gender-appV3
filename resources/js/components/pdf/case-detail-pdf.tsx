@@ -128,8 +128,8 @@ const toDisplayString = (
     fallback: string,
 ): string => {
     if (value === null || value === undefined || value === '') {
-return fallback;
-}
+        return fallback;
+    }
 
     return String(value);
 };
@@ -209,7 +209,7 @@ const CaseDetailPDF = ({ caseData }: CaseDetailPDFProps) => {
                 ) : null}
 
                 {/* Assignment Details */}
-                {caseData.case_assignment ? (
+                {/* {caseData.case_assignment ? (
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>
                             Case Assignment Information
@@ -233,6 +233,39 @@ const CaseDetailPDF = ({ caseData }: CaseDetailPDFProps) => {
                         <DataRow
                             label="Assigner Role"
                             value={`${caseData.case_assignment.assigned_by.role}`}
+                        />
+                    </View>
+                ) : null} */}
+
+                {/* Assignment Details */}
+                {caseData.case_assignment ? (
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>
+                            Case Assignment Information
+                        </Text>
+                        <DataRow
+                            label="Assignee"
+                            value={`${caseData.case_assignment.assigned_to.first_name} ${caseData.case_assignment.assigned_to.last_name}`}
+                        />
+                        <DataRow
+                            label="Assignee Role"
+                            value={caseData.case_assignment.assigned_to.roles.join(
+                                ', ',
+                            )}
+                        />
+                        <DataRow
+                            label="Priority"
+                            value={caseData.case_assignment.priority}
+                        />
+                        <DataRow
+                            label="Assigner"
+                            value={`${caseData.case_assignment.assigned_by.first_name} ${caseData.case_assignment.assigned_by.last_name}`}
+                        />
+                        <DataRow
+                            label="Assigner Role"
+                            value={caseData.case_assignment.assigned_by.roles.join(
+                                ', ',
+                            )}
                         />
                     </View>
                 ) : null}

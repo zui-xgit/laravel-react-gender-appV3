@@ -25,7 +25,7 @@ export interface StaffMember {
     gender: 'male' | 'female';
     email: string;
     phone: string | null;
-    role: 'admin' | 'officer';
+    roles: string[];
     status: 'active' | 'inactive' | 'suspended';
     last_login_at: string | null;
     last_logout_at: string | null;
@@ -43,7 +43,8 @@ export interface UsePageProps extends PageProps {
             email: string;
             phone: string;
             gender: 'male' | 'female';
-            role?: string;
+            roles: string[];
+            permissions: string[];
         };
     };
     sidebarOpen: boolean;
@@ -54,12 +55,12 @@ export interface CaseAssignment {
     assigned_by: {
         first_name: string;
         last_name: string;
-        role: string;
+        roles: string[];
     };
     assigned_to: {
         first_name: string;
         last_name: string;
-        role: string;
+        roles: string[];
     };
     priority: string;
 }
@@ -160,9 +161,9 @@ export interface InProgressCase {
         priority: string;
         case_assigned_at: string;
         assigned_by: string;
-        assigned_by_role: string;
+        assigned_by_roles: string[];
         assigned_to: string;
-        assigned_to_role: string;
+        assigned_to_roles: string[];
     };
 }
 
@@ -179,9 +180,9 @@ export interface CompletedCase {
     case_assignment: {
         case_assigned_at: string;
         assigned_by: string;
-        assigned_by_role: string;
+        assigned_by_roles: string[];
         assigned_to: string;
-        assigned_to_role: string;
+        assigned_to_roles: string[];
     };
 }
 
@@ -195,7 +196,7 @@ export interface PersonalAssignment {
     };
     assignedBy: {
         assigned_by: string;
-        assigned_by_role: string;
+        assigned_by_roles: string[];
     };
     priority: string;
     date_assigned: string;
@@ -206,7 +207,7 @@ export interface Log {
     description: string;
     event: string;
     causer_name: string;
-    causer_role: string | undefined;
+    causer_roles: string[];
     // The Ultimate Lazy & Safe Types:
     subject: Record<string, any> | null; // <-- This handles 100+ models instantly
     subject_type: string | null;
