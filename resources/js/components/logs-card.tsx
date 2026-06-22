@@ -294,6 +294,7 @@ const LogsCard = ({
             },
         );
     };
+
     return (
         <Card className="border-none shadow-sm ring-1 ring-border">
             <CardHeader>
