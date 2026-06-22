@@ -31,7 +31,7 @@ export interface StaffMember {
     last_logout_at: string | null;
 }
 
-export interface UsePageProps extends PageProps {
+export interface UsePageProps {
     name: string;
     auth: {
         user: {

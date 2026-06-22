@@ -146,7 +146,7 @@ const LogDescription = ({ log }: { log: Log }) => {
         <span className="text-sm font-semibold text-foreground">
             {log.description}{' '}
             {log.log_name === 'users-table' && <> - By {log.causer_name}</>}
-            {log.causer_roles.length > 0 && (
+            {log.log_name === 'users-table' && log.causer_roles.length > 0 && (
                 <>
                     {'  '} [{log.causer_roles.join(', ')}]
                 </>
@@ -165,10 +165,10 @@ const LogProperties = ({ log }: { log: Log }) => {
                 <>
                     {/* Assigned To: {assignedToNameAndRole} */}
                     Assigned To: {assignedToName}
-                    {log.properties.assigned_to_role.length > 0 && (
+                    {log.properties.assigned_to_roles.length > 0 && (
                         <>
-                            {'  '} [{log.properties.assigned_to_role.join(', ')}
-                            ]
+                            {'  '} [
+                            {log.properties.assigned_to_roles.join(', ')}]
                         </>
                     )}
                     <div></div>

@@ -15,14 +15,11 @@ import { Spinner } from '@/components/ui/spinner';
 import { logout } from '@/routes';
 import admin from '@/routes/admin';
 import officer from '@/routes/officer';
-import type { UsePageProps } from '@/types/types';
 
 const Inactive = () => {
-    const { auth } = usePage<UsePageProps>().props;
-    const route =
-        auth.user.role === 'admin'
-            ? admin.overview().url
-            : officer.overview().url;
+    const { auth } = usePage().props;
+    const isAdmin = auth.user.roles.includes('admin');
+    const route = isAdmin ? admin.overview().url : officer.overview().url;
 
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
@@ -52,8 +49,8 @@ const Inactive = () => {
                         <CardTitle className="text-xl font-bold">
                             {auth.user.full_name}
                         </CardTitle>
-                        <CardDescription className="text-xs font-medium tracking-widest text-muted-foreground uppercase">
-                            Role: {auth.user.role}
+                        <CardDescription className="text-xs font-medium tracking-widest text-muted-foreground">
+                            Role: <>[{auth.user.roles.join(', ')}]</>
                         </CardDescription>
                         <CardDescription className="pt-2 text-balance text-muted-foreground">
                             Your account is inactive or deactivated.

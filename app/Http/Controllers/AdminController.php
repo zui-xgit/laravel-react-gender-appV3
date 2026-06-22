@@ -189,7 +189,7 @@ class AdminController extends Controller
                  'userAgent' => $request->userAgent(), 
                  'tracking_id' => $case->case_tracking_id, 
                  'assigned_to_name' => $targetUser->first_name . ' ' .  $targetUser->last_name, 
-                 'assigned_to_role' => $targetUser->getRoleNames()
+                 'assigned_to_roles' => $targetUser->getRoleNames(), 
               ])
               ->log("Case with trackingID: :properties.tracking_id  was assigned.");
 
@@ -254,9 +254,9 @@ class AdminController extends Controller
                     'priority' => $case->caseAssignment->priority, 
                     'case_assigned_at' => $case->caseAssignment->created_at->toIso8601String(),
                     'assigned_to' => $case->caseAssignment->assignedTo->first_name . ' ' . $case->caseAssignment->assignedTo->last_name, 
-                    'assigned_to_role' => $case->caseAssignment->assignedTo->getRoleNames(),
+                    'assigned_to_roles' => $case->caseAssignment->assignedTo->getRoleNames(),
                     'assigned_by' => $case->caseAssignment->assignedBy->first_name . ' ' . $case->caseAssignment->assignedBy->last_name,
-                    'assigned_by_role' => $case->caseAssignment->assignedBy->getRoleNames(),
+                    'assigned_by_roles' => $case->caseAssignment->assignedBy->getRoleNames(),
                 ]
             ];
         });
@@ -313,9 +313,9 @@ class AdminController extends Controller
                 'case_assignment' => [
                     'case_assigned_at' => $case->caseAssignment->created_at->toIso8601String(),
                     'assigned_by' => $case->caseAssignment->assignedBy->first_name . ' ' . $case->caseAssignment->assignedBy->last_name, 
-                    'assigned_by_role' => $case->caseAssignment->assignedBy->getRoleNames(), 
+                    'assigned_by_roles' => $case->caseAssignment->assignedBy->getRoleNames(), 
                     'assigned_to' => $case->caseAssignment->assignedTo->first_name . ' ' . $case->caseAssignment->assignedTo->last_name, 
-                    'assigned_to_role' => $case->caseAssignment->assignedTo->getRoleNames()
+                    'assigned_to_roles' => $case->caseAssignment->assignedTo->getRoleNames()
                 ]
             ];
         });
@@ -478,9 +478,9 @@ class AdminController extends Controller
             $user->update($updatedData);
             $user->syncRoles($roleName);
            
-           DB::commit(); 
-           Inertia::flash('toast', ['type' => 'success', 'message' => __('Staff member updated successfully')]);
-           return back(); 
+            DB::commit(); 
+            Inertia::flash('toast', ['type' => 'success', 'message' => __('Staff member updated successfully')]);
+            return back(); 
         }catch(Exception $e){
             DB::rollBack(); 
             return back()->withErrors([
