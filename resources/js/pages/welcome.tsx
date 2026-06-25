@@ -24,7 +24,6 @@ import {
 import { reporterReport } from '@/routes';
 
 export default function Home() {
-    console.log('working now');
     // Core application features
     const coreFeatures = [
         {

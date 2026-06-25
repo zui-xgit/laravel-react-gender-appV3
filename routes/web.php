@@ -8,17 +8,10 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 // use Laravel\Fortify\Features;
 
-Route::inertia('/', 'welcome')->name('home');
-
-// Route::inertia('/test', 'test' )->name("test");
-
-
+    Route::inertia('/', 'welcome')->name('home');
 // Route::middleware(['guest'])->group(function () {
     Route::post("reporter", [ReporterController::class, 'store'])->name('reporter');
 
-    // Route::get('reporter/case-reported-successfully', function (){
-    //     return Inertia::render('reporter/case-reported-successfully');  
-    // })->name('case-reported-successfully')->middleware('has.tracking'); 
 
     Route::inertia('reporter/case-reported-successfully', 'reporter/case-reported-successfully')
         ->name('case-reported-successfully')->middleware('has.tracking');
@@ -29,27 +22,21 @@ Route::inertia('/', 'welcome')->name('home');
     Route::inertia('education', 'reporter/education')->name('education');
     Route::inertia('suspended', 'suspended')->name('suspended'); 
 
-        Route::post('track-case', [ReporterController::class, 'trackCase'])->name('track-case'); 
-        Route::post('/logout/session', [ReporterController::class, 'destroyTrackCaseSession'])->name('destroy-session'); 
-        
-        Route::middleware(['track.case.session'])->group(function(){
-            Route::get('track/show-case', [ReporterController::class, 'showCase'])->name('track.show-case'); 
-            Route::get('track/download-file/{file:uuid}', [ReporterController::class, 'downloadFile'])->name('track.download-file'); 
-        }); 
-
-
-
-
+    Route::post('track-case', [ReporterController::class, 'trackCase'])->name('track-case'); 
+    Route::post('/logout/session', [ReporterController::class, 'destroyTrackCaseSession'])->name('destroy-session'); 
+    
+    Route::middleware(['track.case.session'])->group(function(){
+        Route::get('track/show-case', [ReporterController::class, 'showCase'])->name('track.show-case'); 
+        Route::get('track/download-file/{file:uuid}', [ReporterController::class, 'downloadFile'])->name('track.download-file'); 
+    }); 
 // });
-
-
-
 Route::prefix('admin')->group(function (){
     require __DIR__.'/admin.php';
 }); 
-
 Route::prefix('officer')->group(function (){
     require __DIR__.'/officer.php';
 });
-require __DIR__.'/general.php';
+Route::prefix('case')->group(function (){
+    require __DIR__.'/general.php';
+}); 
 require __DIR__.'/settings.php';

@@ -1,4 +1,4 @@
-import { Head, router } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import {
     AlertCircle,
     CheckCircle2,
@@ -74,6 +74,10 @@ const LogDescription = ({ log }: { log: Log }) => {
 };
 
 export default function Overview({ stats, logs }: OverviewProps) {
+    const { auth } = usePage().props;
+
+    console.log('PERMISSIONS: ', auth.user.permissions);
+
     const statsConfig = [
         {
             title: 'Total Cases',

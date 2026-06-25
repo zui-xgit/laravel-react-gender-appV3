@@ -5,14 +5,12 @@ use App\Http\Controllers\GeneralController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::middleware(['auth', 'verified', 'role:admin|officer', 'check.status'])->group(function () {
+Route::middleware(['auth', 'verified', 'permission:case-workflow', 'check.status'])->group(function () {
     Route::post('case-intake/{case:uuid}', [CaseWorkflowController::class, 'caseIntake'])->name('case-intake');
     Route::post('case-investigate/{case:uuid}', [CaseWorkflowController::class, 'caseInvestigate'])->name('case-investigation');
     Route::post('case-escalate/{case:uuid}', [CaseWorkflowController::class, 'caseEscalate'])->name('case-escalation');
     Route::post('case-resolve/{case:uuid}', [CaseWorkflowController::class, 'caseResolve'])->name('case-resolution');
-    // this route is for assignments , since both admin and officer can deal with assignments.
-    // Route::get('general/assignments', [GeneralController::class, 'assignments'])->name('general.assignments'); 
-    Route::get('general/assignments', [GeneralController::class, 'assignments'])->name('general.assignments'); 
+    Route::get('assignments', [GeneralController::class, 'assignments'])->name('general.assignments'); 
 
 
     Route::get('view-case/{case:uuid}', [GeneralController::class, 'viewCase'])->name("general.view-case"); 
@@ -21,7 +19,7 @@ Route::middleware(['auth', 'verified', 'role:admin|officer', 'check.status'])->g
     Route::get('view-files', [GeneralController::class, 'viewFile'])->name('general.view-file'); 
 
     Route::get('downloadFile/{file:uuid}', [GeneralController::class, 'downloadFile'])->name('general.download-file'); ; 
-});
+}); 
     
 
 Route::middleware(['auth', 'verified', 'role:admin|officer'])->group(function () {

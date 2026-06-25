@@ -48,15 +48,15 @@ class HandleInertiaRequests extends Middleware
                     'full_name' => $request->user()->first_name . " " . $request->user()->last_name, 
                     'email' => $request->user()->email,
                     'gender' => $request->user()->gender, 
-                    'phone' => $request->user()->phone,
-                    'roles' => $request->user()->getRoleNames(),
-                    'permissions' => $request->user()->getPermissionNames(), 
+                    'phone' => $request->user()->phone,     
+                    'roles' => $request->user()->getRoleNames(),    
+                    'permissions' => $request->user()->getAllPermissions()->pluck('name'), 
                 ] : null,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
 
 
 
-        ];
+        ];  
     }
 }

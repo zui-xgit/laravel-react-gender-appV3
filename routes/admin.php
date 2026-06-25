@@ -12,7 +12,8 @@ Route::middleware(['auth', 'verified', 'role:admin', 'check.status'])->group(fun
     Route::get('staff-management', [AdminController::class, 'staffManagement'])->name("admin.staff-management");
     Route::get('report', [AdminController::class, 'report'])->name('admin.report'); 
     Route::get('audit-logs', [AdminController::class, 'auditLogs'])->name("admin.audit-logs"); 
-
+    
+    
 
     Route::post("assign-case/{case:uuid}", [AdminController::class, 'assignCase'])->name('admin-assign-case');
     

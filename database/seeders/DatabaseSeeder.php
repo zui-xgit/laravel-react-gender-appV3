@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\VictimDetail;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,18 +21,26 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        // 1. CRITICAL: Clear Spatie's internal cache first
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        Role::create(['name' => 'admin']);
-        Role::create(['name' => 'officer']);
+        // roles
+        $adminRole = Role::create(['name' => 'admin']);
+        $officerRole = Role::create(['name' => 'officer']);
+
+        //permission
+        $dealCasePersmission = Permission::create(['name' => 'case-workflow']); 
+
+        // give permissions to roles
+        $adminRole->givePermissionTo($dealCasePersmission); 
+        $officerRole->givePermissionTo($dealCasePersmission); 
+
+        
 
         $adminUser = User::factory()->create([
             'username' => 'jacob.athuman',
             'first_name'=> 'Jacob', 
             'last_name'=> 'Athuman'
         ]);
-        $adminUser->assignRole('admin');
+        $adminUser->assignRole($adminRole);
 
         
         $officerUser = User::factory()->create([
@@ -39,7 +48,7 @@ class DatabaseSeeder extends Seeder
             'first_name'=> 'Elias', 
             'last_name'=> 'Marc'
         ]);
-        $officerUser->assignRole('officer');
+        $officerUser->assignRole($officerRole);
 
 
         $cases = CaseDetail::factory(5)->create(); 
