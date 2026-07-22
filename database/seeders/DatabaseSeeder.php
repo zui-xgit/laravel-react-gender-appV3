@@ -21,18 +21,18 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'role' => 'admin', 
-            'username' => 'jacob.athuman',
+            'username' => 'admin.juma',
 
-            'first_name'=> 'Jacob', 
+            'first_name'=> 'Juma', 
             'last_name'=> 'Athuman'
         ]);
 
         
         User::factory()->create([
             'role' => 'officer', 
-            'username' => 'elias.marc',
+            'username' => 'officer.juma',
 
-            'first_name'=> 'Elias', 
+            'first_name'=> 'Juma', 
             'last_name'=> 'Marc'
         ]);
 
