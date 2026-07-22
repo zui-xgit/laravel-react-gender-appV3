@@ -22,7 +22,7 @@ class ReporterController extends Controller
      * Store a newly created resource in storage.
      */
 
-     public function store(Request $request)
+    public function store(Request $request)
     {
 
 
@@ -184,9 +184,6 @@ class ReporterController extends Controller
         }catch(Exception $e){
 
             DB::rollBack();
-
-
-            dd($e->getMessage());
 
             Log::error('Report submission failed', [
                 'transaction' => 'report submission failed',

@@ -90,8 +90,10 @@ const Report = () => {
                 preserveScroll: false, // Reset scroll position to top on the new page
                 onStart: () => setProcessing(true), // Triggers your PortalLoader
                 onFinish: () => setProcessing(false), // Hides your PortalLoader
-                onError: (error) => {
-                    toast.error(error.error);
+                onError: (errors) => {
+                    if (errors.error) {
+                        toast.error(errors.error);
+                    }
                 },
             },
         );
